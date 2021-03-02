@@ -25,7 +25,7 @@ spring:
 
   datasource:
     platform: mysql
-    url: jdbc:mysql://spring-boot-test.cuwu8zynnyff.ap-northeast-2.rds.amazonaws.com/JavaSpringBootTemplate
-    username: dory_spring
-    password: dory0324!
+    url: jdbc:mysql://edit-server-db.cdlzwe9h6r65.ap-northeast-2.rds.amazonaws.com:3306/edit
+    username: admin
+    password: editadmin
     driver-class-name: com.mysql.cj.jdbc.Driver
