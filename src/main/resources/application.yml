@@ -4,6 +4,8 @@ server:
 spring:
   application:
     name: demo
+  profiles:
+    active: local
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
