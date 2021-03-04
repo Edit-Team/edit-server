@@ -1,2 +1,4 @@
-package com.app.edit.domain.job;public class Job {
+package com.app.edit.domain.job;
+
+public class Job {
 }

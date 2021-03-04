@@ -1,2 +1,4 @@
-package com.app.edit.domain.job;public interface JobRepository {
+package com.app.edit.domain.job;
+
+public interface JobRepository {
 }
