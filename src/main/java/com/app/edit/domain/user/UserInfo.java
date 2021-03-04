@@ -1,6 +1,9 @@
 package com.app.edit.domain.user;
 
 import com.app.edit.config.BaseEntity;
+import com.app.edit.enums.AuthenticationCheck;
+import com.app.edit.enums.State;
+import com.app.edit.enums.UserRole;
 import lombok.*;
 import lombok.experimental.Accessors;
 
@@ -39,24 +42,57 @@ public class UserInfo extends BaseEntity {
     /**
      * 유저 이메일
      */
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false, columnDefinition = "varchar(60)")
     private String email;
 
     /**
      * 유저 휴대폰 번호
      */
-    @Column(name = "phoneNumber", nullable = false,columnDefinition = "varchar(100) default 'NONE'")
+    @Column(name = "phoneNumber", nullable = false, columnDefinition = "varchar(15)")
     private String phoneNumber;
     /**
      * 유저 역할
      */
-    @Column(name = "role", nullable = false)
-    private String role;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role",length = 6)
+    private UserRole userRole;
 
     /**
      * 멘토 인증 여부
      */
-    @Column(name = "isCertificatedMentor", nullable = false)
-    private String isCertificatedMentor;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "isCertificatedMentor", columnDefinition = "varchar(3) default 'NO'")
+    private AuthenticationCheck isCertificatedMentor;
 
+    /**
+     * 이메일 인증 여부
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "isCertificatedEmail", columnDefinition = "varchar(3) default 'NO'")
+    private AuthenticationCheck isCertificatedEmail;
+
+    /**
+     * 기타 입력 직군 이름
+     */
+    @Column(name = "etcJobName", columnDefinition = "varchar(45) default 'NONE'")
+    private String etcJobName;
+
+    /**
+     * 코인개수
+     */
+    @Column(name = "coinCount", columnDefinition = "bigint default '0'")
+    private Long coinCount;
+
+    /**
+     * 탈퇴 사유
+     */
+    @Column(name = "withdrawal", columnDefinition = "varchar(100) default 'NONE'")
+    private String withdrawal;
+
+    /**
+     * 회원 상태
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "state", columnDefinition = "varchar(10) default 'ACTIVE'")
+    private State state;
 }
