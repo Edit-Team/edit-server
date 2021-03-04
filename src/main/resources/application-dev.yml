@@ -1,7 +1,9 @@
 server:
-  port: 8080
+  port: 9000
 
 spring:
+  profiles:
+    include: credentials
   jpa:
     hibernate:
       ddl-auto: update
@@ -15,3 +17,12 @@ spring:
     driver-class-name: org.h2.Driver
     username: sa
     password:
+
+cloud:
+  aws:
+    s3:
+      bucket: edit-server-bucket
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
