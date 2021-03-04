@@ -26,7 +26,7 @@ public class CoverLetterCategory extends BaseEntity {
     /*
      * 자소서 카테고리 이름
      **/
-    @Column(name = "name", nullable = false, columnDefinition = "varchar(45)")
+    @Column(name = "name", nullable = false, length = 45)
     private String name;
 
     @Builder

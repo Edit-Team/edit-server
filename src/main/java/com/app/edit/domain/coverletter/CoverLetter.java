@@ -1,6 +1,7 @@
 package com.app.edit.domain.coverletter;
 
 import com.app.edit.config.BaseEntity;
+import com.app.edit.enums.State;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,7 +33,7 @@ public class CoverLetter extends BaseEntity {
     /*
      * 자소서 내용
      **/
-    @Column(name = "content", nullable = false, columnDefinition = "varchar(90)")
+    @Column(name = "content", nullable = false, length = 90)
     private String content;
 
     /*
@@ -43,13 +44,14 @@ public class CoverLetter extends BaseEntity {
 
     /*
      * 자소서 삭제 여부
-     * Default - ACTIVE
+     * default - ACTIVE
      **/
+    @Enumerated(EnumType.STRING)
     @Column(name = "state", nullable = false, columnDefinition = "varchar(10) default 'ACTIVE'")
-    private String state;
+    private State state;
 
     @Builder
-    public CoverLetter(Long userInfoId, String content, Long categoryId, String state) {
+    public CoverLetter(Long userInfoId, String content, Long categoryId, State state) {
         this.userInfoId = userInfoId;
         this.content = content;
         this.categoryId = categoryId;
