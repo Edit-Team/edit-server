@@ -1,11 +1,14 @@
 package com.app.edit.domain.job;
 
 import com.app.edit.config.BaseEntity;
+import com.app.edit.domain.user.UserInfo;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.databind.ser.Serializers;
 import lombok.*;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Accessors(chain = true)
 @Builder
@@ -29,4 +32,7 @@ public class Job extends BaseEntity {
      */
     @Column(name = "name", columnDefinition = "varchar(20) not null")
     private String name;
+
+    @OneToMany(mappedBy = "job",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    private List<UserInfo> userInfoList;
 }

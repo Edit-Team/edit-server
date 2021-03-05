@@ -1,6 +1,8 @@
 package com.app.edit.domain.certificationRequest;
 
 import com.app.edit.config.BaseEntity;
+import com.app.edit.domain.job.Job;
+import com.app.edit.domain.user.UserInfo;
 import com.app.edit.enums.IsProcessing;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -45,6 +47,8 @@ public class CertificationRequest extends BaseEntity {
     /**
      * 멘토 등록 인증 요청한 회원 번호
      */
-    //TODO
+    @ManyToOne
+    @JoinColumn(name = "userInfoId",nullable = false)
+    private UserInfo userInfo;
 
 }

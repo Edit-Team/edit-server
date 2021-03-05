@@ -2,11 +2,13 @@ package com.app.edit.domain.profileemotion;
 
 
 import com.app.edit.config.BaseEntity;
+import com.app.edit.domain.userprofile.UserProfile;
 import com.app.edit.enums.State;
 import lombok.*;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Accessors(chain = true)
 @Builder
@@ -37,4 +39,7 @@ public class ProfileEmotion extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "state", columnDefinition = "varchar(10) default 'ACTIVE'")
     private State state;
+
+    @OneToMany(mappedBy = "profileEmotion",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    private List<UserProfile> userProfileList;
 }

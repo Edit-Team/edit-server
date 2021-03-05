@@ -1,15 +1,22 @@
 package com.app.edit.domain.user;
 
 import com.app.edit.config.BaseEntity;
+import com.app.edit.domain.certificationRequest.CertificationRequest;
+import com.app.edit.domain.changerolecategory.ChangeRoleCategory;
+import com.app.edit.domain.changerolereqeust.ChangeRoleRequest;
+import com.app.edit.domain.job.Job;
 import com.app.edit.domain.mentor.MentorInfo;
 import com.app.edit.enums.AuthenticationCheck;
 import com.app.edit.enums.State;
 import com.app.edit.enums.UserRole;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Accessors(chain = true)
 @Builder
@@ -100,5 +107,15 @@ public class UserInfo extends BaseEntity{
 
     @OneToOne(mappedBy = "userInfo",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private MentorInfo mentorInfo;
+
+    @ManyToOne
+    @JoinColumn(name = "jobId",nullable = false)
+    private Job job;
+
+    @OneToMany(mappedBy = "userInfo",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    private List<CertificationRequest> certificationRequestList;
+
+    @OneToMany(mappedBy = "userInfo",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    private List<ChangeRoleRequest> changeRoleRequestList;
 
 }
