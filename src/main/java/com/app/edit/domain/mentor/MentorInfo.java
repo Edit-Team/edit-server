@@ -24,6 +24,7 @@ public class MentorInfo extends BaseEntity{
      * 멘토 ID
      */
     @Id
+    @Column(name = "id",nullable = false,updatable = false)
     private Long id;
 
     @MapsId
@@ -38,7 +39,7 @@ public class MentorInfo extends BaseEntity{
     private String name;
 
     /**
-     * 유저 정보 삭제시 삭제 여부
+     * 멘토 저장 상태
      */
     @Enumerated(EnumType.STRING)
     @Column(name = "state", columnDefinition = "varchar(10) default 'ACTIVE'")
