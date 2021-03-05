@@ -13,7 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "COMMENT_DECLARATION")
+@Table(name = "comment_declaration")
 public class CommentDeclaration extends BaseEntity {
 
     /*

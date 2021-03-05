@@ -15,7 +15,7 @@ import javax.persistence.*;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "TEMPORARY_COVER_LETTER")
+@Table(name = "temporary_cover_letter")
 public class TemporaryCoverLetter extends BaseEntity {
 
     /*

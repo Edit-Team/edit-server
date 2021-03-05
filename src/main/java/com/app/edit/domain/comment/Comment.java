@@ -14,7 +14,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "COMMENT")
+@Table(name = "comment")
 public class Comment extends BaseEntity {
 
     /*

@@ -13,7 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "APPRECIATE")
+@Table(name = "appreciate")
 public class Appreciate extends BaseEntity {
 
     /*

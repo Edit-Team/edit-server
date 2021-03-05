@@ -13,7 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "TEMPORARY_COMMENT")
+@Table(name = "temporary_comment")
 public class TemporaryComment extends BaseEntity {
 
     /*
