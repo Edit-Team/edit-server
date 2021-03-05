@@ -1,6 +1,7 @@
 package com.app.edit.domain.user;
 
 import com.app.edit.config.BaseEntity;
+import com.app.edit.domain.comment.Comment;
 import com.app.edit.domain.coverletter.CoverLetter;
 import com.app.edit.domain.mentor.MentorInfo;
 import com.app.edit.domain.temporarycoverletter.TemporaryCoverLetter;
@@ -110,6 +111,9 @@ public class UserInfo extends BaseEntity{
     @OneToMany(mappedBy = "userInfo", cascade = CascadeType.ALL)
     private List<TemporaryCoverLetter> temporaryCoverLetters;
 
+    @OneToMany(mappedBy = "userInfo", cascade = CascadeType.ALL)
+    private List<Comment> comments;
+
     public void addCoverLetter(CoverLetter coverLetter) {
         this.coverLetters.add(coverLetter);
         coverLetter.setUserInfo(this);
@@ -118,6 +122,11 @@ public class UserInfo extends BaseEntity{
     public void addTemporaryCoverLetter(TemporaryCoverLetter temporaryCoverLetter) {
         this.temporaryCoverLetters.add(temporaryCoverLetter);
         temporaryCoverLetter.setUserInfo(this);
+    }
+
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
+        comment.setUserInfo(this);
     }
 
 }
