@@ -2,6 +2,7 @@ package com.app.edit.domain.temporarycoverletter;
 
 import com.app.edit.config.BaseEntity;
 import com.app.edit.domain.coverlettercategory.CoverLetterCategory;
+import com.app.edit.domain.user.UserInfo;
 import com.app.edit.enums.CoverLetterType;
 import com.app.edit.enums.State;
 import lombok.Builder;
@@ -36,8 +37,9 @@ public class TemporaryCoverLetter extends BaseEntity {
     /*
      * 임시 자소서 작성 유저 ID
      **/
-    @Column(name = "userInfoId", nullable = false, updatable = false)
-    private Long userInfoId;
+    @ManyToOne
+    @JoinColumn(name = "userInfoId", nullable = false, updatable = false)
+    private UserInfo userInfo;
 
     /*
      * 임시 자소서 내용
@@ -66,9 +68,10 @@ public class TemporaryCoverLetter extends BaseEntity {
     private CoverLetterCategory coverLetterCategory;
 
     @Builder
-    public TemporaryCoverLetter(Long categoryId, Long userInfoId, String content, CoverLetterType type, State state, CoverLetterCategory coverLetterCategory) {
+    public TemporaryCoverLetter(Long categoryId, UserInfo userInfo, String content, CoverLetterType type, State state,
+                                CoverLetterCategory coverLetterCategory) {
         this.categoryId = categoryId;
-        this.userInfoId = userInfoId;
+        this.userInfo = userInfo;
         this.content = content;
         this.type = type;
         this.state = state;

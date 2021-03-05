@@ -3,6 +3,7 @@ package com.app.edit.domain.user;
 import com.app.edit.config.BaseEntity;
 import com.app.edit.domain.coverletter.CoverLetter;
 import com.app.edit.domain.mentor.MentorInfo;
+import com.app.edit.domain.temporarycoverletter.TemporaryCoverLetter;
 import com.app.edit.enums.AuthenticationCheck;
 import com.app.edit.enums.State;
 import com.app.edit.enums.UserRole;
@@ -106,9 +107,17 @@ public class UserInfo extends BaseEntity{
     @OneToMany(mappedBy = "userInfo", cascade = CascadeType.ALL)
     private List<CoverLetter> coverLetters;
 
+    @OneToMany(mappedBy = "userInfo", cascade = CascadeType.ALL)
+    private List<TemporaryCoverLetter> temporaryCoverLetters;
+
     public void addCoverLetter(CoverLetter coverLetter) {
         this.coverLetters.add(coverLetter);
         coverLetter.setUserInfo(this);
+    }
+
+    public void addTemporaryCoverLetter(TemporaryCoverLetter temporaryCoverLetter) {
+        this.temporaryCoverLetters.add(temporaryCoverLetter);
+        temporaryCoverLetter.setUserInfo(this);
     }
 
 }
