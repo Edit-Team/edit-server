@@ -1,6 +1,7 @@
 package com.app.edit.domain.coverletter;
 
 import com.app.edit.config.BaseEntity;
+import com.app.edit.domain.comment.Comment;
 import com.app.edit.domain.coverlettercategory.CoverLetterCategory;
 import com.app.edit.domain.user.UserInfo;
 import com.app.edit.enums.State;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Accessors(chain = true)
 @NoArgsConstructor
@@ -57,12 +59,22 @@ public class CoverLetter extends BaseEntity {
     @JoinColumn(name = "coverLetterCategoryId", nullable = false)
     private CoverLetterCategory coverLetterCategory;
 
+    @OneToMany(mappedBy = "coverLetter", cascade = CascadeType.ALL)
+    private List<Comment> comments;
+
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
+        comment.setCoverLetter(this);
+    }
+
     @Builder
-    public CoverLetter(UserInfo userInfo, String content, Long categoryId, State state, CoverLetterCategory coverLetterCategory) {
+    public CoverLetter(UserInfo userInfo, String content, Long categoryId, State state,
+                       CoverLetterCategory coverLetterCategory, List<Comment> comments) {
         this.userInfo = userInfo;
         this.content = content;
         this.categoryId = categoryId;
         this.state = state;
         this.coverLetterCategory = coverLetterCategory;
+        this.comments = comments;
     }
 }

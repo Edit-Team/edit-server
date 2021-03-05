@@ -1,6 +1,7 @@
 package com.app.edit.domain.comment;
 
 import com.app.edit.config.BaseEntity;
+import com.app.edit.domain.coverletter.CoverLetter;
 import com.app.edit.enums.FlagYN;
 import com.app.edit.enums.State;
 import lombok.Builder;
@@ -34,8 +35,9 @@ public class Comment extends BaseEntity {
     /*
      * 자소서 ID
      **/
-    @Column(name = "coverLetterId", nullable = false, updatable = false)
-    private Long coverLetterId;
+    @ManyToOne
+    @JoinColumn(name = "coverLetterId", nullable = false, updatable = false)
+    private CoverLetter coverLetter;
 
     /*
      * 문장에 대한 전체 평가
@@ -88,9 +90,10 @@ public class Comment extends BaseEntity {
     private State state;
 
     @Builder
-    public Comment(Long userInfoId, Long coverLetterId, String sentenceEvaluation, String concretenessLogic, String sincerity, String activity, String content, FlagYN isAdopted, State state) {
+    public Comment(Long userInfoId, CoverLetter coverLetter, String sentenceEvaluation, String concretenessLogic,
+                   String sincerity, String activity, String content, FlagYN isAdopted, State state) {
         this.userInfoId = userInfoId;
-        this.coverLetterId = coverLetterId;
+        this.coverLetter = coverLetter;
         this.sentenceEvaluation = sentenceEvaluation;
         this.concretenessLogic = concretenessLogic;
         this.sincerity = sincerity;
