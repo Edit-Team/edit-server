@@ -1,6 +1,7 @@
 package com.app.edit.domain.comment;
 
 import com.app.edit.config.BaseEntity;
+import com.app.edit.domain.appreciate.Appreciate;
 import com.app.edit.domain.commentdeclaration.CommentDeclaration;
 import com.app.edit.domain.coverletter.CoverLetter;
 import com.app.edit.domain.user.UserInfo;
@@ -96,15 +97,23 @@ public class Comment extends BaseEntity {
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
     private List<CommentDeclaration> commentDeclarations;
 
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
+    private List<Appreciate> appreciates;
+
     public void addCommentDeclaration(CommentDeclaration commentDeclaration) {
         this.commentDeclarations.add(commentDeclaration);
         commentDeclaration.setComment(this);
     }
 
+    public void addAppreciate(Appreciate appreciate) {
+        this.appreciates.add(appreciate);
+        appreciate.setComment(this);
+    }
+
     @Builder
     public Comment(UserInfo userInfo, CoverLetter coverLetter, String sentenceEvaluation, String concretenessLogic,
                    String sincerity, String activity, String content, IsAdopted isAdopted, State state,
-                   List<CommentDeclaration> commentDeclarations) {
+                   List<CommentDeclaration> commentDeclarations, List<Appreciate> appreciates) {
         this.userInfo = userInfo;
         this.coverLetter = coverLetter;
         this.sentenceEvaluation = sentenceEvaluation;
@@ -115,5 +124,6 @@ public class Comment extends BaseEntity {
         this.isAdopted = isAdopted;
         this.state = state;
         this.commentDeclarations = commentDeclarations;
+        this.appreciates = appreciates;
     }
 }

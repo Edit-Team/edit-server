@@ -1,12 +1,14 @@
 package com.app.edit.domain.appreciate;
 
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 
+@Data
 @NoArgsConstructor
 @Embeddable
 public class AppreciateId implements Serializable {

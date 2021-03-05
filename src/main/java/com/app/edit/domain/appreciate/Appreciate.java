@@ -1,6 +1,7 @@
 package com.app.edit.domain.appreciate;
 
 import com.app.edit.config.BaseEntity;
+import com.app.edit.domain.comment.Comment;
 import com.app.edit.enums.State;
 import lombok.Builder;
 import lombok.Data;
@@ -23,6 +24,11 @@ public class Appreciate extends BaseEntity {
     @EmbeddedId
     private AppreciateId appreciateId;
 
+    @MapsId(value = "commentId")
+    @ManyToOne
+    @JoinColumn(name = "commentId", nullable = false)
+    private Comment comment;
+
     /*
      * 감사 여부
      * default - ACTIVE
@@ -32,8 +38,9 @@ public class Appreciate extends BaseEntity {
     private State state;
 
     @Builder
-    public Appreciate(AppreciateId appreciateId, State state) {
+    public Appreciate(AppreciateId appreciateId, Comment comment, State state) {
         this.appreciateId = appreciateId;
+        this.comment = comment;
         this.state = state;
     }
 }
