@@ -59,7 +59,7 @@ public class UserInfo extends BaseEntity{
     private UserRole userRole;
 
     /**
-     * 멘토 인증 여부
+     * 멘토 인증 여부  d
      */
     @Enumerated(EnumType.STRING)
     @Column(name = "isCertificatedMentor", columnDefinition = "varchar(3) default 'NO'")
