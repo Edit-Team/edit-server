@@ -2,7 +2,6 @@ package com.app.edit.domain.coverletterdeclaration;
 
 import com.app.edit.config.BaseEntity;
 import com.app.edit.domain.coverletter.CoverLetter;
-import com.app.edit.enums.FlagYN;
 import com.app.edit.enums.IsProcessing;
 import lombok.Builder;
 import lombok.Data;

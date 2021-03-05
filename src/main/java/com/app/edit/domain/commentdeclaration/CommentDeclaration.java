@@ -1,7 +1,9 @@
 package com.app.edit.domain.commentdeclaration;
 
 import com.app.edit.config.BaseEntity;
-import com.app.edit.enums.FlagYN;
+import com.app.edit.domain.comment.Comment;
+import com.app.edit.enums.IsAdopted;
+import com.app.edit.enums.IsProcessing;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,8 +29,9 @@ public class CommentDeclaration extends BaseEntity {
     /*
      * 신고당한 코멘트 ID
      **/
-    @Column(name = "commentId", nullable = false, updatable = false)
-    private Long commentId;
+    @ManyToOne
+    @JoinColumn(name = "commentId", nullable = false, updatable = false)
+    private Comment comment;
 
     /*
      * 신고한 유저 ID
@@ -42,11 +45,11 @@ public class CommentDeclaration extends BaseEntity {
      **/
     @Enumerated(EnumType.STRING)
     @Column(name = "isProcessing", nullable = false, columnDefinition = "varchar(3) default 'NO'")
-    private FlagYN isProcessing;
+    private IsProcessing isProcessing;
 
     @Builder
-    public CommentDeclaration(Long commentId, Long userInfoId, FlagYN isProcessing) {
-        this.commentId = commentId;
+    public CommentDeclaration(Comment comment, Long userInfoId, IsProcessing isProcessing) {
+        this.comment = comment;
         this.userInfoId = userInfoId;
         this.isProcessing = isProcessing;
     }

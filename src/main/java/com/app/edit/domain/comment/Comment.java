@@ -1,9 +1,10 @@
 package com.app.edit.domain.comment;
 
 import com.app.edit.config.BaseEntity;
+import com.app.edit.domain.commentdeclaration.CommentDeclaration;
 import com.app.edit.domain.coverletter.CoverLetter;
 import com.app.edit.domain.user.UserInfo;
-import com.app.edit.enums.FlagYN;
+import com.app.edit.enums.IsAdopted;
 import com.app.edit.enums.State;
 import lombok.Builder;
 import lombok.Data;
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Accessors(chain = true)
 @NoArgsConstructor
@@ -81,7 +83,7 @@ public class Comment extends BaseEntity {
      **/
     @Enumerated(EnumType.STRING)
     @Column(name = "isAdopted", nullable = false, columnDefinition = "varchar(3) default 'NO'")
-    private FlagYN isAdopted;
+    private IsAdopted isAdopted;
 
     /*
      * 삭제 여부
@@ -91,9 +93,18 @@ public class Comment extends BaseEntity {
     @Column(name = "state", nullable = false, columnDefinition = "varchar(10) default 'ACTIVE'")
     private State state;
 
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
+    private List<CommentDeclaration> commentDeclarations;
+
+    public void addCommentDeclaration(CommentDeclaration commentDeclaration) {
+        this.commentDeclarations.add(commentDeclaration);
+        commentDeclaration.setComment(this);
+    }
+
     @Builder
     public Comment(UserInfo userInfo, CoverLetter coverLetter, String sentenceEvaluation, String concretenessLogic,
-                   String sincerity, String activity, String content, FlagYN isAdopted, State state) {
+                   String sincerity, String activity, String content, IsAdopted isAdopted, State state,
+                   List<CommentDeclaration> commentDeclarations) {
         this.userInfo = userInfo;
         this.coverLetter = coverLetter;
         this.sentenceEvaluation = sentenceEvaluation;
@@ -103,5 +114,6 @@ public class Comment extends BaseEntity {
         this.content = content;
         this.isAdopted = isAdopted;
         this.state = state;
+        this.commentDeclarations = commentDeclarations;
     }
 }
