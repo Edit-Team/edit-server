@@ -1,9 +1,8 @@
-package com.app.edit.domain.job;
+package com.app.edit.domain.userprofile;
 
 import com.app.edit.domain.user.UserInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 
-public interface JobRepository extends JpaRepository<Job,Long>{
-
+public interface UserProfileRepository extends JpaRepository<UserProfile, UserInfo> {
 }

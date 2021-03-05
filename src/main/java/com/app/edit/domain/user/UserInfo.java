@@ -1,6 +1,7 @@
 package com.app.edit.domain.user;
 
 import com.app.edit.config.BaseEntity;
+import com.app.edit.domain.mentor.MentorInfo;
 import com.app.edit.enums.AuthenticationCheck;
 import com.app.edit.enums.State;
 import com.app.edit.enums.UserRole;
@@ -8,16 +9,16 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Accessors(chain = true)
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
-@EqualsAndHashCode(callSuper = false)
 @Data
 @Entity
-@Table(name = "userInfo")
-public class UserInfo extends BaseEntity {
+@Table(name = "user_info")
+public class UserInfo extends BaseEntity{
 
     /**
      * 유저 ID
@@ -30,25 +31,25 @@ public class UserInfo extends BaseEntity {
     /**
      * 유저 이름
      */
-    @Column(name = "name", nullable = false, columnDefinition = "varchar(10)")
+    @Column(name = "name", nullable = false, length = 10)
     private String name;
 
     /**
      * 유저 닉네임
      */
-    @Column(name = "nickName", nullable = false, columnDefinition = "varchar(20)")
+    @Column(name = "nickName", nullable = false, length = 20)
     private String nickName;
 
     /**
      * 유저 이메일
      */
-    @Column(name = "email", nullable = false, columnDefinition = "varchar(60)")
+    @Column(name = "email", nullable = false, length = 60)
     private String email;
 
     /**
      * 유저 휴대폰 번호
      */
-    @Column(name = "phoneNumber", nullable = false, columnDefinition = "varchar(15)")
+    @Column(name = "phoneNumber", nullable = false, length = 15)
     private String phoneNumber;
     /**
      * 유저 역할
@@ -58,7 +59,7 @@ public class UserInfo extends BaseEntity {
     private UserRole userRole;
 
     /**
-     * 멘토 인증 여부
+     * 멘토 인증 여부  d
      */
     @Enumerated(EnumType.STRING)
     @Column(name = "isCertificatedMentor", columnDefinition = "varchar(3) default 'NO'")
@@ -95,4 +96,9 @@ public class UserInfo extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "state", columnDefinition = "varchar(10) default 'ACTIVE'")
     private State state;
+
+
+    @OneToOne(mappedBy = "userInfo",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    private MentorInfo mentorInfo;
+
 }

@@ -1,7 +1,6 @@
-package com.app.edit.domain.job;
+package com.app.edit.domain.changerolecategory;
 
 import com.app.edit.config.BaseEntity;
-import com.fasterxml.jackson.databind.ser.Serializers;
 import lombok.*;
 import lombok.experimental.Accessors;
 
@@ -13,20 +12,20 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
 @Entity
-@Table(name = "job")
-public class Job extends BaseEntity {
+@Table(name = "change_role_category")
+public class ChangeRoleCategory extends BaseEntity {
 
     /**
-     * 직군 ID
+     * 신청 사유 카테고리 번호
      */
     @Id
-    @Column(name = "id", nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
     /**
-     * 직군 이름
+     * 신청 사유 카테고리 이름
      */
-    @Column(name = "name", columnDefinition = "varchar(20) not null")
+    @Column(name = "name", nullable = false, length = 45)
     private String name;
 }
