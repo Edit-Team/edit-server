@@ -2,6 +2,7 @@ package com.app.edit.domain.coverletter;
 
 import com.app.edit.config.BaseEntity;
 import com.app.edit.domain.coverlettercategory.CoverLetterCategory;
+import com.app.edit.domain.user.UserInfo;
 import com.app.edit.enums.State;
 import lombok.Builder;
 import lombok.Data;
@@ -28,8 +29,9 @@ public class CoverLetter extends BaseEntity {
     /*
      * 자소서 작성한 유저 ID
      **/
-    @Column(name = "userInfoId", nullable = false, updatable = false)
-    private Long userInfoId;
+    @ManyToOne
+    @JoinColumn(name = "userInfoId", nullable = false, updatable = false)
+    private UserInfo userInfo;
 
     /*
      * 자소서 내용
@@ -56,8 +58,8 @@ public class CoverLetter extends BaseEntity {
     private CoverLetterCategory coverLetterCategory;
 
     @Builder
-    public CoverLetter(Long userInfoId, String content, Long categoryId, State state, CoverLetterCategory coverLetterCategory) {
-        this.userInfoId = userInfoId;
+    public CoverLetter(UserInfo userInfo, String content, Long categoryId, State state, CoverLetterCategory coverLetterCategory) {
+        this.userInfo = userInfo;
         this.content = content;
         this.categoryId = categoryId;
         this.state = state;

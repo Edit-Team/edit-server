@@ -1,6 +1,7 @@
 package com.app.edit.domain.user;
 
 import com.app.edit.config.BaseEntity;
+import com.app.edit.domain.coverletter.CoverLetter;
 import com.app.edit.domain.mentor.MentorInfo;
 import com.app.edit.enums.AuthenticationCheck;
 import com.app.edit.enums.State;
@@ -10,6 +11,7 @@ import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Accessors(chain = true)
 @Builder
@@ -100,5 +102,13 @@ public class UserInfo extends BaseEntity{
 
     @OneToOne(mappedBy = "userInfo",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private MentorInfo mentorInfo;
+
+    @OneToMany(mappedBy = "userInfo", cascade = CascadeType.ALL)
+    private List<CoverLetter> coverLetters;
+
+    public void addCoverLetter(CoverLetter coverLetter) {
+        this.coverLetters.add(coverLetter);
+        coverLetter.setUserInfo(this);
+    }
 
 }
