@@ -1,6 +1,7 @@
 package com.app.edit.domain.coverletter;
 
 import com.app.edit.config.BaseEntity;
+import com.app.edit.domain.coverlettercategory.CoverLetterCategory;
 import com.app.edit.enums.State;
 import lombok.Builder;
 import lombok.Data;
@@ -50,11 +51,16 @@ public class CoverLetter extends BaseEntity {
     @Column(name = "state", nullable = false, columnDefinition = "varchar(10) default 'ACTIVE'")
     private State state;
 
+    @ManyToOne
+    @JoinColumn(name = "coverLetterCategoryId", nullable = false)
+    private CoverLetterCategory coverLetterCategory;
+
     @Builder
-    public CoverLetter(Long userInfoId, String content, Long categoryId, State state) {
+    public CoverLetter(Long userInfoId, String content, Long categoryId, State state, CoverLetterCategory coverLetterCategory) {
         this.userInfoId = userInfoId;
         this.content = content;
         this.categoryId = categoryId;
         this.state = state;
+        this.coverLetterCategory = coverLetterCategory;
     }
 }
