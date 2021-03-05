@@ -4,6 +4,7 @@ import com.app.edit.config.BaseEntity;
 import com.app.edit.domain.comment.Comment;
 import com.app.edit.domain.coverlettercategory.CoverLetterCategory;
 import com.app.edit.domain.coverletterdeclaration.CoverLetterDeclaration;
+import com.app.edit.domain.sympathy.Sympathy;
 import com.app.edit.domain.temporarycomment.TemporaryComment;
 import com.app.edit.domain.user.UserInfo;
 import com.app.edit.enums.State;
@@ -67,6 +68,9 @@ public class CoverLetter extends BaseEntity {
     @OneToMany(mappedBy = "coverLetter", cascade = CascadeType.ALL)
     private List<CoverLetterDeclaration> coverLetterDeclarations;
 
+    @OneToMany(mappedBy = "coverLetter", cascade = CascadeType.ALL)
+    private List<Sympathy> sympathies;
+
     public void addComment(Comment comment) {
         this.comments.add(comment);
         comment.setCoverLetter(this);
@@ -82,10 +86,15 @@ public class CoverLetter extends BaseEntity {
         coverLetterDeclaration.setCoverLetter(this);
     }
 
+    public void addSympathy(Sympathy sympathy) {
+        this.sympathies.add(sympathy);
+        sympathy.setCoverLetter(this);
+    }
+
     @Builder
     public CoverLetter(UserInfo userInfo, String content, State state, CoverLetterCategory coverLetterCategory,
                        List<Comment> comments, List<TemporaryComment> temporaryComments,
-                       List<CoverLetterDeclaration> coverLetterDeclarations) {
+                       List<CoverLetterDeclaration> coverLetterDeclarations, List<Sympathy> sympathies) {
         this.userInfo = userInfo;
         this.content = content;
         this.state = state;
@@ -93,5 +102,6 @@ public class CoverLetter extends BaseEntity {
         this.comments = comments;
         this.temporaryComments = temporaryComments;
         this.coverLetterDeclarations = coverLetterDeclarations;
+        this.sympathies = sympathies;
     }
 }
