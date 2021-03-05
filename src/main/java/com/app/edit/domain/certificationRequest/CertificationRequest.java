@@ -1,6 +1,7 @@
 package com.app.edit.domain.certificationRequest;
 
 import com.app.edit.config.BaseEntity;
+import com.app.edit.enums.IsProcessing;
 import lombok.*;
 import lombok.experimental.Accessors;
 
@@ -39,7 +40,7 @@ public class CertificationRequest extends BaseEntity {
      * 멘토 등록 인증 처리 여부
      */
     @Column(name = "isProcessing", columnDefinition = "varchar(3) default 'NO'")
-    private String isProcessing;
+    private IsProcessing isProcessing;
 
     /**
      * 멘토 등록 인증 요청한 회원 번호

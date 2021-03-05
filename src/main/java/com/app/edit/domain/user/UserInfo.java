@@ -18,7 +18,7 @@ import java.io.Serializable;
 @Data
 @Entity
 @Table(name = "user_info")
-public class UserInfo extends BaseEntity implements Serializable {
+public class UserInfo extends BaseEntity{
 
     /**
      * 유저 ID

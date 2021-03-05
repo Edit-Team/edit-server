@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-public interface MentorInfoRepository extends CrudRepository<MentorInfo, UserInfo> {
+public interface MentorInfoRepository extends JpaRepository<MentorInfo, UserInfo> {
 }
