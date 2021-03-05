@@ -2,6 +2,8 @@ package com.app.edit.domain.user;
 
 import com.app.edit.config.BaseEntity;
 import com.app.edit.domain.certificationRequest.CertificationRequest;
+import com.app.edit.domain.changerolecategory.ChangeRoleCategory;
+import com.app.edit.domain.changerolereqeust.ChangeRoleRequest;
 import com.app.edit.domain.job.Job;
 import com.app.edit.domain.mentor.MentorInfo;
 import com.app.edit.enums.AuthenticationCheck;
@@ -112,5 +114,8 @@ public class UserInfo extends BaseEntity{
 
     @OneToMany(mappedBy = "userInfo",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<CertificationRequest> certificationRequestList;
+
+    @OneToMany(mappedBy = "userInfo",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    private List<ChangeRoleRequest> changeRoleRequestList;
 
 }

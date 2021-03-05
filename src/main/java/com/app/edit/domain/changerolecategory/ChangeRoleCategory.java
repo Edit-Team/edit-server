@@ -1,10 +1,14 @@
 package com.app.edit.domain.changerolecategory;
 
 import com.app.edit.config.BaseEntity;
+import com.app.edit.domain.certificationRequest.CertificationRequest;
+import com.app.edit.domain.changerolereqeust.ChangeRoleRequest;
+import com.app.edit.domain.job.Job;
 import lombok.*;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Accessors(chain = true)
 @Builder
@@ -28,4 +32,7 @@ public class ChangeRoleCategory extends BaseEntity {
      */
     @Column(name = "name", nullable = false, length = 45)
     private String name;
+
+    @OneToMany(mappedBy = "changeRoleCategory",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    private List<ChangeRoleRequest> changeRoleRequestList;
 }
