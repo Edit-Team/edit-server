@@ -1,6 +1,7 @@
 package com.app.edit.domain.temporarycoverletter;
 
 import com.app.edit.config.BaseEntity;
+import com.app.edit.domain.coverlettercategory.CoverLetterCategory;
 import com.app.edit.enums.CoverLetterType;
 import com.app.edit.enums.State;
 import lombok.Builder;
@@ -60,12 +61,17 @@ public class TemporaryCoverLetter extends BaseEntity {
     @Column(name = "state", nullable = false, columnDefinition = "varchar(10) default 'ACTIVE'")
     private State state;
 
+    @ManyToOne
+    @JoinColumn(name = "coverLetterCategoryId", nullable = false)
+    private CoverLetterCategory coverLetterCategory;
+
     @Builder
-    public TemporaryCoverLetter(Long categoryId, Long userInfoId, String content, CoverLetterType type, State state) {
+    public TemporaryCoverLetter(Long categoryId, Long userInfoId, String content, CoverLetterType type, State state, CoverLetterCategory coverLetterCategory) {
         this.categoryId = categoryId;
         this.userInfoId = userInfoId;
         this.content = content;
         this.type = type;
         this.state = state;
+        this.coverLetterCategory = coverLetterCategory;
     }
 }
