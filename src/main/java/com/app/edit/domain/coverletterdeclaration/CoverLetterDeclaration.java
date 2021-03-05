@@ -1,7 +1,9 @@
 package com.app.edit.domain.coverletterdeclaration;
 
 import com.app.edit.config.BaseEntity;
+import com.app.edit.domain.coverletter.CoverLetter;
 import com.app.edit.enums.FlagYN;
+import com.app.edit.enums.IsProcessing;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,8 +29,9 @@ public class CoverLetterDeclaration extends BaseEntity {
     /*
      * 신고당한 자소서 ID
      **/
-    @Column(name = "coverLetterId", nullable = false, updatable = false)
-    private Long coverLetterId;
+    @ManyToOne
+    @JoinColumn(name = "coverLetterId", nullable = false, updatable = false)
+    private CoverLetter coverLetter;
 
     /*
      * 신고한 유저 ID
@@ -42,11 +45,11 @@ public class CoverLetterDeclaration extends BaseEntity {
      **/
     @Enumerated(EnumType.STRING)
     @Column(name = "isProcessing", nullable = false, columnDefinition = "varchar(3) default 'NO'")
-    private FlagYN isProcessing;
+    private IsProcessing isProcessing;
 
     @Builder
-    public CoverLetterDeclaration(Long coverLetterId, Long userInfoId, FlagYN isProcessing) {
-        this.coverLetterId = coverLetterId;
+    public CoverLetterDeclaration(CoverLetter coverLetter, Long userInfoId, IsProcessing isProcessing) {
+        this.coverLetter = coverLetter;
         this.userInfoId = userInfoId;
         this.isProcessing = isProcessing;
     }
