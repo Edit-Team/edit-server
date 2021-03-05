@@ -3,6 +3,7 @@ package com.app.edit.domain.coverletter;
 import com.app.edit.config.BaseEntity;
 import com.app.edit.domain.comment.Comment;
 import com.app.edit.domain.coverlettercategory.CoverLetterCategory;
+import com.app.edit.domain.temporarycomment.TemporaryComment;
 import com.app.edit.domain.user.UserInfo;
 import com.app.edit.enums.State;
 import lombok.Builder;
@@ -62,19 +63,29 @@ public class CoverLetter extends BaseEntity {
     @OneToMany(mappedBy = "coverLetter", cascade = CascadeType.ALL)
     private List<Comment> comments;
 
+    @OneToMany(mappedBy = "coverLetter", cascade = CascadeType.ALL)
+    private List<TemporaryComment> temporaryComments;
+
     public void addComment(Comment comment) {
         this.comments.add(comment);
         comment.setCoverLetter(this);
     }
 
+    public void addTemporaryComment(TemporaryComment temporaryComment) {
+        this.temporaryComments.add(temporaryComment);
+        temporaryComment.setCoverLetter(this);
+    }
+
     @Builder
     public CoverLetter(UserInfo userInfo, String content, Long categoryId, State state,
-                       CoverLetterCategory coverLetterCategory, List<Comment> comments) {
+                       CoverLetterCategory coverLetterCategory, List<Comment> comments,
+                       List<TemporaryComment> temporaryComments) {
         this.userInfo = userInfo;
         this.content = content;
         this.categoryId = categoryId;
         this.state = state;
         this.coverLetterCategory = coverLetterCategory;
         this.comments = comments;
+        this.temporaryComments = temporaryComments;
     }
 }
