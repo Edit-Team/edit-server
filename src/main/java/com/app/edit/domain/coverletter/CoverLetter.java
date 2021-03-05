@@ -44,12 +44,6 @@ public class CoverLetter extends BaseEntity {
     private String content;
 
     /*
-     * 자소서 종류(카테고리) ID
-     **/
-    @Column(name = "categoryId", nullable = false, updatable = false)
-    private Long categoryId;
-
-    /*
      * 자소서 삭제 여부
      * default - ACTIVE
      **/
@@ -57,6 +51,9 @@ public class CoverLetter extends BaseEntity {
     @Column(name = "state", nullable = false, columnDefinition = "varchar(10) default 'ACTIVE'")
     private State state;
 
+    /*
+     * 자소서 종류(카테고리) ID
+     **/
     @ManyToOne
     @JoinColumn(name = "coverLetterCategoryId", nullable = false)
     private CoverLetterCategory coverLetterCategory;
@@ -86,12 +83,11 @@ public class CoverLetter extends BaseEntity {
     }
 
     @Builder
-    public CoverLetter(UserInfo userInfo, String content, Long categoryId, State state,
-                       CoverLetterCategory coverLetterCategory, List<Comment> comments,
-                       List<TemporaryComment> temporaryComments, List<CoverLetterDeclaration> coverLetterDeclarations) {
+    public CoverLetter(UserInfo userInfo, String content, State state, CoverLetterCategory coverLetterCategory,
+                       List<Comment> comments, List<TemporaryComment> temporaryComments,
+                       List<CoverLetterDeclaration> coverLetterDeclarations) {
         this.userInfo = userInfo;
         this.content = content;
-        this.categoryId = categoryId;
         this.state = state;
         this.coverLetterCategory = coverLetterCategory;
         this.comments = comments;

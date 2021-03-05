@@ -29,12 +29,6 @@ public class TemporaryCoverLetter extends BaseEntity {
     private Long id;
 
     /*
-     * 자소서 카테고리 ID
-     **/
-    @Column(name = "categoryId", nullable = false, updatable = false)
-    private Long categoryId;
-
-    /*
      * 임시 자소서 작성 유저 ID
      **/
     @ManyToOne
@@ -63,14 +57,16 @@ public class TemporaryCoverLetter extends BaseEntity {
     @Column(name = "state", nullable = false, columnDefinition = "varchar(10) default 'ACTIVE'")
     private State state;
 
+    /*
+     * 자소서 종류(카테고리) ID
+     **/
     @ManyToOne
     @JoinColumn(name = "coverLetterCategoryId", nullable = false)
     private CoverLetterCategory coverLetterCategory;
 
     @Builder
-    public TemporaryCoverLetter(Long categoryId, UserInfo userInfo, String content, CoverLetterType type, State state,
+    public TemporaryCoverLetter(UserInfo userInfo, String content, CoverLetterType type, State state,
                                 CoverLetterCategory coverLetterCategory) {
-        this.categoryId = categoryId;
         this.userInfo = userInfo;
         this.content = content;
         this.type = type;
