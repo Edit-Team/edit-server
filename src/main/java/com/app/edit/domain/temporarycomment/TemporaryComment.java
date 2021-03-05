@@ -2,6 +2,7 @@ package com.app.edit.domain.temporarycomment;
 
 import com.app.edit.config.BaseEntity;
 import com.app.edit.domain.coverletter.CoverLetter;
+import com.app.edit.domain.user.UserInfo;
 import com.app.edit.enums.State;
 import lombok.Builder;
 import lombok.Data;
@@ -28,8 +29,9 @@ public class TemporaryComment extends BaseEntity {
     /*
      * 코멘트를 임시 저장한 유저 ID
      **/
-    @Column(name = "userInfoId", nullable = false, updatable = false)
-    private Long userInfoId;
+    @ManyToOne
+    @JoinColumn(name = "userInfoId", nullable = false, updatable = false)
+    private UserInfo userInfo;
 
     /*
      * 임시 저장된 코멘트를 달려고 했던 자소서 ID
@@ -81,9 +83,9 @@ public class TemporaryComment extends BaseEntity {
     private State state;
 
     @Builder
-    public TemporaryComment(Long userInfoId, CoverLetter coverLetter, String sentenceEvaluation,
+    public TemporaryComment(UserInfo userInfo, CoverLetter coverLetter, String sentenceEvaluation,
                             String concretenessLogic, String sincerity, String activity, String content, State state) {
-        this.userInfoId = userInfoId;
+        this.userInfo = userInfo;
         this.coverLetter = coverLetter;
         this.sentenceEvaluation = sentenceEvaluation;
         this.concretenessLogic = concretenessLogic;

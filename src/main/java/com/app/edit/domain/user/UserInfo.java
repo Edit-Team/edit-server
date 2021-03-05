@@ -4,6 +4,7 @@ import com.app.edit.config.BaseEntity;
 import com.app.edit.domain.comment.Comment;
 import com.app.edit.domain.coverletter.CoverLetter;
 import com.app.edit.domain.mentor.MentorInfo;
+import com.app.edit.domain.temporarycomment.TemporaryComment;
 import com.app.edit.domain.temporarycoverletter.TemporaryCoverLetter;
 import com.app.edit.enums.AuthenticationCheck;
 import com.app.edit.enums.State;
@@ -114,6 +115,9 @@ public class UserInfo extends BaseEntity{
     @OneToMany(mappedBy = "userInfo", cascade = CascadeType.ALL)
     private List<Comment> comments;
 
+    @OneToMany(mappedBy = "userInfo", cascade = CascadeType.ALL)
+    private List<TemporaryComment> temporaryComments;
+
     public void addCoverLetter(CoverLetter coverLetter) {
         this.coverLetters.add(coverLetter);
         coverLetter.setUserInfo(this);
@@ -127,6 +131,11 @@ public class UserInfo extends BaseEntity{
     public void addComment(Comment comment) {
         this.comments.add(comment);
         comment.setUserInfo(this);
+    }
+
+    public void addTemporaryComment(TemporaryComment temporaryComment) {
+        this.temporaryComments.add(temporaryComment);
+        temporaryComment.setUserInfo(this);
     }
 
 }
