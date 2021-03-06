@@ -9,7 +9,6 @@ public class enumTest {
                 .id(1L)
                 .email("test")
                 .etcJobName("test")
-                .isCertificatedEmail(null)
                 .isCertificatedMentor(null)
                 .name("test")
                 .coinCount(1L)
