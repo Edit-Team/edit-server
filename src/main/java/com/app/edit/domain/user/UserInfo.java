@@ -66,6 +66,13 @@ public class UserInfo extends BaseEntity{
      */
     @Column(name = "phoneNumber", nullable = false, length = 15)
     private String phoneNumber;
+
+    /**
+     * 유저 비밀번호
+     */
+    @Column(name = "password", nullable = false)
+    private String password;
+
     /**
      * 유저 역할
      */
