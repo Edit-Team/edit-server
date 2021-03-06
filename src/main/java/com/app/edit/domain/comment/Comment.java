@@ -1,7 +1,11 @@
 package com.app.edit.domain.comment;
 
 import com.app.edit.config.BaseEntity;
-import com.app.edit.enums.FlagYN;
+import com.app.edit.domain.appreciate.Appreciate;
+import com.app.edit.domain.commentdeclaration.CommentDeclaration;
+import com.app.edit.domain.coverletter.CoverLetter;
+import com.app.edit.domain.user.UserInfo;
+import com.app.edit.enums.IsAdopted;
 import com.app.edit.enums.State;
 import lombok.Builder;
 import lombok.Data;
@@ -9,12 +13,13 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Accessors(chain = true)
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "COMMENT")
+@Table(name = "comment")
 public class Comment extends BaseEntity {
 
     /*
@@ -28,14 +33,16 @@ public class Comment extends BaseEntity {
     /*
      * 코멘트 등록한 유저 ID
      **/
-    @Column(name = "userInfoId", nullable = false, updatable = false)
-    private Long userInfoId;
+    @ManyToOne
+    @JoinColumn(name = "userInfoId", nullable = false, updatable = false)
+    private UserInfo userInfo;
 
     /*
      * 자소서 ID
      **/
-    @Column(name = "coverLetterId", nullable = false, updatable = false)
-    private Long coverLetterId;
+    @ManyToOne
+    @JoinColumn(name = "coverLetterId", nullable = false, updatable = false)
+    private CoverLetter coverLetter;
 
     /*
      * 문장에 대한 전체 평가
@@ -77,7 +84,7 @@ public class Comment extends BaseEntity {
      **/
     @Enumerated(EnumType.STRING)
     @Column(name = "isAdopted", nullable = false, columnDefinition = "varchar(3) default 'NO'")
-    private FlagYN isAdopted;
+    private IsAdopted isAdopted;
 
     /*
      * 삭제 여부
@@ -87,10 +94,28 @@ public class Comment extends BaseEntity {
     @Column(name = "state", nullable = false, columnDefinition = "varchar(10) default 'ACTIVE'")
     private State state;
 
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
+    private List<CommentDeclaration> commentDeclarations;
+
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
+    private List<Appreciate> appreciates;
+
+    public void addCommentDeclaration(CommentDeclaration commentDeclaration) {
+        this.commentDeclarations.add(commentDeclaration);
+        commentDeclaration.setComment(this);
+    }
+
+    public void addAppreciate(Appreciate appreciate) {
+        this.appreciates.add(appreciate);
+        appreciate.setComment(this);
+    }
+
     @Builder
-    public Comment(Long userInfoId, Long coverLetterId, String sentenceEvaluation, String concretenessLogic, String sincerity, String activity, String content, FlagYN isAdopted, State state) {
-        this.userInfoId = userInfoId;
-        this.coverLetterId = coverLetterId;
+    public Comment(UserInfo userInfo, CoverLetter coverLetter, String sentenceEvaluation, String concretenessLogic,
+                   String sincerity, String activity, String content, IsAdopted isAdopted, State state,
+                   List<CommentDeclaration> commentDeclarations, List<Appreciate> appreciates) {
+        this.userInfo = userInfo;
+        this.coverLetter = coverLetter;
         this.sentenceEvaluation = sentenceEvaluation;
         this.concretenessLogic = concretenessLogic;
         this.sincerity = sincerity;
@@ -98,5 +123,7 @@ public class Comment extends BaseEntity {
         this.content = content;
         this.isAdopted = isAdopted;
         this.state = state;
+        this.commentDeclarations = commentDeclarations;
+        this.appreciates = appreciates;
     }
 }

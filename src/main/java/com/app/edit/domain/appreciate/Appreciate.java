@@ -1,6 +1,8 @@
 package com.app.edit.domain.appreciate;
 
 import com.app.edit.config.BaseEntity;
+import com.app.edit.domain.comment.Comment;
+import com.app.edit.domain.user.UserInfo;
 import com.app.edit.enums.State;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +15,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "APPRECIATE")
+@Table(name = "appreciate")
 public class Appreciate extends BaseEntity {
 
     /*
@@ -22,6 +24,16 @@ public class Appreciate extends BaseEntity {
      **/
     @EmbeddedId
     private AppreciateId appreciateId;
+
+    @MapsId(value = "commentId")
+    @ManyToOne
+    @JoinColumn(name = "commentId", nullable = false)
+    private Comment comment;
+
+    @MapsId(value = "userInfoId")
+    @ManyToOne
+    @JoinColumn(name = "userInfoId", nullable = false)
+    private UserInfo userInfo;
 
     /*
      * 감사 여부
@@ -32,8 +44,10 @@ public class Appreciate extends BaseEntity {
     private State state;
 
     @Builder
-    public Appreciate(AppreciateId appreciateId, State state) {
+    public Appreciate(AppreciateId appreciateId, Comment comment, UserInfo userInfo, State state) {
         this.appreciateId = appreciateId;
+        this.comment = comment;
+        this.userInfo = userInfo;
         this.state = state;
     }
 }

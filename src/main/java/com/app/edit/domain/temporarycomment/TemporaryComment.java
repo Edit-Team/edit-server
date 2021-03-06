@@ -1,6 +1,8 @@
 package com.app.edit.domain.temporarycomment;
 
 import com.app.edit.config.BaseEntity;
+import com.app.edit.domain.coverletter.CoverLetter;
+import com.app.edit.domain.user.UserInfo;
 import com.app.edit.enums.State;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +15,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "TEMPORARY_COMMENT")
+@Table(name = "temporary_comment")
 public class TemporaryComment extends BaseEntity {
 
     /*
@@ -27,14 +29,16 @@ public class TemporaryComment extends BaseEntity {
     /*
      * 코멘트를 임시 저장한 유저 ID
      **/
-    @Column(name = "userInfoId", nullable = false, updatable = false)
-    private Long userInfoId;
+    @ManyToOne
+    @JoinColumn(name = "userInfoId", nullable = false, updatable = false)
+    private UserInfo userInfo;
 
     /*
      * 임시 저장된 코멘트를 달려고 했던 자소서 ID
      **/
-    @Column(name = "coverLetterId", nullable = false, updatable = false)
-    private Long coverLetterId;
+    @ManyToOne
+    @JoinColumn(name = "coverLetterId", nullable = false, updatable = false)
+    private CoverLetter coverLetter;
 
     /*
      * 문장에 대한 전체 평가
@@ -79,9 +83,10 @@ public class TemporaryComment extends BaseEntity {
     private State state;
 
     @Builder
-    public TemporaryComment(Long userInfoId, Long coverLetterId, String sentenceEvaluation, String concretenessLogic, String sincerity, String activity, String content, State state) {
-        this.userInfoId = userInfoId;
-        this.coverLetterId = coverLetterId;
+    public TemporaryComment(UserInfo userInfo, CoverLetter coverLetter, String sentenceEvaluation,
+                            String concretenessLogic, String sincerity, String activity, String content, State state) {
+        this.userInfo = userInfo;
+        this.coverLetter = coverLetter;
         this.sentenceEvaluation = sentenceEvaluation;
         this.concretenessLogic = concretenessLogic;
         this.sincerity = sincerity;

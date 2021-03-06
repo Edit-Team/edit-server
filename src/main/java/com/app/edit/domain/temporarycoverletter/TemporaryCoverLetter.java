@@ -1,6 +1,8 @@
 package com.app.edit.domain.temporarycoverletter;
 
 import com.app.edit.config.BaseEntity;
+import com.app.edit.domain.coverlettercategory.CoverLetterCategory;
+import com.app.edit.domain.user.UserInfo;
 import com.app.edit.enums.CoverLetterType;
 import com.app.edit.enums.State;
 import lombok.Builder;
@@ -15,7 +17,7 @@ import javax.persistence.*;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "TEMPORARY_COVER_LETTER")
+@Table(name = "temporary_cover_letter")
 public class TemporaryCoverLetter extends BaseEntity {
 
     /*
@@ -27,16 +29,11 @@ public class TemporaryCoverLetter extends BaseEntity {
     private Long id;
 
     /*
-     * 자소서 카테고리 ID
-     **/
-    @Column(name = "categoryId", nullable = false, updatable = false)
-    private Long categoryId;
-
-    /*
      * 임시 자소서 작성 유저 ID
      **/
-    @Column(name = "userInfoId", nullable = false, updatable = false)
-    private Long userInfoId;
+    @ManyToOne
+    @JoinColumn(name = "userInfoId", nullable = false, updatable = false)
+    private UserInfo userInfo;
 
     /*
      * 임시 자소서 내용
@@ -60,12 +57,20 @@ public class TemporaryCoverLetter extends BaseEntity {
     @Column(name = "state", nullable = false, columnDefinition = "varchar(10) default 'ACTIVE'")
     private State state;
 
+    /*
+     * 자소서 종류(카테고리) ID
+     **/
+    @ManyToOne
+    @JoinColumn(name = "coverLetterCategoryId", nullable = false)
+    private CoverLetterCategory coverLetterCategory;
+
     @Builder
-    public TemporaryCoverLetter(Long categoryId, Long userInfoId, String content, CoverLetterType type, State state) {
-        this.categoryId = categoryId;
-        this.userInfoId = userInfoId;
+    public TemporaryCoverLetter(UserInfo userInfo, String content, CoverLetterType type, State state,
+                                CoverLetterCategory coverLetterCategory) {
+        this.userInfo = userInfo;
         this.content = content;
         this.type = type;
         this.state = state;
+        this.coverLetterCategory = coverLetterCategory;
     }
 }

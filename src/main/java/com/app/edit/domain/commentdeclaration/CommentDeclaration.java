@@ -1,7 +1,10 @@
 package com.app.edit.domain.commentdeclaration;
 
 import com.app.edit.config.BaseEntity;
-import com.app.edit.enums.FlagYN;
+import com.app.edit.domain.comment.Comment;
+import com.app.edit.domain.user.UserInfo;
+import com.app.edit.enums.IsAdopted;
+import com.app.edit.enums.IsProcessing;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +16,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "COMMENT_DECLARATION")
+@Table(name = "comment_declaration")
 public class CommentDeclaration extends BaseEntity {
 
     /*
@@ -27,14 +30,16 @@ public class CommentDeclaration extends BaseEntity {
     /*
      * 신고당한 코멘트 ID
      **/
-    @Column(name = "commentId", nullable = false, updatable = false)
-    private Long commentId;
+    @ManyToOne
+    @JoinColumn(name = "commentId", nullable = false, updatable = false)
+    private Comment comment;
 
     /*
      * 신고한 유저 ID
      **/
-    @Column(name = "userInfoId", nullable = false, updatable = false)
-    private Long userInfoId;
+    @ManyToOne
+    @JoinColumn(name = "userInfoId", nullable = false, updatable = false)
+    private UserInfo userInfo;
 
     /*
      * 신고 처리 여부
@@ -42,12 +47,12 @@ public class CommentDeclaration extends BaseEntity {
      **/
     @Enumerated(EnumType.STRING)
     @Column(name = "isProcessing", nullable = false, columnDefinition = "varchar(3) default 'NO'")
-    private FlagYN isProcessing;
+    private IsProcessing isProcessing;
 
     @Builder
-    public CommentDeclaration(Long commentId, Long userInfoId, FlagYN isProcessing) {
-        this.commentId = commentId;
-        this.userInfoId = userInfoId;
+    public CommentDeclaration(Comment comment, UserInfo userInfo, IsProcessing isProcessing) {
+        this.comment = comment;
+        this.userInfo = userInfo;
         this.isProcessing = isProcessing;
     }
 }

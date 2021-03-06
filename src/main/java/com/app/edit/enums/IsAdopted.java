@@ -5,6 +5,6 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public enum FlagYN {
+public enum IsAdopted {
     YES, NO
 }
