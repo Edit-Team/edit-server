@@ -3,6 +3,7 @@ package com.app.edit.domain.user;
 import com.app.edit.config.BaseEntity;
 import com.app.edit.domain.appreciate.Appreciate;
 import com.app.edit.domain.comment.Comment;
+import com.app.edit.domain.commentdeclaration.CommentDeclaration;
 import com.app.edit.domain.coverletter.CoverLetter;
 import com.app.edit.domain.coverletterdeclaration.CoverLetterDeclaration;
 import com.app.edit.domain.mentor.MentorInfo;
@@ -130,6 +131,9 @@ public class UserInfo extends BaseEntity{
     @OneToMany(mappedBy = "userInfo", cascade = CascadeType.ALL)
     private List<CoverLetterDeclaration> coverLetterDeclarations;
 
+    @OneToMany(mappedBy = "userInfo", cascade = CascadeType.ALL)
+    private List<CommentDeclaration> commentDeclarations;
+
     public void addCoverLetter(CoverLetter coverLetter) {
         this.coverLetters.add(coverLetter);
         coverLetter.setUserInfo(this);
@@ -163,5 +167,10 @@ public class UserInfo extends BaseEntity{
     public void addCoverLetterDeclaration(CoverLetterDeclaration coverLetterDeclaration) {
         this.coverLetterDeclarations.add(coverLetterDeclaration);
         coverLetterDeclaration.setUserInfo(this);
+    }
+
+    public void addCommentDeclaration(CommentDeclaration commentDeclaration) {
+        this.commentDeclarations.add(commentDeclaration);
+        commentDeclaration.setUserInfo(this);
     }
 }

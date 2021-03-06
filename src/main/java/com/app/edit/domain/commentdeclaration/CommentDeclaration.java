@@ -2,6 +2,7 @@ package com.app.edit.domain.commentdeclaration;
 
 import com.app.edit.config.BaseEntity;
 import com.app.edit.domain.comment.Comment;
+import com.app.edit.domain.user.UserInfo;
 import com.app.edit.enums.IsAdopted;
 import com.app.edit.enums.IsProcessing;
 import lombok.Builder;
@@ -36,8 +37,9 @@ public class CommentDeclaration extends BaseEntity {
     /*
      * 신고한 유저 ID
      **/
-    @Column(name = "userInfoId", nullable = false, updatable = false)
-    private Long userInfoId;
+    @ManyToOne
+    @JoinColumn(name = "userInfoId", nullable = false, updatable = false)
+    private UserInfo userInfo;
 
     /*
      * 신고 처리 여부
@@ -48,9 +50,9 @@ public class CommentDeclaration extends BaseEntity {
     private IsProcessing isProcessing;
 
     @Builder
-    public CommentDeclaration(Comment comment, Long userInfoId, IsProcessing isProcessing) {
+    public CommentDeclaration(Comment comment, UserInfo userInfo, IsProcessing isProcessing) {
         this.comment = comment;
-        this.userInfoId = userInfoId;
+        this.userInfo = userInfo;
         this.isProcessing = isProcessing;
     }
 }
