@@ -23,6 +23,8 @@ repositories {
 }
 
 dependencies {
+    implementation 'junit:junit:4.12'
+
     // Spring Boot Starter
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
@@ -40,6 +42,13 @@ dependencies {
     // Security, Authentication
     implementation 'org.springframework.boot:spring-boot-starter-security'
     compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.7.0'
+
+    // email
+    compile("org.springframework.boot:spring-boot-starter-mail")
+
+    // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-ses
+    implementation group: 'com.amazonaws', name: 'aws-java-sdk-ses', version: '1.11.967'
+    compile 'software.amazon.awssdk:ses:2.10.25'
 
     // H2 Database
     runtimeOnly 'com.h2database:h2'

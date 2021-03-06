@@ -1,3 +1,5 @@
+package com.app.edit;
+
 import com.app.edit.domain.user.UserInfo;
 import com.app.edit.enums.UserRole;
 
