@@ -2,6 +2,7 @@ package com.app.edit.domain.sympathy;
 
 import com.app.edit.config.BaseEntity;
 import com.app.edit.domain.coverletter.CoverLetter;
+import com.app.edit.domain.user.UserInfo;
 import com.app.edit.enums.State;
 import lombok.Builder;
 import lombok.Data;
@@ -29,6 +30,11 @@ public class Sympathy extends BaseEntity {
     @JoinColumn(name = "coverLetterId", nullable = false)
     private CoverLetter coverLetter;
 
+    @MapsId(value = "userInfoId")
+    @ManyToOne
+    @JoinColumn(name = "userInfoId", nullable = false)
+    private UserInfo userInfo;
+
     /*
      * 공감 여부
      * default - ACTIVE
@@ -38,9 +44,10 @@ public class Sympathy extends BaseEntity {
     private State state;
 
     @Builder
-    public Sympathy(SympathyId sympathyId, CoverLetter coverLetter, State state) {
+    public Sympathy(SympathyId sympathyId, CoverLetter coverLetter, UserInfo userInfo, State state) {
         this.sympathyId = sympathyId;
         this.coverLetter = coverLetter;
+        this.userInfo = userInfo;
         this.state = state;
     }
 }
