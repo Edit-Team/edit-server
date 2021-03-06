@@ -2,6 +2,7 @@ package com.app.edit.domain.coverletterdeclaration;
 
 import com.app.edit.config.BaseEntity;
 import com.app.edit.domain.coverletter.CoverLetter;
+import com.app.edit.domain.user.UserInfo;
 import com.app.edit.enums.IsProcessing;
 import lombok.Builder;
 import lombok.Data;
@@ -35,8 +36,9 @@ public class CoverLetterDeclaration extends BaseEntity {
     /*
      * 신고한 유저 ID
      **/
-    @Column(name = "userInfoId", nullable = false, updatable = false)
-    private Long userInfoId;
+    @ManyToOne
+    @JoinColumn(name = "userInfoId", nullable = false, updatable = false)
+    private UserInfo userInfo;
 
     /*
      * 신고 처리 여부
@@ -47,9 +49,9 @@ public class CoverLetterDeclaration extends BaseEntity {
     private IsProcessing isProcessing;
 
     @Builder
-    public CoverLetterDeclaration(CoverLetter coverLetter, Long userInfoId, IsProcessing isProcessing) {
+    public CoverLetterDeclaration(CoverLetter coverLetter, UserInfo userInfo, IsProcessing isProcessing) {
         this.coverLetter = coverLetter;
-        this.userInfoId = userInfoId;
+        this.userInfo = userInfo;
         this.isProcessing = isProcessing;
     }
 }

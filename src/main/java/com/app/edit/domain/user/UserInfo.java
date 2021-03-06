@@ -4,6 +4,7 @@ import com.app.edit.config.BaseEntity;
 import com.app.edit.domain.appreciate.Appreciate;
 import com.app.edit.domain.comment.Comment;
 import com.app.edit.domain.coverletter.CoverLetter;
+import com.app.edit.domain.coverletterdeclaration.CoverLetterDeclaration;
 import com.app.edit.domain.mentor.MentorInfo;
 import com.app.edit.domain.sympathy.Sympathy;
 import com.app.edit.domain.temporarycomment.TemporaryComment;
@@ -126,6 +127,9 @@ public class UserInfo extends BaseEntity{
     @OneToMany(mappedBy = "userInfo", cascade = CascadeType.ALL)
     private List<Appreciate> appreciates;
 
+    @OneToMany(mappedBy = "userInfo", cascade = CascadeType.ALL)
+    private List<CoverLetterDeclaration> coverLetterDeclarations;
+
     public void addCoverLetter(CoverLetter coverLetter) {
         this.coverLetters.add(coverLetter);
         coverLetter.setUserInfo(this);
@@ -156,4 +160,8 @@ public class UserInfo extends BaseEntity{
         appreciate.setUserInfo(this);
     }
 
+    public void addCoverLetterDeclaration(CoverLetterDeclaration coverLetterDeclaration) {
+        this.coverLetterDeclarations.add(coverLetterDeclaration);
+        coverLetterDeclaration.setUserInfo(this);
+    }
 }
