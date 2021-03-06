@@ -1,11 +1,10 @@
 package com.app.edit.domain.user;
 
 import com.app.edit.config.BaseEntity;
-import com.app.edit.domain.appreciate.Appreciate;
-import com.app.edit.domain.comment.Comment;
-import com.app.edit.domain.commentdeclaration.CommentDeclaration;
-import com.app.edit.domain.coverletter.CoverLetter;
-import com.app.edit.domain.coverletterdeclaration.CoverLetterDeclaration;
+import com.app.edit.domain.certificationRequest.CertificationRequest;
+import com.app.edit.domain.changerolecategory.ChangeRoleCategory;
+import com.app.edit.domain.changerolereqeust.ChangeRoleRequest;
+import com.app.edit.domain.job.Job;
 import com.app.edit.domain.mentor.MentorInfo;
 import com.app.edit.domain.sympathy.Sympathy;
 import com.app.edit.domain.temporarycomment.TemporaryComment;
@@ -13,6 +12,13 @@ import com.app.edit.domain.temporarycoverletter.TemporaryCoverLetter;
 import com.app.edit.enums.AuthenticationCheck;
 import com.app.edit.enums.State;
 import com.app.edit.enums.UserRole;
+import com.app.edit.domain.appreciate.Appreciate;
+import com.app.edit.domain.comment.Comment;
+import com.app.edit.domain.commentdeclaration.CommentDeclaration;
+import com.app.edit.domain.coverletter.CoverLetter;
+import com.app.edit.domain.coverletterdeclaration.CoverLetterDeclaration;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import lombok.experimental.Accessors;
 
@@ -110,6 +116,16 @@ public class UserInfo extends BaseEntity{
     @OneToOne(mappedBy = "userInfo",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private MentorInfo mentorInfo;
 
+    @ManyToOne
+    @JoinColumn(name = "jobId",nullable = false)
+    private Job job;
+
+    @OneToMany(mappedBy = "userInfo",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    private List<CertificationRequest> certificationRequestList;
+
+    @OneToMany(mappedBy = "userInfo",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    private List<ChangeRoleRequest> changeRoleRequestList;
+  
     @OneToMany(mappedBy = "userInfo", cascade = CascadeType.ALL)
     private List<CoverLetter> coverLetters;
 
@@ -173,4 +189,6 @@ public class UserInfo extends BaseEntity{
         this.commentDeclarations.add(commentDeclaration);
         commentDeclaration.setUserInfo(this);
     }
+
+
 }

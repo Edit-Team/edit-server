@@ -1,12 +1,16 @@
 package com.app.edit.domain.changerolereqeust;
 
 import com.app.edit.config.BaseEntity;
+import com.app.edit.domain.changerolecategory.ChangeRoleCategory;
+import com.app.edit.domain.user.UserInfo;
 import com.app.edit.enums.IsProcessing;
 import com.app.edit.enums.UserRole;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Accessors(chain = true)
 @Builder
@@ -44,4 +48,12 @@ public class ChangeRoleRequest extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "isProcessing",columnDefinition = "varchar(3) default 'NO'")
     private IsProcessing isProcessing;
+
+    @ManyToOne
+    @JoinColumn(name = "userInfoId",referencedColumnName = "id")
+    private UserInfo userInfo;
+
+    @ManyToOne
+    @JoinColumn(name = "roleCategoryId")
+    private ChangeRoleCategory changeRoleCategory;
 }
