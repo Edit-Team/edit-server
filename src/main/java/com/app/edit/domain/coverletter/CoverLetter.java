@@ -7,6 +7,7 @@ import com.app.edit.domain.coverletterdeclaration.CoverLetterDeclaration;
 import com.app.edit.domain.sympathy.Sympathy;
 import com.app.edit.domain.temporarycomment.TemporaryComment;
 import com.app.edit.domain.user.UserInfo;
+import com.app.edit.enums.CoverLetterType;
 import com.app.edit.enums.State;
 import lombok.Builder;
 import lombok.Data;
@@ -58,6 +59,14 @@ public class CoverLetter extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "coverLetterCategoryId", nullable = false)
     private CoverLetterCategory coverLetterCategory;
+
+    /*
+     * 자소서 타입
+     * 작성한(등록한) 자소서 - WRITING, 완성한 자소서 - COMPLETING
+     **/
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false, length = 15)
+    private CoverLetterType type;
 
     @OneToMany(mappedBy = "coverLetter", cascade = CascadeType.ALL)
     private List<Comment> comments;
