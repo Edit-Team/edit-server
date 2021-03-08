@@ -18,8 +18,6 @@ import static java.util.stream.Collectors.toList;
 @Transactional(readOnly = true)
 @Service
 public class CoverLetterProvider {
-    private final static LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
-    private final static LocalDateTime startOfTomorrow = startOfToday.plusDays(ONE);
 
     private final CoverLetterRepository coverLetterRepository;
 
@@ -32,6 +30,8 @@ public class CoverLetterProvider {
      * 오늘의 문장 조회
      **/
     public List<GetCoverLettersRes> retrieveTodayCoverLetters(Pageable pageable) {
+        LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
+        LocalDateTime startOfTomorrow = startOfToday.plusDays(ONE);
         return coverLetterRepository.findCoverLettersOnToday(pageable, startOfToday, startOfTomorrow).stream()
                 .map(CoverLetter::toGetCoverLetterInfoRes)
                 .collect(toList());
