@@ -9,6 +9,7 @@ import com.app.edit.domain.temporarycomment.TemporaryComment;
 import com.app.edit.domain.user.UserInfo;
 import com.app.edit.enums.CoverLetterType;
 import com.app.edit.enums.State;
+import com.app.edit.response.coverletter.GetCoverLettersRes;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -123,5 +124,19 @@ public class CoverLetter extends BaseEntity {
         this.temporaryComments = temporaryComments;
         this.coverLetterDeclarations = coverLetterDeclarations;
         this.sympathies = sympathies;
+    }
+
+    /*
+     * todo: 유저기능 및 직군 종류 데이터 결정되면 jobName, isSympathy 로직 수정할 것.
+     **/
+    public static GetCoverLettersRes toGetCoverLetterInfoRes(CoverLetter coverLetter) {
+        Long coverLetterId = coverLetter.getId();
+        String nickName = coverLetter.getUserInfo().getNickName();
+        String jobName = coverLetter.getUserInfo().getJob().getName();
+        String coverLetterCategoryName = coverLetter.getCoverLetterCategory().getName();
+        String coverLetterContent = coverLetter.getContent();
+        boolean isSympathy = true;
+        return new GetCoverLettersRes(coverLetterId, nickName, jobName,
+                coverLetterCategoryName, coverLetterContent, isSympathy);
     }
 }

@@ -2,7 +2,6 @@ package com.app.edit.provider;
 
 import com.app.edit.domain.coverletter.CoverLetter;
 import com.app.edit.domain.coverletter.CoverLetterRepository;
-import com.app.edit.response.coverletter.CoverLetterInfo;
 import com.app.edit.response.coverletter.GetCoverLettersRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,35 +24,23 @@ public class CoverLetterProvider {
         this.coverLetterRepository = coverLetterRepository;
     }
 
+
+    public List<GetCoverLettersRes> retrieveTodayCoverLetters(Pageable pageable) {
+        Page<CoverLetter> coverLetters = getCoverLettersWithPage(pageable);
+        return getCoverLetterInfos(coverLetters);
+    }
+
     /*
      * 자소서 목록 조회(기본)
-     * todo: 유저기능 및 직군 종류 데이터 결정되면 jobName, isSympathy 로직 수정할 것.
+     * Pageable -> 정렬 방식 지정
      **/
-    public GetCoverLettersRes retrieveCoverLetters(Pageable pageable) {
-        Page<CoverLetter> coverLetters = getCoverLetters(pageable);
-        List<CoverLetterInfo> coverLetterInfos = getCoverLetterInfos(coverLetters);
-        return new GetCoverLettersRes(coverLetterInfos, coverLetters.getPageable());
+    private Page<CoverLetter> getCoverLettersWithPage(Pageable pageable) {
+        return coverLetterRepository.findAll(pageable);
     }
 
-    private Page<CoverLetter> getCoverLetters(Pageable pageable) {
-        Page<CoverLetter> coverLetters = coverLetterRepository.findAll(pageable);
-        return coverLetters;
-    }
-
-    private List<CoverLetterInfo> getCoverLetterInfos(Page<CoverLetter> coverLetters) {
-        List<CoverLetterInfo> coverLetterInfos = coverLetters.getContent().stream()
-                .map(coverLetter -> {
-                    Long coverLetterId = coverLetter.getId();
-                    String nickName = coverLetter.getUserInfo().getNickName();
-                    String jobName = coverLetter.getUserInfo().getJob().getName();
-                    String coverLetterCategoryName = coverLetter.getCoverLetterCategory().getName();
-                    String coverLetterContent = coverLetter.getContent();
-                    boolean isSympathy = true;
-                    return new CoverLetterInfo(coverLetterId, nickName, jobName,
-                            coverLetterCategoryName, coverLetterContent, isSympathy);
-                })
+    private List<GetCoverLettersRes> getCoverLetterInfos(Page<CoverLetter> coverLetters) {
+        return coverLetters.getContent().stream()
+                .map(CoverLetter::toGetCoverLetterInfoRes)
                 .collect(toList());
-        return coverLetterInfos;
     }
-
 }
