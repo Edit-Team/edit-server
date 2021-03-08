@@ -19,4 +19,10 @@ public interface CoverLetterRepository extends JpaRepository<CoverLetter, Long> 
     @Query(value = "select cl from CoverLetter cl where cl.createdAt >= :startOfToday and cl.createdAt < :startOfTomorrow")
     Page<CoverLetter> findCoverLettersOnToday(Pageable pageable, @Param("startOfToday") LocalDateTime startOfToday,
                                               @Param("startOfTomorrow") LocalDateTime startOfTomorrow);
+
+    /*
+     * 코멘트를 기다리고 있어요 조회 쿼리
+     **/
+    @Query(value = "select cl from CoverLetter cl where size(cl.comments) = 0")
+    Page<CoverLetter> findCoverLettersHasNotComment(Pageable pageable);
 }
