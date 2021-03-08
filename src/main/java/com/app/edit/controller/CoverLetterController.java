@@ -34,9 +34,9 @@ public class CoverLetterController {
      * 먼저 등록된 순서대로 정렬
      **/
     @GetMapping("/today-cover-letters")
-    public BaseResponse<List<GetCoverLettersRes>> getTodayCoverLetters(@RequestParam Integer pageNumber) {
+    public BaseResponse<List<GetCoverLettersRes>> getTodayCoverLetters(@RequestParam Integer page) {
         PageRequest pageRequest = com.app.edit.config.PageRequest
-                .of(pageNumber - ONE, DEFAULT_PAGE_SIZE, Sort.by("createdAt"));
+                .of(page, DEFAULT_PAGE_SIZE, Sort.by("createdAt"));
         return new BaseResponse<>(BaseResponseStatus.SUCCESS, coverLetterProvider.retrieveTodayCoverLetters(pageRequest));
     }
 
@@ -45,9 +45,9 @@ public class CoverLetterController {
      * 코멘트가 없는 자소서 -> 먼저 등록된 순서대로 정렬
      **/
     @GetMapping("/waiting-for-comment-cover-letters")
-    public BaseResponse<List<GetCoverLettersRes>> getWaitingForCommentCoverLetters(@RequestParam Integer pageNumber) {
+    public BaseResponse<List<GetCoverLettersRes>> getWaitingForCommentCoverLetters(@RequestParam Integer page) {
         PageRequest pageRequest = com.app.edit.config.PageRequest
-                .of(pageNumber - ONE, DEFAULT_PAGE_SIZE, Sort.by("createdAt"));
+                .of(page, DEFAULT_PAGE_SIZE, Sort.by("createdAt"));
         return new BaseResponse<>(BaseResponseStatus.SUCCESS,
                 coverLetterProvider.retrieveWaitingForCommentCoverLetters(pageRequest));
     }

@@ -3,6 +3,7 @@ package com.app.edit.config;
 import org.springframework.data.domain.Sort;
 
 import static com.app.edit.config.Constant.ONE;
+import static com.app.edit.config.Constant.ZERO;
 
 public class PageRequest {
 
@@ -16,9 +17,9 @@ public class PageRequest {
     }
 
     private static int setPage(int page) {
-        if (page - ONE <= 0) {
-            page = 0;
+        if (page <= ONE) {
+            return ZERO;
         }
-        return page;
+        return page - ONE;
     }
 }
