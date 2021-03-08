@@ -4,18 +4,22 @@ import com.app.edit.domain.coverletter.CoverLetter;
 import com.app.edit.domain.coverletter.CoverLetterRepository;
 import com.app.edit.response.coverletter.GetCoverLettersRes;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.app.edit.config.Constant.ONE;
 import static java.util.stream.Collectors.toList;
 
 @Transactional(readOnly = true)
 @Service
 public class CoverLetterProvider {
+    private final static LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
+    private final static LocalDateTime startOfTomorrow = startOfToday.plusDays(ONE);
 
     private final CoverLetterRepository coverLetterRepository;
 
@@ -24,30 +28,20 @@ public class CoverLetterProvider {
         this.coverLetterRepository = coverLetterRepository;
     }
 
-
+    /*
+     * 오늘의 문장 조회
+     **/
     public List<GetCoverLettersRes> retrieveTodayCoverLetters(Pageable pageable) {
-        Page<CoverLetter> coverLetters = getCoverLettersWithPage(pageable);
-        return getCoverLetterInfos(coverLetters);
-    }
-
-    public List<GetCoverLettersRes> retrieveWaitingForCommentCoverLetters(Pageable pageable) {
-        Page<CoverLetter> coverLettersWithPage = getCoverLettersWithPage(pageable);
-        return coverLettersWithPage.getContent().stream()
-                .filter(coverLetter -> coverLetter.getComments().isEmpty())
+        return coverLetterRepository.findCoverLettersOnToday(pageable, startOfToday, startOfTomorrow).stream()
                 .map(CoverLetter::toGetCoverLetterInfoRes)
                 .collect(toList());
     }
 
     /*
-     * 자소서 목록 조회(기본)
-     * Pageable -> 정렬 방식 지정
+     * 코멘트를 기다리고 있어요 조회
      **/
-    private Page<CoverLetter> getCoverLettersWithPage(Pageable pageable) {
-        return coverLetterRepository.findAll(pageable);
-    }
-
-    private List<GetCoverLettersRes> getCoverLetterInfos(Page<CoverLetter> coverLetters) {
-        return coverLetters.getContent().stream()
+    public List<GetCoverLettersRes> retrieveWaitingForCommentCoverLetters(Pageable pageable) {
+        return coverLetterRepository.findCoverLettersHasNotComment(pageable).stream()
                 .map(CoverLetter::toGetCoverLetterInfoRes)
                 .collect(toList());
     }
