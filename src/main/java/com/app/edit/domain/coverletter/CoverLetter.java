@@ -8,6 +8,7 @@ import com.app.edit.domain.sympathy.Sympathy;
 import com.app.edit.domain.temporarycomment.TemporaryComment;
 import com.app.edit.domain.user.UserInfo;
 import com.app.edit.enums.CoverLetterType;
+import com.app.edit.enums.IsAdopted;
 import com.app.edit.enums.State;
 import com.app.edit.response.coverletter.GetCoverLettersRes;
 import lombok.Builder;
@@ -15,8 +16,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
+import org.joda.time.DateTime;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Accessors(chain = true)
@@ -138,5 +141,22 @@ public class CoverLetter extends BaseEntity {
         boolean isSympathy = true;
         return new GetCoverLettersRes(coverLetterId, nickName, jobName,
                 coverLetterCategoryName, coverLetterContent, isSympathy);
+    }
+
+    /*
+     * 채택된 코멘트 존재 여부 확인
+     **/
+    public static boolean hasAdoptedComment(CoverLetter coverLetter) {
+        return coverLetter.getComments().stream()
+                .anyMatch(comment -> comment.getIsAdopted().equals(IsAdopted.YES));
+    }
+
+    /*
+     * 자소서에 달린 코멘트가 채택된 시간 얻어오기
+     **/
+    public static LocalDateTime getAdoptedTime(CoverLetter coverLetter) {
+        return coverLetter.getComments().stream()
+                .filter(comment -> comment.getIsAdopted().equals(IsAdopted.YES))
+                .findFirst().get().getUpdatedAt();
     }
 }

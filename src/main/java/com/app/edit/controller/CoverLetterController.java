@@ -51,4 +51,16 @@ public class CoverLetterController {
         return new BaseResponse<>(BaseResponseStatus.SUCCESS,
                 coverLetterProvider.retrieveWaitingForCommentCoverLetters(pageRequest));
     }
+
+    /*
+     * 채택이 완료되었어요 조회 API
+     * 조회 시점으로부터 가장 가까운 시점에 채택된 순서대로 정렬
+     **/
+    @GetMapping("/adopted-cover-letters")
+    public BaseResponse<List<GetCoverLettersRes>> getAdoptedCoverLetters(@RequestParam Integer page) {
+        PageRequest pageRequest = com.app.edit.config.PageRequest
+                .of(page, DEFAULT_PAGE_SIZE);
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS,
+                coverLetterProvider.retrieveAdoptedCoverLetters(pageRequest));
+    }
 }

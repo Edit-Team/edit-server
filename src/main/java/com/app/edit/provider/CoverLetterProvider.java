@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.app.edit.config.Constant.ONE;
@@ -42,6 +43,17 @@ public class CoverLetterProvider {
      **/
     public List<GetCoverLettersRes> retrieveWaitingForCommentCoverLetters(Pageable pageable) {
         return coverLetterRepository.findCoverLettersHasNotComment(pageable).stream()
+                .map(CoverLetter::toGetCoverLetterInfoRes)
+                .collect(toList());
+    }
+
+    /*
+     * 채택이 완료되었어요 조회
+     **/
+    public List<GetCoverLettersRes> retrieveAdoptedCoverLetters(Pageable pageable) {
+        return coverLetterRepository.findAll(pageable).stream()
+                .filter(CoverLetter::hasAdoptedComment)
+                .sorted(Comparator.comparing(CoverLetter::getAdoptedTime).reversed())
                 .map(CoverLetter::toGetCoverLetterInfoRes)
                 .collect(toList());
     }
