@@ -13,12 +13,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Accessors(chain = true)
 @NoArgsConstructor
+@DynamicInsert
 @Data
 @Entity
 @Table(name = "cover_letter")
@@ -68,6 +70,12 @@ public class CoverLetter extends BaseEntity {
     @Column(name = "type", nullable = false, length = 15)
     private CoverLetterType type;
 
+    /*
+     * 완성한 자소서일 경우, 기존에 작성한 자소서 ID
+     **/
+    @Column(name = "originalCoverLetterId", updatable = false, columnDefinition = "bigint default 0")
+    private Long originalCoverLetterId;
+
     @OneToMany(mappedBy = "coverLetter", cascade = CascadeType.ALL)
     private List<Comment> comments;
 
@@ -102,12 +110,15 @@ public class CoverLetter extends BaseEntity {
 
     @Builder
     public CoverLetter(UserInfo userInfo, String content, State state, CoverLetterCategory coverLetterCategory,
-                       List<Comment> comments, List<TemporaryComment> temporaryComments,
-                       List<CoverLetterDeclaration> coverLetterDeclarations, List<Sympathy> sympathies) {
+                       CoverLetterType type, Long originalCoverLetterId, List<Comment> comments,
+                       List<TemporaryComment> temporaryComments, List<CoverLetterDeclaration> coverLetterDeclarations,
+                       List<Sympathy> sympathies) {
         this.userInfo = userInfo;
         this.content = content;
         this.state = state;
         this.coverLetterCategory = coverLetterCategory;
+        this.type = type;
+        this.originalCoverLetterId = originalCoverLetterId;
         this.comments = comments;
         this.temporaryComments = temporaryComments;
         this.coverLetterDeclarations = coverLetterDeclarations;
