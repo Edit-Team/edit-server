@@ -29,10 +29,12 @@ public class CoverLetterController {
 
     /*
      * 오늘의 문장 조회 API
+     * 먼저 등록된 순서대로 정렬
      **/
     @GetMapping("/today-cover-letters")
     public BaseResponse<GetCoverLettersRes> getTodayCoverLetters(@RequestParam Integer pageNumber) {
-        PageRequest pageRequest = PageRequest.of(pageNumber - ONE, DEFAULT_PAGE_SIZE, Sort.by("createdAt"));
+        PageRequest pageRequest = com.app.edit.config.PageRequest
+                .of(pageNumber - ONE, DEFAULT_PAGE_SIZE, Sort.by("createdAt"));
         return new BaseResponse<>(BaseResponseStatus.SUCCESS, coverLetterProvider.retrieveCoverLetters(pageRequest));
     }
 }
