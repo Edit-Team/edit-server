@@ -30,6 +30,14 @@ public class CoverLetterProvider {
         return getCoverLetterInfos(coverLetters);
     }
 
+    public List<GetCoverLettersRes> retrieveWaitingForCommentCoverLetters(Pageable pageable) {
+        Page<CoverLetter> coverLettersWithPage = getCoverLettersWithPage(pageable);
+        return coverLettersWithPage.getContent().stream()
+                .filter(coverLetter -> coverLetter.getComments().isEmpty())
+                .map(CoverLetter::toGetCoverLetterInfoRes)
+                .collect(toList());
+    }
+
     /*
      * 자소서 목록 조회(기본)
      * Pageable -> 정렬 방식 지정
