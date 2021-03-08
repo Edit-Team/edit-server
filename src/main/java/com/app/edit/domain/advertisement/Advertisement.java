@@ -40,6 +40,7 @@ public class Advertisement extends BaseEntity {
      * 광고 삭제 여부
      * default - ACTIVE
      **/
+    @Enumerated(EnumType.STRING)
     @Column(name = "state", nullable = false, columnDefinition = "varchar(10) default 'ACTIVE'")
     private State state;
 
