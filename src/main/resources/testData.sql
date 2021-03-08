@@ -81,3 +81,16 @@ insert into cover_letter
 values (12, current_timestamp, current_timestamp, concat('content', 12), 1, 'ACTIVE', 'WRITING', 1, 6);
 insert into cover_letter
 values (13, current_timestamp, current_timestamp, concat('content', 13), 1, 'ACTIVE', 'WRITING', 1, 1);
+
+insert into comment
+values (1, current_timestamp, current_timestamp, 'NONE', 'NONE', concat('comment', 1), 'YES', 'NONE', 'NONE', 'ACTIVE',
+        1, 1);
+insert into comment
+values (2, current_timestamp, current_timestamp, 'NONE', 'NONE', concat('comment', 1), 'YES', 'NONE', 'NONE', 'ACTIVE',
+        2, 1);
+insert into comment
+values (3, current_timestamp, current_timestamp, 'NONE', 'NONE', concat('comment', 1), 'YES', 'NONE', 'NONE', 'ACTIVE',
+        3, 1);
+insert into comment
+values (4, current_timestamp, current_timestamp, 'NONE', 'NONE', concat('comment', 1), 'YES', 'NONE', 'NONE', 'ACTIVE',
+        4, 1);
