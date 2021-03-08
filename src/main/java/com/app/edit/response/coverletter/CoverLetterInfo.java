@@ -1,0 +1,18 @@
+package com.app.edit.response.coverletter;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+@AllArgsConstructor
+@Getter
+@Setter
+public class CoverLetterInfo {
+
+    private Long coverLetterId;
+    private String nickName;
+    private String jobName;
+    private String coverLetterCategoryName;
+    private String coverLetterContent;
+    private boolean isSympathy;
+}
