@@ -135,12 +135,12 @@ public class CoverLetter extends BaseEntity {
     /*
      * todo: 유저기능 및 직군 종류 데이터 결정되면 jobName, isSympathy 로직 수정할 것.
      **/
-    public static GetCoverLettersRes toGetCoverLetterInfoRes(CoverLetter coverLetter) {
-        Long coverLetterId = coverLetter.getId();
-        String nickName = coverLetter.getUserInfo().getNickName();
-        String jobName = coverLetter.getUserInfo().getJob().getName();
-        String coverLetterCategoryName = coverLetter.getCoverLetterCategory().getName();
-        String coverLetterContent = coverLetter.getContent();
+    public GetCoverLettersRes toGetCoverLetterRes() {
+        Long coverLetterId = this.getId();
+        String nickName = this.getUserInfo().getNickName();
+        String jobName = this.getUserInfo().getJob().getName();
+        String coverLetterCategoryName = this.getCoverLetterCategory().getName();
+        String coverLetterContent = this.getContent();
         boolean isSympathy = DEFAULT_SYMPATHY;
         Long sympathiesCount = DEFAULT_SYMPATHIES_COUNT;
         return new GetCoverLettersRes(coverLetterId, nickName, jobName,
