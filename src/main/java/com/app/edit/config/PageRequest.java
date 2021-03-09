@@ -13,6 +13,7 @@ public class PageRequest {
     }
 
     public static org.springframework.data.domain.PageRequest of(int page, int size) {
+        page = setPage(page);
         return org.springframework.data.domain.PageRequest.of(page, size);
     }
 
