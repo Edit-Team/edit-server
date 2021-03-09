@@ -63,4 +63,16 @@ public class CoverLetterController {
         return new BaseResponse<>(BaseResponseStatus.SUCCESS,
                 coverLetterProvider.retrieveAdoptedCoverLetters(pageRequest));
     }
+
+    /*
+     * 많은 분들이 공감하고 있어요 조회 API
+     * 조회시점으로부터 3일 전에 등록된 자소서까지만 조회
+     * 공감 수가 많은 순서대로 정렬
+     **/
+    @GetMapping("/many-sympathies-cover-letters")
+    public BaseResponse<List<GetCoverLettersRes>> getManySympathiesCoverLetters(@RequestParam Integer page) {
+        PageRequest pageRequest = com.app.edit.config.PageRequest.of(page, DEFAULT_PAGE_SIZE);
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS,
+                coverLetterProvider.retrieveManySympathiesCoverLetters(pageRequest));
+    }
 }
