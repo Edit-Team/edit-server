@@ -15,4 +15,5 @@ public class GetCoverLettersRes {
     private String coverLetterCategoryName;
     private String coverLetterContent;
     private boolean isSympathy;
+    private Long sympathiesCount;
 }

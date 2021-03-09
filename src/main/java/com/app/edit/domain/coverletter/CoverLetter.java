@@ -22,6 +22,9 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.app.edit.config.Constant.DEFAULT_SYMPATHIES_COUNT;
+import static com.app.edit.config.Constant.DEFAULT_SYMPATHY;
+
 @Accessors(chain = true)
 @NoArgsConstructor
 @DynamicInsert
@@ -138,9 +141,10 @@ public class CoverLetter extends BaseEntity {
         String jobName = coverLetter.getUserInfo().getJob().getName();
         String coverLetterCategoryName = coverLetter.getCoverLetterCategory().getName();
         String coverLetterContent = coverLetter.getContent();
-        boolean isSympathy = true;
+        boolean isSympathy = DEFAULT_SYMPATHY;
+        Long sympathiesCount = DEFAULT_SYMPATHIES_COUNT;
         return new GetCoverLettersRes(coverLetterId, nickName, jobName,
-                coverLetterCategoryName, coverLetterContent, isSympathy);
+                coverLetterCategoryName, coverLetterContent, isSympathy, sympathiesCount);
     }
 
     /*
