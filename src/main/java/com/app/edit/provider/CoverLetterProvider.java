@@ -15,8 +15,7 @@ import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 
-import static com.app.edit.config.Constant.ONE;
-import static com.app.edit.config.Constant.CAN_STAY_DAY;
+import static com.app.edit.config.Constant.*;
 import static java.util.stream.Collectors.toList;
 
 @Transactional(readOnly = true)
@@ -24,10 +23,12 @@ import static java.util.stream.Collectors.toList;
 public class CoverLetterProvider {
 
     private final CoverLetterRepository coverLetterRepository;
+    private final SympathyProvider sympathyProvider;
 
     @Autowired
-    public CoverLetterProvider(CoverLetterRepository coverLetterRepository) {
+    public CoverLetterProvider(CoverLetterRepository coverLetterRepository, SympathyProvider sympathyProvider) {
         this.coverLetterRepository = coverLetterRepository;
+        this.sympathyProvider = sympathyProvider;
     }
 
     /*
@@ -37,7 +38,7 @@ public class CoverLetterProvider {
         LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
         LocalDateTime startOfTomorrow = startOfToday.plusDays(ONE);
         return coverLetterRepository.findCoverLettersOnToday(pageable, startOfToday, startOfTomorrow).stream()
-                .map(CoverLetter::toGetCoverLetterInfoRes)
+                .map(coverLetter -> convertToGetCoverLettersRes(coverLetter))
                 .collect(toList());
     }
 
@@ -46,7 +47,7 @@ public class CoverLetterProvider {
      **/
     public List<GetCoverLettersRes> retrieveWaitingForCommentCoverLetters(Pageable pageable) {
         return coverLetterRepository.findCoverLettersHasNotComment(pageable).stream()
-                .map(CoverLetter::toGetCoverLetterInfoRes)
+                .map(coverLetter -> convertToGetCoverLettersRes(coverLetter))
                 .collect(toList());
     }
 
@@ -56,7 +57,7 @@ public class CoverLetterProvider {
     public List<GetCoverLettersRes> retrieveAdoptedCoverLetters(Pageable pageable) {
         return coverLetterRepository.findCoverLettersHasAdoptedComment(pageable, IsAdopted.YES).stream()
                 .sorted(Comparator.comparing(CoverLetter::getAdoptedTime).reversed())
-                .map(CoverLetter::toGetCoverLetterInfoRes)
+                .map(coverLetter -> convertToGetCoverLettersRes(coverLetter))
                 .collect(toList());
     }
 
@@ -66,7 +67,17 @@ public class CoverLetterProvider {
     public List<GetCoverLettersRes> retrieveManySympathiesCoverLetters(Pageable pageable) {
         LocalDateTime beforeThreeDays = LocalDateTime.now().minusDays(CAN_STAY_DAY);
         return coverLetterRepository.findCoverLettersHasManySympathies(pageable, beforeThreeDays, State.ACTIVE.name()).stream()
-                .map(CoverLetter::toGetCoverLetterInfoRes)
+                .map(coverLetter -> convertToGetCoverLettersRes(coverLetter))
                 .collect(toList());
+    }
+
+    /*
+     * 자소서 -> 자소서 조회 응답 객체로 변환
+     **/
+    private GetCoverLettersRes convertToGetCoverLettersRes(CoverLetter coverLetter) {
+        GetCoverLettersRes getCoverLettersRes = coverLetter.toGetCoverLetterRes();
+        Long sympathiesCount = sympathyProvider.getSympathiesCount(coverLetter);
+        getCoverLettersRes.setSympathiesCount(sympathiesCount);
+        return getCoverLettersRes;
     }
 }
