@@ -1,6 +1,6 @@
 package com.app.edit.controller;
 
-import com.app.edit.domain.commentdeclaration.CommentDeclarationRepository;
+import com.app.edit.service.CommentDeclarationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class CommentDeclarationController {
 
-    private final CommentDeclarationRepository commentDeclarationRepository;
+    private final CommentDeclarationService commentDeclarationService;
 
     @Autowired
-    public CommentDeclarationController(CommentDeclarationRepository commentDeclarationRepository) {
-        this.commentDeclarationRepository = commentDeclarationRepository;
+    public CommentDeclarationController(CommentDeclarationService commentDeclarationService) {
+        this.commentDeclarationService = commentDeclarationService;
     }
 }
