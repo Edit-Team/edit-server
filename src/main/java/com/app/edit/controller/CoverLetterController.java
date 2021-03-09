@@ -4,6 +4,7 @@ import com.app.edit.config.BaseResponse;
 import com.app.edit.config.BaseResponseStatus;
 import com.app.edit.provider.CoverLetterProvider;
 import com.app.edit.response.coverletter.GetCoverLettersRes;
+import com.app.edit.response.coverletter.GetMainCoverLettersRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 import static com.app.edit.config.Constant.DEFAULT_PAGE_SIZE;
-import static com.app.edit.config.Constant.ONE;
 
 
 @RequestMapping("/api")
@@ -27,6 +27,14 @@ public class CoverLetterController {
     @Autowired
     public CoverLetterController(CoverLetterProvider coverLetterProvider) {
         this.coverLetterProvider = coverLetterProvider;
+    }
+
+    /*
+     * 메인 화면 조회 API
+     **/
+    @GetMapping("/main")
+    public BaseResponse<GetMainCoverLettersRes> getMainCoverLetters() {
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS, coverLetterProvider.retrieveMainCoverLetters());
     }
 
     /*
