@@ -124,6 +124,30 @@ values (11, current_timestamp, current_timestamp, 'NONE', 'NONE', concat('commen
 insert into comment
 values (12, current_timestamp, current_timestamp, 'NONE', 'NONE', concat('comment', 1), 'YES', 'NONE', 'NONE', 'ACTIVE',
         12, 1);
+insert into comment
+values (13, current_timestamp, current_timestamp, 'NONE', 'NONE', concat('comment', 1), 'YES', 'NONE', 'NONE', 'ACTIVE',
+        1, 5);
+insert into comment
+values (14, current_timestamp, current_timestamp, 'NONE', 'NONE', concat('comment', 1), 'YES', 'NONE', 'NONE', 'ACTIVE',
+        1, 6);
+insert into comment
+values (15, current_timestamp, current_timestamp, 'NONE', 'NONE', concat('comment', 1), 'YES', 'NONE', 'NONE', 'ACTIVE',
+        1, 1);
+insert into comment
+values (16, current_timestamp, current_timestamp, 'NONE', 'NONE', concat('comment', 1), 'YES', 'NONE', 'NONE', 'ACTIVE',
+        1, 5);
+insert into comment
+values (17, current_timestamp, current_timestamp, 'NONE', 'NONE', concat('comment', 1), 'YES', 'NONE', 'NONE', 'ACTIVE',
+        1, 6);
+insert into comment
+values (18, current_timestamp, current_timestamp, 'NONE', 'NONE', concat('comment', 1), 'YES', 'NONE', 'NONE', 'ACTIVE',
+        1, 1);
+insert into comment
+values (19, current_timestamp, current_timestamp, 'NONE', 'NONE', concat('comment', 1), 'YES', 'NONE', 'NONE', 'ACTIVE',
+        1, 5);
+insert into comment
+values (20, current_timestamp, current_timestamp, 'NONE', 'NONE', concat('comment', 1), 'YES', 'NONE', 'NONE', 'ACTIVE',
+        1, 6);
 
 insert into sympathy values (1, 1, current_timestamp, current_timestamp, 'ACTIVE');
 insert into sympathy values (1, 2, current_timestamp, current_timestamp, 'ACTIVE');
