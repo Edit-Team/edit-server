@@ -1,5 +1,7 @@
 package com.app.edit.provider;
 
+import com.app.edit.config.BaseException;
+import com.app.edit.config.BaseResponseStatus;
 import com.app.edit.config.PageRequest;
 import com.app.edit.domain.coverletter.CoverLetter;
 import com.app.edit.domain.coverletter.CoverLetterRepository;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static com.app.edit.config.Constant.*;
 import static java.util.stream.Collectors.toList;
@@ -90,5 +93,13 @@ public class CoverLetterProvider {
                     return getCoverLettersRes;
                 })
                 .collect(toList());
+    }
+
+    public CoverLetter getCoverLetterById(Long coverLetterId) throws BaseException {
+        Optional<CoverLetter> coverLetter = coverLetterRepository.findById(coverLetterId);
+        if (coverLetter.isEmpty()) {
+            throw new BaseException(BaseResponseStatus.NOT_FOUND_COVER_LETTER);
+        }
+        return coverLetter.get();
     }
 }

@@ -45,6 +45,9 @@ public enum BaseResponseStatus {
     FAILED_TO_DELETE_USER(false, 3015, "회원 탈퇴에 실패하였습니다."),
     FAILED_TO_PATCH_USER(false, 3016, "개인정보 수정에 실패하였습니다."),
 
+    // colt
+    NOT_FOUND_COVER_LETTER(false, 3100, "존재하지 않는 자소서입니다."),
+
     // 4000 : Database 오류
     SERVER_ERROR(false, 4000, "서버와의 통신에 실패하였습니다."),
     DATABASE_ERROR(false, 4001, "데이터베이스 연결에 실패하였습니다.");
