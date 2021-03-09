@@ -17,4 +17,9 @@ public class EditRestControllerAdvice {
     public BaseResponse argumentTypeMismatchHandler() {
         return new BaseResponse(BaseResponseStatus.REQUEST_PARAMETER_MISMATCH);
     }
+
+    @ExceptionHandler(value = BaseException.class)
+    public BaseResponse baseHandler(BaseException e) {
+        return new BaseResponse(e.getStatus());
+    }
 }
