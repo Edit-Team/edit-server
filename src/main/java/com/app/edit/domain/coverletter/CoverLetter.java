@@ -16,7 +16,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
-import org.joda.time.DateTime;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -133,6 +132,7 @@ public class CoverLetter extends BaseEntity {
     }
 
     /*
+     * 자소서 -> 자소서 조회 응답 객체로 변환
      * todo: 유저기능 및 직군 종류 데이터 결정되면 jobName, isSympathy 로직 수정할 것.
      **/
     public GetCoverLettersRes toGetCoverLetterRes() {
@@ -145,6 +145,14 @@ public class CoverLetter extends BaseEntity {
         Long sympathiesCount = DEFAULT_SYMPATHIES_COUNT;
         return new GetCoverLettersRes(coverLetterId, nickName, jobName,
                 coverLetterCategoryName, coverLetterContent, isSympathy, sympathiesCount);
+    }
+
+    /*
+     * 응답에 공감 수 추가
+     **/
+    public static GetCoverLettersRes setSympathiesCountInCoverLettersRes(GetCoverLettersRes getCoverLettersRes, Long sympathiesCount) {
+        getCoverLettersRes.setSympathiesCount(sympathiesCount);
+        return getCoverLettersRes;
     }
 
     /*

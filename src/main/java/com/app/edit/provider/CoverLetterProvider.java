@@ -6,16 +6,17 @@ import com.app.edit.enums.IsAdopted;
 import com.app.edit.enums.State;
 import com.app.edit.response.coverletter.GetCoverLettersRes;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
 
-import static com.app.edit.config.Constant.*;
+import static com.app.edit.config.Constant.CAN_STAY_DAY;
+import static com.app.edit.config.Constant.ONE;
 import static java.util.stream.Collectors.toList;
 
 @Transactional(readOnly = true)
@@ -37,28 +38,25 @@ public class CoverLetterProvider {
     public List<GetCoverLettersRes> retrieveTodayCoverLetters(Pageable pageable) {
         LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
         LocalDateTime startOfTomorrow = startOfToday.plusDays(ONE);
-        return coverLetterRepository.findCoverLettersOnToday(pageable, startOfToday, startOfTomorrow).stream()
-                .map(coverLetter -> convertToGetCoverLettersRes(coverLetter))
-                .collect(toList());
+        Page<CoverLetter> coverLettersOnToday = coverLetterRepository
+                .findCoverLettersOnToday(pageable, startOfToday, startOfTomorrow);
+        return getCoverLettersResponses(coverLettersOnToday);
     }
 
     /*
      * 코멘트를 기다리고 있어요 조회
      **/
     public List<GetCoverLettersRes> retrieveWaitingForCommentCoverLetters(Pageable pageable) {
-        return coverLetterRepository.findCoverLettersHasNotComment(pageable).stream()
-                .map(coverLetter -> convertToGetCoverLettersRes(coverLetter))
-                .collect(toList());
+        Page<CoverLetter> coverLettersHasNotComment = coverLetterRepository.findCoverLettersHasNotComment(pageable);
+        return getCoverLettersResponses(coverLettersHasNotComment);
     }
 
     /*
      * 채택이 완료되었어요 조회
      **/
     public List<GetCoverLettersRes> retrieveAdoptedCoverLetters(Pageable pageable) {
-        return coverLetterRepository.findCoverLettersHasAdoptedComment(pageable, IsAdopted.YES).stream()
-                .sorted(Comparator.comparing(CoverLetter::getAdoptedTime).reversed())
-                .map(coverLetter -> convertToGetCoverLettersRes(coverLetter))
-                .collect(toList());
+        Page<CoverLetter> coverLettersHasAdoptedComment = coverLetterRepository.findCoverLettersHasAdoptedComment(pageable, IsAdopted.YES);
+        return getCoverLettersResponses(coverLettersHasAdoptedComment);
     }
 
     /*
@@ -66,18 +64,18 @@ public class CoverLetterProvider {
      **/
     public List<GetCoverLettersRes> retrieveManySympathiesCoverLetters(Pageable pageable) {
         LocalDateTime beforeThreeDays = LocalDateTime.now().minusDays(CAN_STAY_DAY);
-        return coverLetterRepository.findCoverLettersHasManySympathies(pageable, beforeThreeDays, State.ACTIVE.name()).stream()
-                .map(coverLetter -> convertToGetCoverLettersRes(coverLetter))
-                .collect(toList());
+        Page<CoverLetter> coverLettersHasManySympathies = coverLetterRepository.findCoverLettersHasManySympathies(pageable, beforeThreeDays, State.ACTIVE.name());
+        return getCoverLettersResponses(coverLettersHasManySympathies);
     }
 
-    /*
-     * 자소서 -> 자소서 조회 응답 객체로 변환
-     **/
-    private GetCoverLettersRes convertToGetCoverLettersRes(CoverLetter coverLetter) {
-        GetCoverLettersRes getCoverLettersRes = coverLetter.toGetCoverLetterRes();
-        Long sympathiesCount = sympathyProvider.getSympathiesCount(coverLetter);
-        getCoverLettersRes.setSympathiesCount(sympathiesCount);
-        return getCoverLettersRes;
+    private List<GetCoverLettersRes> getCoverLettersResponses(Page<CoverLetter> coverLetterPage) {
+        return coverLetterPage.stream()
+                .map(coverLetter -> {
+                    GetCoverLettersRes getCoverLettersRes = coverLetter.toGetCoverLetterRes();
+                    Long sympathiesCount = sympathyProvider.getSympathiesCount(coverLetter);
+                    CoverLetter.setSympathiesCountInCoverLettersRes(getCoverLettersRes, sympathiesCount);
+                    return getCoverLettersRes;
+                })
+                .collect(toList());
     }
 }
