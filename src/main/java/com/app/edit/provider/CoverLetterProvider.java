@@ -1,10 +1,12 @@
 package com.app.edit.provider;
 
+import com.app.edit.config.PageRequest;
 import com.app.edit.domain.coverletter.CoverLetter;
 import com.app.edit.domain.coverletter.CoverLetterRepository;
 import com.app.edit.enums.IsAdopted;
 import com.app.edit.enums.State;
 import com.app.edit.response.coverletter.GetCoverLettersRes;
+import com.app.edit.response.coverletter.GetMainCoverLettersRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,8 +17,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.app.edit.config.Constant.CAN_STAY_DAY;
-import static com.app.edit.config.Constant.ONE;
+import static com.app.edit.config.Constant.*;
 import static java.util.stream.Collectors.toList;
 
 @Transactional(readOnly = true)
@@ -30,6 +31,18 @@ public class CoverLetterProvider {
     public CoverLetterProvider(CoverLetterRepository coverLetterRepository, SympathyProvider sympathyProvider) {
         this.coverLetterRepository = coverLetterRepository;
         this.sympathyProvider = sympathyProvider;
+    }
+
+    /*
+     * 메인 페이지 자소서 조회
+     **/
+    public GetMainCoverLettersRes retrieveMainCoverLetters() {
+        Pageable pageableForToday = PageRequest.of(ONE, MAIN_TODAY_COVER_LETTERS_COUNT);
+        Pageable pageableForAnother = PageRequest.of(ONE, MAIN_ANOTHER_COVER_LETTERS_COUNT);
+        return new GetMainCoverLettersRes(retrieveTodayCoverLetters(pageableForToday),
+                retrieveWaitingForCommentCoverLetters(pageableForAnother),
+                retrieveAdoptedCoverLetters(pageableForAnother),
+                retrieveManySympathiesCoverLetters(pageableForAnother));
     }
 
     /*
