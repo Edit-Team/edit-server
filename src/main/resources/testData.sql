@@ -124,3 +124,12 @@ values (11, current_timestamp, current_timestamp, 'NONE', 'NONE', concat('commen
 insert into comment
 values (12, current_timestamp, current_timestamp, 'NONE', 'NONE', concat('comment', 1), 'YES', 'NONE', 'NONE', 'ACTIVE',
         12, 1);
+
+insert into sympathy values (1, 1, current_timestamp, current_timestamp, 'ACTIVE');
+insert into sympathy values (1, 2, current_timestamp, current_timestamp, 'ACTIVE');
+insert into sympathy values (3, 3, current_timestamp, current_timestamp, 'ACTIVE');
+insert into sympathy values (3, 4, current_timestamp, current_timestamp, 'ACTIVE');
+insert into sympathy values (3, 5, current_timestamp, current_timestamp, 'INACTIVE');
+insert into sympathy values (6, 6, current_timestamp, current_timestamp, 'ACTIVE');
+insert into sympathy values (6, 1, current_timestamp, current_timestamp, 'ACTIVE');
+insert into sympathy values (6, 2, current_timestamp, current_timestamp, 'ACTIVE');
