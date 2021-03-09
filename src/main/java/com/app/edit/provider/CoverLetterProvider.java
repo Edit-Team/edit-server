@@ -2,6 +2,7 @@ package com.app.edit.provider;
 
 import com.app.edit.domain.coverletter.CoverLetter;
 import com.app.edit.domain.coverletter.CoverLetterRepository;
+import com.app.edit.enums.IsAdopted;
 import com.app.edit.response.coverletter.GetCoverLettersRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -51,8 +52,7 @@ public class CoverLetterProvider {
      * 채택이 완료되었어요 조회
      **/
     public List<GetCoverLettersRes> retrieveAdoptedCoverLetters(Pageable pageable) {
-        return coverLetterRepository.findAll(pageable).stream()
-                .filter(CoverLetter::hasAdoptedComment)
+        return coverLetterRepository.findCoverLettersHasAdoptedComment(pageable, IsAdopted.YES).stream()
                 .sorted(Comparator.comparing(CoverLetter::getAdoptedTime).reversed())
                 .map(CoverLetter::toGetCoverLetterInfoRes)
                 .collect(toList());
