@@ -29,14 +29,14 @@ public class CoverLetterDeclaration extends BaseEntity {
     /*
      * 신고당한 자소서 ID
      **/
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "coverLetterId", nullable = false, updatable = false)
     private CoverLetter coverLetter;
 
     /*
      * 신고한 유저 ID
      **/
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userInfoId", nullable = false, updatable = false)
     private UserInfo userInfo;
 

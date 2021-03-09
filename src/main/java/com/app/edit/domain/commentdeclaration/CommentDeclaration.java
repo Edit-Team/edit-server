@@ -30,14 +30,14 @@ public class CommentDeclaration extends BaseEntity {
     /*
      * 신고당한 코멘트 ID
      **/
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "commentId", nullable = false, updatable = false)
     private Comment comment;
 
     /*
      * 신고한 유저 ID
      **/
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userInfoId", nullable = false, updatable = false)
     private UserInfo userInfo;
 

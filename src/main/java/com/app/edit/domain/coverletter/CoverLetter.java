@@ -44,7 +44,7 @@ public class CoverLetter extends BaseEntity {
     /*
      * 자소서 작성한 유저 ID
      **/
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userInfoId", nullable = false, updatable = false)
     private UserInfo userInfo;
 
@@ -65,7 +65,7 @@ public class CoverLetter extends BaseEntity {
     /*
      * 자소서 종류(카테고리) ID
      **/
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "coverLetterCategoryId", nullable = false)
     private CoverLetterCategory coverLetterCategory;
 

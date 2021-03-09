@@ -33,14 +33,14 @@ public class Comment extends BaseEntity {
     /*
      * 코멘트 등록한 유저 ID
      **/
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userInfoId", nullable = false, updatable = false)
     private UserInfo userInfo;
 
     /*
      * 자소서 ID
      **/
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "coverLetterId", nullable = false, updatable = false)
     private CoverLetter coverLetter;
 
