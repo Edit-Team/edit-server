@@ -1,5 +1,6 @@
 package com.app.edit.domain.coverletter;
 
+import com.app.edit.enums.IsAdopted;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -24,4 +25,10 @@ public interface CoverLetterRepository extends JpaRepository<CoverLetter, Long> 
      **/
     @Query(value = "select cl from CoverLetter cl where size(cl.comments) = 0")
     Page<CoverLetter> findCoverLettersHasNotComment(Pageable pageable);
+
+    /*
+     * 채택이 완료되었어요 조회 쿼리
+     **/
+    @Query(value = "select cl from CoverLetter cl where exists(select c from Comment c where c.isAdopted = :isAdopted and c.coverLetter = cl)")
+    Page<CoverLetter> findCoverLettersHasAdoptedComment(Pageable pageable,@Param("isAdopted") IsAdopted isAdopted);
 }
