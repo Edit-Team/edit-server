@@ -102,4 +102,13 @@ public class CoverLetterProvider {
         }
         return coverLetter.get();
     }
+
+    /*
+     * 내가 등록한 자소서 목록 조회
+     **/
+    public List<GetCoverLettersRes> retrieveMyCoverLetters(Pageable pageable) {
+        Long userInfoId = 1L;
+        Page<CoverLetter> myCoverLetters = coverLetterRepository.findMyCoverLetters(pageable, userInfoId, State.ACTIVE);
+        return getCoverLettersResponses(myCoverLetters);
+    }
 }
