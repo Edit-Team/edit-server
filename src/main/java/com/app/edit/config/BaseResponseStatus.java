@@ -19,7 +19,7 @@ public enum BaseResponseStatus {
     SUCCESS_READ_SEARCH_USERS(true, 1017, "회원 검색 조회에 성공하였습니다."),
 
     // 2000 : Request 오류
-    REQUEST_ERROR(false, 2000, "입력값을 확인해주세요."),
+    REQUEST_ERROR(false, 2000, "요청 바디의 입력값을 확인해주세요."),
     EMPTY_USERID(false, 2001, "유저 아이디 값을 확인해주세요."),
     EMPTY_JWT(false, 2010, "JWT를 입력해주세요."),
     INVALID_JWT(false, 2011, "유효하지 않은 JWT입니다."),
