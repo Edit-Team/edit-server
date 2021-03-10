@@ -99,4 +99,15 @@ public class CoverLetterController {
         }
         return new BaseResponse<>(BaseResponseStatus.SUCCESS, coverLetterService.createWritingCoverLetter(request));
     }
+
+    /*
+     * 완성중인 자소서 등록 API
+     **/
+    @PostMapping("/completing-cover-letters")
+    public BaseResponse<Long> postCompletingCoverLetter(@RequestBody PostCompletingCoverLetterReq request) throws BaseException {
+        if (request.getCoverLetterContent().length() > COVER_LETTER_CONTENT_LIMIT_LENGTH) {
+            throw new BaseException(COVER_LETTER_CONTENT_LENGTH_CAN_NOT_BE_GREATER_THAN_LENGTH_LIMIT);
+        }
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS, coverLetterService.createCompletingCoverLetter(request));
+    }
 }
