@@ -44,4 +44,10 @@ public interface CoverLetterRepository extends JpaRepository<CoverLetter, Long> 
             "order by (select count(*) from sympathy s where s.cover_letter_id = cl.id and s.state = :state) desc ",
             nativeQuery = true)
     Page<CoverLetter> findCoverLettersHasManySympathies(Pageable pageable, @Param("beforeThreeDays") LocalDateTime beforeThreeDays, @Param("state") String state);
+
+    /*
+     * 내가 등록한 자소서 목록 조회 쿼리
+     **/
+    @Query(value = "select c from CoverLetter c where c.userInfo.id = :userInfoId and c.state = :state")
+    Page<CoverLetter> findMyCoverLetters(Pageable pageable, @Param("userInfoId") Long userInfoId, @Param("state") State state);
 }
