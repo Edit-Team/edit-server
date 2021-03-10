@@ -4,6 +4,7 @@ import com.app.edit.config.BaseException;
 import com.app.edit.domain.comment.Comment;
 import com.app.edit.domain.comment.CommentRepository;
 import com.app.edit.domain.coverletter.CoverLetter;
+import com.app.edit.enums.State;
 import com.app.edit.response.comment.GetCommentsRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -31,7 +32,7 @@ public class CommentProvider {
 
     public List<GetCommentsRes> retrieveCommentsByCoverLetterId(Pageable pageable, Long coverLetterId) throws BaseException {
         CoverLetter coverLetter = coverLetterProvider.getCoverLetterById(coverLetterId);
-        return commentRepository.findCommentsByCoverLetter(pageable, coverLetter).stream()
+        return commentRepository.findCommentsByCoverLetter(pageable, coverLetter, State.ACTIVE).stream()
                 .map(comment -> comment.toGetCommentsRes())
                 .collect(toList());
     }
