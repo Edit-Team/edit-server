@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestControllerAdvice
@@ -32,10 +34,9 @@ public class EditRestControllerAdvice {
      * @RequestBody @Valid 적용된 요청 객체 필드 검증
      **/
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    public BaseResponse<Map<String, String>> methodArgumentNotValidHandler(MethodArgumentNotValidException e) {
-        Map<String, String> errors = new HashMap<>();
-        e.getBindingResult().getAllErrors()
-                .forEach(objectError -> errors.put(((FieldError) objectError).getField(), objectError.getDefaultMessage()));
-        return new BaseResponse<>(BaseResponseStatus.REQUEST_ERROR, errors);
+    public BaseResponse<List<String>> methodArgumentNotValidHandler(MethodArgumentNotValidException e) {
+        List<String> errorMessages = new ArrayList<>();
+        e.getBindingResult().getAllErrors().forEach(objectError -> errorMessages.add(objectError.getDefaultMessage()));
+        return new BaseResponse<>(BaseResponseStatus.REQUEST_ERROR, errorMessages);
     }
 }
