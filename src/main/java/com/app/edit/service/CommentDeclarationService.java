@@ -8,7 +8,7 @@ import com.app.edit.domain.user.UserInfo;
 import com.app.edit.enums.IsProcessing;
 import com.app.edit.provider.CommentProvider;
 import com.app.edit.provider.UserInfoProvider;
-import com.app.edit.request.comment.PostDeclareCommentReq;
+import com.app.edit.request.comment.PostCommentDeclarationReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +28,7 @@ public class CommentDeclarationService {
         this.commentProvider = commentProvider;
     }
 
-    public Long createCommentDeclaration(PostDeclareCommentReq request) throws BaseException {
+    public Long createCommentDeclaration(PostCommentDeclarationReq request) throws BaseException {
         Long userId = 1L;
         Long commentId = request.getCommentId();
         UserInfo userInfo = userInfoProvider.getUserInfoById(userId);

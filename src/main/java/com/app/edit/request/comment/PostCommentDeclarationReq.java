@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class PostDeclareCommentReq {
+public class PostCommentDeclarationReq {
 
     private Long commentId;
 }
