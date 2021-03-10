@@ -5,6 +5,7 @@ import com.app.edit.config.BaseResponseStatus;
 import com.app.edit.provider.CoverLetterProvider;
 import com.app.edit.response.coverletter.GetCoverLettersRes;
 import com.app.edit.response.coverletter.GetMainCoverLettersRes;
+import com.app.edit.service.CoverLetterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -23,10 +24,12 @@ import static com.app.edit.config.Constant.DEFAULT_PAGE_SIZE;
 public class CoverLetterController {
 
     private final CoverLetterProvider coverLetterProvider;
+    private final CoverLetterService coverLetterService;
 
     @Autowired
-    public CoverLetterController(CoverLetterProvider coverLetterProvider) {
+    public CoverLetterController(CoverLetterProvider coverLetterProvider, CoverLetterService coverLetterService) {
         this.coverLetterProvider = coverLetterProvider;
+        this.coverLetterService = coverLetterService;
     }
 
     /*
