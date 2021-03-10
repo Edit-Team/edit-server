@@ -5,11 +5,13 @@ import com.app.edit.domain.user.UserInfo;
 import com.app.edit.domain.user.UserInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 import static com.app.edit.config.BaseResponseStatus.NOT_FOUND_USER_INFO;
 
+@Transactional(readOnly = true)
 @Service
 public class UserInfoProvider {
 
