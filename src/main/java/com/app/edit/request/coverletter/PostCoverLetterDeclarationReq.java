@@ -11,6 +11,6 @@ import javax.validation.constraints.NotNull;
 @Setter
 public class PostCoverLetterDeclarationReq {
 
-    @NotNull
+    @NotNull(message = "자소서 ID를 입력해주세요.")
     private Long coverLetterId;
 }

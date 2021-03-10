@@ -14,9 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
-import static com.app.edit.config.BaseResponseStatus.COVER_LETTER_CONTENT_LENGTH_CAN_NOT_BE_GREATER_THAN_LENGTH_LIMIT;
-import static com.app.edit.config.Constant.COVER_LETTER_CONTENT_LIMIT_LENGTH;
-
 @RequestMapping("/api")
 @RestController
 public class TemporaryCoverLetterController {
@@ -33,9 +30,6 @@ public class TemporaryCoverLetterController {
      **/
     @PostMapping("/writing-temporary-cover-letters")
     public BaseResponse<Long> postWritingTemporaryCoverLetter(@RequestBody @Valid PostWritingTemporaryCoverLetterReq request) throws BaseException {
-        if (request.getCoverLetterContent().length() > COVER_LETTER_CONTENT_LIMIT_LENGTH) {
-            throw new BaseException(COVER_LETTER_CONTENT_LENGTH_CAN_NOT_BE_GREATER_THAN_LENGTH_LIMIT);
-        }
         return new BaseResponse<>(BaseResponseStatus.SUCCESS,
                 temporaryCoverLetterService.createWritingTemporaryCoverLetter(request));
     }
@@ -45,9 +39,6 @@ public class TemporaryCoverLetterController {
      **/
     @PostMapping("/completing-temporary-cover-letters")
     public BaseResponse<Long> postCompletingTemporaryCoverLetter(@RequestBody @Valid PostCompletingTemporaryCoverLetterReq request) throws BaseException {
-        if (request.getCoverLetterContent().length() > COVER_LETTER_CONTENT_LIMIT_LENGTH) {
-            throw new BaseException(COVER_LETTER_CONTENT_LENGTH_CAN_NOT_BE_GREATER_THAN_LENGTH_LIMIT);
-        }
         return new BaseResponse<>(BaseResponseStatus.SUCCESS,
                 temporaryCoverLetterService.createCompletingTemporaryCoverLetter(request));
     }

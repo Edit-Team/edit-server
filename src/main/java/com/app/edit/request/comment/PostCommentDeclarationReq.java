@@ -11,6 +11,6 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 public class PostCommentDeclarationReq {
 
-    @NotNull
+    @NotNull(message = "코멘트 ID를 입력해주세요.")
     private Long commentId;
 }
