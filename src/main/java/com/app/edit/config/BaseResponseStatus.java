@@ -49,6 +49,7 @@ public enum BaseResponseStatus {
     NOT_FOUND_COVER_LETTER(false, 3100, "존재하지 않는 자소서입니다."),
     NOT_FOUND_USER_INFO(false, 3200, "존재하지 않는 유저입니다."),
     NOT_FOUND_COMMENT(false, 3300, "존재하지 않는 코멘트입니다."),
+    NOT_FOUND_COVER_LETTER_CATEGORY(false, 3400, "존재하지 않는 자소서 종류입니다."),
 
     // 4000 : Database 오류
     SERVER_ERROR(false, 4000, "서버와의 통신에 실패하였습니다."),
