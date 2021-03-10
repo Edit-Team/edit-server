@@ -103,4 +103,14 @@ public class CoverLetterController {
     public BaseResponse<Long> postCompletingCoverLetter(@RequestBody @Valid PostCompletingCoverLetterReq request) throws BaseException {
         return new BaseResponse<>(BaseResponseStatus.SUCCESS, coverLetterService.createCompletingCoverLetter(request));
     }
+
+    /*
+     * 내가 등록한 자소서 조회 API
+     * 먼저 등록한 순서대로 정렬
+     **/
+    @GetMapping("/my-cover-letters")
+    public BaseResponse<List<GetCoverLettersRes>> getMyCoverLetters(@RequestParam Integer page) {
+        PageRequest pageRequest = com.app.edit.config.PageRequest.of(page, DEFAULT_PAGE_SIZE, Sort.by("createdAt"));
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS, coverLetterProvider.retrieveMyCoverLetters(pageRequest));
+    }
 }
