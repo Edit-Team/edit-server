@@ -7,7 +7,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class PostCoverLetterReq {
+public class PostWritingCoverLetterReq {
 
     private Long coverLetterCategoryId;
     private String coverLetterContent;

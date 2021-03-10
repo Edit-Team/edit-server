@@ -9,7 +9,7 @@ import com.app.edit.enums.CoverLetterType;
 import com.app.edit.enums.State;
 import com.app.edit.provider.CoverLetterCategoryProvider;
 import com.app.edit.provider.UserInfoProvider;
-import com.app.edit.request.coverletter.PostCoverLetterReq;
+import com.app.edit.request.coverletter.PostWritingCoverLetterReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +31,7 @@ public class CoverLetterService {
         this.coverLetterCategoryProvider = coverLetterCategoryProvider;
     }
 
-    public Long createWritingCoverLetter(PostCoverLetterReq request) throws BaseException {
+    public Long createWritingCoverLetter(PostWritingCoverLetterReq request) throws BaseException {
         Long userId = 1L;
         Long coverLetterCategoryId = request.getCoverLetterCategoryId();
         CoverLetterCategory coverLetterCategory = coverLetterCategoryProvider
