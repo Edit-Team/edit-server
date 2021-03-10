@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RequestMapping("/api")
 @RestController
 public class CommentDeclarationController {
@@ -26,7 +28,7 @@ public class CommentDeclarationController {
      * 코멘트 신고 API
      **/
     @PostMapping("/declare-comments")
-    public BaseResponse<Long> postCommentDeclaration(@RequestBody PostCommentDeclarationReq request) throws BaseException {
+    public BaseResponse<Long> postCommentDeclaration(@RequestBody @Valid PostCommentDeclarationReq request) throws BaseException {
         return new BaseResponse<>(BaseResponseStatus.SUCCESS, commentDeclarationService.createCommentDeclaration(request));
     }
 }

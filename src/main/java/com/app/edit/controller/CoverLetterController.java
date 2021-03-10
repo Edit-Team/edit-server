@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static com.app.edit.config.BaseResponseStatus.COVER_LETTER_CONTENT_LENGTH_CAN_NOT_BE_GREATER_THAN_LENGTH_LIMIT;
@@ -93,7 +94,7 @@ public class CoverLetterController {
      * 작성중인 자소서 등록 API
      **/
     @PostMapping("/writing-cover-letters")
-    public BaseResponse<Long> postWritingCoverLetter(@RequestBody PostWritingCoverLetterReq request) throws BaseException {
+    public BaseResponse<Long> postWritingCoverLetter(@RequestBody @Valid PostWritingCoverLetterReq request) throws BaseException {
         if (request.getCoverLetterContent().length() > COVER_LETTER_CONTENT_LIMIT_LENGTH) {
             throw new BaseException(COVER_LETTER_CONTENT_LENGTH_CAN_NOT_BE_GREATER_THAN_LENGTH_LIMIT);
         }
@@ -104,7 +105,7 @@ public class CoverLetterController {
      * 완성중인 자소서 등록 API
      **/
     @PostMapping("/completing-cover-letters")
-    public BaseResponse<Long> postCompletingCoverLetter(@RequestBody PostCompletingCoverLetterReq request) throws BaseException {
+    public BaseResponse<Long> postCompletingCoverLetter(@RequestBody @Valid PostCompletingCoverLetterReq request) throws BaseException {
         if (request.getCoverLetterContent().length() > COVER_LETTER_CONTENT_LIMIT_LENGTH) {
             throw new BaseException(COVER_LETTER_CONTENT_LENGTH_CAN_NOT_BE_GREATER_THAN_LENGTH_LIMIT);
         }

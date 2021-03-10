@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RequestMapping("/api")
 @RestController
 public class CoverLetterDeclarationController {
@@ -26,7 +28,7 @@ public class CoverLetterDeclarationController {
      * 자소서 신고 API
      **/
     @PostMapping("/declare-cover-letters")
-    public BaseResponse<Long> postCoverLetterDeclaration(@RequestBody PostCoverLetterDeclarationReq request) throws BaseException {
+    public BaseResponse<Long> postCoverLetterDeclaration(@RequestBody @Valid PostCoverLetterDeclarationReq request) throws BaseException {
         return new BaseResponse<>(BaseResponseStatus.SUCCESS,
                 coverLetterDeclarationService.createCoverLetterDeclaration(request));
     }
