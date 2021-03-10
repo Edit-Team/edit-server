@@ -19,21 +19,21 @@ public interface CoverLetterRepository extends JpaRepository<CoverLetter, Long> 
     /*
      * 오늘의 문장 조회 쿼리
      **/
-    @Query(value = "select cl from CoverLetter cl where cl.createdAt >= :startOfToday and cl.createdAt < :startOfTomorrow")
+    @Query(value = "select cl from CoverLetter cl where cl.createdAt >= :startOfToday and cl.createdAt < :startOfTomorrow and cl.state = :state")
     Page<CoverLetter> findCoverLettersOnToday(Pageable pageable, @Param("startOfToday") LocalDateTime startOfToday,
-                                              @Param("startOfTomorrow") LocalDateTime startOfTomorrow);
+                                              @Param("startOfTomorrow") LocalDateTime startOfTomorrow, @Param("state") State state);
 
     /*
      * 코멘트를 기다리고 있어요 조회 쿼리
      **/
-    @Query(value = "select cl from CoverLetter cl where size(cl.comments) = 0")
-    Page<CoverLetter> findCoverLettersHasNotComment(Pageable pageable);
+    @Query(value = "select cl from CoverLetter cl where size(cl.comments) = 0 and cl.state = :state")
+    Page<CoverLetter> findCoverLettersHasNotComment(Pageable pageable, @Param("state") State state);
 
     /*
      * 채택이 완료되었어요 조회 쿼리
      **/
-    @Query(value = "select cl from CoverLetter cl where exists(select c from Comment c where c.isAdopted = :isAdopted and c.coverLetter = cl)")
-    Page<CoverLetter> findCoverLettersHasAdoptedComment(Pageable pageable, @Param("isAdopted") IsAdopted isAdopted);
+    @Query(value = "select cl from CoverLetter cl where exists(select c from Comment c where c.isAdopted = :isAdopted and c.coverLetter = cl and c.state = :state)")
+    Page<CoverLetter> findCoverLettersHasAdoptedComment(Pageable pageable, @Param("isAdopted") IsAdopted isAdopted, @Param("state") State state);
 
     /*
      * 많은 분들이 공감하고 있어요 조회 쿼리
