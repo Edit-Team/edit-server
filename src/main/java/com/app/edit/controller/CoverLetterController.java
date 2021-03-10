@@ -1,18 +1,17 @@
 package com.app.edit.controller;
 
+import com.app.edit.config.BaseException;
 import com.app.edit.config.BaseResponse;
 import com.app.edit.config.BaseResponseStatus;
 import com.app.edit.provider.CoverLetterProvider;
+import com.app.edit.request.coverletter.PostCoverLetterReq;
 import com.app.edit.response.coverletter.GetCoverLettersRes;
 import com.app.edit.response.coverletter.GetMainCoverLettersRes;
 import com.app.edit.service.CoverLetterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -85,5 +84,13 @@ public class CoverLetterController {
         PageRequest pageRequest = com.app.edit.config.PageRequest.of(page, DEFAULT_PAGE_SIZE);
         return new BaseResponse<>(BaseResponseStatus.SUCCESS,
                 coverLetterProvider.retrieveManySympathiesCoverLetters(pageRequest));
+    }
+
+    /*
+     * 자소서 등록 API
+     **/
+    @PostMapping("/cover-letters")
+    public BaseResponse<Long> postCoverLetter(@RequestBody PostCoverLetterReq request) throws BaseException {
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS, coverLetterService.createCoverLetter(request));
     }
 }
