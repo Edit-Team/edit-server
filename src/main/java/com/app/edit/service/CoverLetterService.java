@@ -31,7 +31,7 @@ public class CoverLetterService {
         this.coverLetterCategoryProvider = coverLetterCategoryProvider;
     }
 
-    public Long createCoverLetter(PostCoverLetterReq request) throws BaseException {
+    public Long createWritingCoverLetter(PostCoverLetterReq request) throws BaseException {
         Long userId = 1L;
         Long coverLetterCategoryId = request.getCoverLetterCategoryId();
         CoverLetterCategory coverLetterCategory = coverLetterCategoryProvider
