@@ -26,10 +26,10 @@ public class TemporaryCoverLetterController {
     }
 
     /*
-     * 작성중인 자소서 등록 API
+     * 작성중인 자소서 임시 등록 API
      **/
     @PostMapping("/writing-temporary-cover-letters")
-    public BaseResponse<Long> postTemporaryCoverLetters(@RequestBody PostTemporaryCoverLetterReq request) throws BaseException {
+    public BaseResponse<Long> postWritingTemporaryCoverLetter(@RequestBody PostTemporaryCoverLetterReq request) throws BaseException {
         if (request.getCoverLetterContent().length() > COVER_LETTER_CONTENT_LIMIT_LENGTH) {
             throw new BaseException(COVER_LETTER_CONTENT_LENGTH_CAN_NOT_BE_GREATER_THAN_LENGTH_LIMIT);
         }
