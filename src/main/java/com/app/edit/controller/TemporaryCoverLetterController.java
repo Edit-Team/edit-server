@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.app.edit.config.BaseResponseStatus.COVER_LETTER_CONTENT_LENGTH_CAN_NOT_BE_GREATER_THAN_LENGTH_LIMIT;
+import static com.app.edit.config.Constant.COVER_LETTER_CONTENT_LIMIT_LENGTH;
+
 @RequestMapping("/api")
 @RestController
 public class TemporaryCoverLetterController {
@@ -27,6 +30,9 @@ public class TemporaryCoverLetterController {
      **/
     @PostMapping("/writing-temporary-cover-letters")
     public BaseResponse<Long> postTemporaryCoverLetters(@RequestBody PostTemporaryCoverLetterReq request) throws BaseException {
+        if (request.getCoverLetterContent().length() > COVER_LETTER_CONTENT_LIMIT_LENGTH) {
+            throw new BaseException(COVER_LETTER_CONTENT_LENGTH_CAN_NOT_BE_GREATER_THAN_LENGTH_LIMIT);
+        }
         return new BaseResponse<>(BaseResponseStatus.SUCCESS,
                 temporaryCoverLetterService.createWritingTemporaryCoverLetter(request));
     }
