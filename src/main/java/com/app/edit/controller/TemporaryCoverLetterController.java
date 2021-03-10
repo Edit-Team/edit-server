@@ -3,7 +3,7 @@ package com.app.edit.controller;
 import com.app.edit.config.BaseException;
 import com.app.edit.config.BaseResponse;
 import com.app.edit.config.BaseResponseStatus;
-import com.app.edit.request.temporarycoverletter.PostTemporaryCoverLetterReq;
+import com.app.edit.request.temporarycoverletter.PostWritingTemporaryCoverLetterReq;
 import com.app.edit.service.TemporaryCoverLetterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,10 +26,10 @@ public class TemporaryCoverLetterController {
     }
 
     /*
-     * 작성중인 자소서 임시 등록 API
+     * 작성중인 자소서 임시 저장 API
      **/
     @PostMapping("/writing-temporary-cover-letters")
-    public BaseResponse<Long> postWritingTemporaryCoverLetter(@RequestBody PostTemporaryCoverLetterReq request) throws BaseException {
+    public BaseResponse<Long> postWritingTemporaryCoverLetter(@RequestBody PostWritingTemporaryCoverLetterReq request) throws BaseException {
         if (request.getCoverLetterContent().length() > COVER_LETTER_CONTENT_LIMIT_LENGTH) {
             throw new BaseException(COVER_LETTER_CONTENT_LENGTH_CAN_NOT_BE_GREATER_THAN_LENGTH_LIMIT);
         }
