@@ -5,6 +5,7 @@ import com.app.edit.config.secret.Secret;
 import com.app.edit.domain.job.JobRepository;
 import com.app.edit.domain.user.UserInfo;
 import com.app.edit.domain.user.UserInfoRepository;
+import com.app.edit.enums.State;
 import com.app.edit.enums.UserRole;
 import com.app.edit.provider.UserProvider;
 import com.app.edit.request.user.PostUserReq;
@@ -14,6 +15,8 @@ import com.app.edit.utils.JwtService;
 import com.app.edit.utils.UserRoleConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 import static com.app.edit.config.BaseResponseStatus.*;
 
@@ -60,7 +63,6 @@ public class UserService {
         } catch (Exception ignored) {
             throw new BaseException(FAILED_TO_POST_USER);
         }
-        UserRoleConverter userRoleConverter = new UserRoleConverter();
         UserInfo newUser = UserInfo.builder()
                 .name(parameters.getName())
                 .nickName(parameters.getNickname())
@@ -88,4 +90,5 @@ public class UserService {
                 .jwt(jwt)
                 .build();
     }
+
 }

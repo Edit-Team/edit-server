@@ -21,7 +21,7 @@ import static com.app.edit.config.BaseResponseStatus.*;
 public class JwtService {
 
 
-    private final long ACCESS_TOKEN_VALID_TIME = 14 * 24 * 3600 * 1000L;   // 1분
+    private final long ACCESS_TOKEN_VALID_TIME = 14 * 24 * 3600 * 1000L;   // 2주
 
     /**
      * JWT 생성

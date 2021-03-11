@@ -1,5 +1,6 @@
 package com.app.edit.email;
 
+import com.app.edit.config.BaseException;
 import com.app.edit.service.EmailSenderService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,7 +20,7 @@ class EmailEmailSenderServiceTest {
 
     @Test
     @DisplayName("AWS SES 이메일전송 테스트")
-    void sesSendTest() {
+    void sesSendTest() throws BaseException {
         // given
         ArrayList<String> to = new ArrayList<>();
         to.add("ast3138@naver.com");

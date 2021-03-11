@@ -7,6 +7,6 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
-public class DuplicationEmailCheck {
-    private final String duplicationEmailCheck;
+public class DuplicationCheck {
+    private final String duplicationCheck;
 }
