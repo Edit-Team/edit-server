@@ -54,11 +54,13 @@ public class EmailSenderService {
         }
     }
 
-    public String createKey() {
+    public String createKey(String type) {
         StringBuilder key = new StringBuilder();
         Random rnd = new Random();
 
-        for (int i = 0; i < 6; i++) { // 인증코드 8자리
+        int size = type.equals("code") ? 6 : 10;
+
+        for (int i = 0; i < size; i++) { // 인증코드 6자리
             int index = rnd.nextInt(3); // 0~2 까지 랜덤
 
             switch (index) {
@@ -79,5 +81,7 @@ public class EmailSenderService {
 
         return key.toString();
     }
+
+
 
 }

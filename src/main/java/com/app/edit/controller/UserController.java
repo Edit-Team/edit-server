@@ -5,6 +5,7 @@ import com.app.edit.config.BaseResponse;
 import com.app.edit.enums.AuthenticationCheck;
 import com.app.edit.provider.UserProvider;
 import com.app.edit.request.user.PostUserReq;
+import com.app.edit.response.user.GetEmailRes;
 import com.app.edit.response.user.GetUserRes;
 import com.app.edit.response.user.PostUserRes;
 import com.app.edit.response.user.DuplicationCheck;
@@ -128,7 +129,7 @@ public class UserController {
      * 이메일 인증
      * [GET] /api/users/authentication-email
      */
-    @GetMapping(value = "/api/users/authentication-email")
+    @GetMapping(value = "/users/authentication-email")
     @ApiOperation(value = "이메일 인증", notes = "이메일 인증")
     public BaseResponse<Void> AuthenticationEmail(
             @RequestParam(value = "email") String email) {
@@ -145,7 +146,7 @@ public class UserController {
      * 이메일 인증 코드 검증
      * [GET] /api/users/authentication-code
      */
-    @GetMapping(value = "/api/users/authentication-code")
+    @GetMapping(value = "/users/authentication-code")
     @ApiOperation(value = "이메일 인증 코드 검증", notes = "이메일 인증 코드 검증")
     public BaseResponse<AuthenticationCheck> AuthenticationCode(
             @RequestParam(value = "authenticationCode") String authenticationCode) {
@@ -158,5 +159,41 @@ public class UserController {
         }
     }
 
+    /**
+     * 이메일 찾기
+     * [GET] /api/users/email
+     */
+    @GetMapping(value = "/users/email")
+    @ApiOperation(value = "이메일 찾기", notes = "이메일 찾기")
+    public BaseResponse<GetEmailRes> searchEmail(
+            @RequestParam(value = "name") String name,
+            @RequestParam(value = "phoneNumber") String phoneNumber) {
+
+        try {
+            GetEmailRes getEmailRes = userProvider.searchEmail(name,phoneNumber);
+            return new BaseResponse<>(SUCCESS , getEmailRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    /**
+     * 비밀번호 찾기
+     * [GET] /api/users/temporary-password
+     */
+    @PatchMapping(value = "/users/temporary-password")
+    @ApiOperation(value = "비밀번호 찾기", notes = "비밀번호 찾기")
+    public BaseResponse<Void> searchPassword(
+            @RequestParam(value = "name") String name,
+            @RequestParam(value = "email") String email,
+            @RequestParam(value = "phoneNumber") String phoneNumber) {
+
+        try {
+            userService.searchPassword(name, email, phoneNumber);
+            return new BaseResponse<>(SUCCESS);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
 
 }

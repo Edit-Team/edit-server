@@ -7,6 +7,7 @@ import com.app.edit.domain.user.UserInfoRepository;
 import com.app.edit.enums.AuthenticationCheck;
 import com.app.edit.enums.State;
 import com.app.edit.response.user.DuplicationCheck;
+import com.app.edit.response.user.GetEmailRes;
 import com.app.edit.response.user.GetUserRes;
 import com.app.edit.response.user.PostUserRes;
 import com.app.edit.service.EmailSenderService;
@@ -138,7 +139,7 @@ public class UserProvider {
      */
     public void authenticationEmail(String email) throws BaseException {
 
-        String authenticationCode = sesEmailEmailSender.createKey();
+        String authenticationCode = sesEmailEmailSender.createKey("code");
         ArrayList<String> to = new ArrayList<>();
         to.add(email);
         String subject = "<이메일 인증>";
@@ -221,7 +222,34 @@ public class UserProvider {
 
     }
 
+    /**
+     * 로그아웃
+     * @return
+     */
     public PostUserRes logout() {
         return null;
     }
+
+    /**
+     * 이메일 찾기
+     * @param name
+     * @param phoneNumber
+     * @return
+     */
+    public GetEmailRes searchEmail(String name, String phoneNumber) throws BaseException{
+
+        UserInfo userInfo = userInfoRepository.findByStateAndNameAndPhoneNumber(State.ACTIVE,name,phoneNumber)
+                .orElseThrow(() -> new BaseException(FAILED_TO_GET_USER));
+
+        String email = userInfo.getEmail();
+        StringBuilder sb = new StringBuilder();
+        sb.append(email);
+        int index = email.indexOf('@');
+        for(int i = index - (index / 3); i < index ; i++)
+            sb.replace(i,i + 1, "*");
+        return GetEmailRes.builder()
+                .email(sb.toString())
+                .build();
+    }
+
 }

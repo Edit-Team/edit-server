@@ -36,6 +36,7 @@ public enum BaseResponseStatus {
     AUTHENTICATION_TIME_EXPIRED(false, 2044, "인증 시간이 만료되었습니다."),
 
 
+
     // colt
     REQUEST_PARAMETER_MISSING(false, 2050, "요청에 필수 파라미터가 누락되어 있습니다."),
     REQUEST_PARAMETER_MISMATCH(false, 2051, "요청 파라미터 타입이 맞지 않습니다."),
@@ -53,6 +54,7 @@ public enum BaseResponseStatus {
     FAILED_TO_SEND_EMAIL(false, 3017, "이메일 전송에 실패했습니다."),
     FAILED_TO_AUTHENTICATION_CODE(false, 3018, "인증 번호 인증에 실패했습니다."),
     FAILED_TO_ENCRYPT_PASSWORD(false, 3019, "비밀 번호 암호화에 실패했습니다."),
+    FAILED_TO_UPDATE_USER(false, 3020, "비밀번호 변경에 실패했습니다."),
 
 
     // colt
