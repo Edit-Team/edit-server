@@ -19,8 +19,8 @@ import static com.app.edit.utils.ValidationRegex.isRegexEmail;
 import static com.app.edit.utils.ValidationRegex.isRegexPhoneNumber;
 
 @Slf4j
-@RestController
 @RequestMapping("/api")
+@RestController
 public class UserController {
 
     private final UserProvider userProvider;
@@ -38,7 +38,7 @@ public class UserController {
      * [GET] /users
      * @return BaseResponse<List<GetUsersRes>>
      */
-    @RequestMapping(value = "/admin/users",method = RequestMethod.GET)
+    @GetMapping("/admin/users")
     @ApiOperation(value = "회원 전체 조회", notes = "회원 전체 조회")
     public BaseResponse<List<GetUserRes>> getUsers() {
         try {
@@ -54,8 +54,7 @@ public class UserController {
      * [POST] /users
      * @return BaseResponse<List<GetUsersRes>>
      */
-    @ResponseBody
-    @RequestMapping(value = "/users",method = RequestMethod.POST)
+    @PostMapping(value = "/users")
     @ApiOperation(value = "회원 추가", notes = "회원 추가")
     public BaseResponse<PostUserRes> createUsers(
             @RequestBody PostUserReq parameters) {

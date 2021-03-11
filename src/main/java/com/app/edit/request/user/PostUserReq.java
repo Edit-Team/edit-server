@@ -3,17 +3,17 @@ package com.app.edit.request.user;
 import com.app.edit.enums.UserRole;
 import lombok.*;
 
-@AllArgsConstructor
+@NoArgsConstructor
 @Getter
-@Builder
+@Setter
 public class PostUserReq {
-    private final String name;
-    private final String nickname;
-    private final String jobName;
-    private final String email;
-    private final String etcJobName;
-    private final String phoneNumber;
-    private final String password;
-    private final String authenticationPassword;
-    private final String userRole;
+    private String name;
+    private String nickname;
+    private String jobName;
+    private String email;
+    private String etcJobName;
+    private String phoneNumber;
+    private String password;
+    private String authenticationPassword;
+    private UserRole userRole;
 }

@@ -2,7 +2,7 @@ package com.app.edit.service;
 
 import com.app.edit.config.BaseException;
 import com.app.edit.config.secret.Secret;
-import com.app.edit.domain.job.Job;
+import com.app.edit.domain.job.JobRepository;
 import com.app.edit.domain.user.UserInfo;
 import com.app.edit.domain.user.UserInfoRepository;
 import com.app.edit.enums.UserRole;
@@ -21,14 +21,17 @@ import static com.app.edit.config.BaseResponseStatus.*;
 public class UserService {
 
     private final UserInfoRepository userInfoRepository;
+    private final JobRepository jobRepository;
     private final UserProvider userProvider;
     private final JwtService jwtService;
 
     @Autowired
     public UserService(UserInfoRepository userRepository,
+                       JobRepository jobRepository,
                        UserProvider userProvider,
                        JwtService jwtService) {
         this.userInfoRepository = userRepository;
+        this.jobRepository = jobRepository;
         this.userProvider = userProvider;
         this.jwtService = jwtService;
     }
@@ -57,19 +60,15 @@ public class UserService {
         } catch (Exception ignored) {
             throw new BaseException(FAILED_TO_POST_USER);
         }
-        Job job = Job.builder()
-                .id(1L)
-                .name("test")
-                .build();
         UserRoleConverter userRoleConverter = new UserRoleConverter();
         UserInfo newUser = UserInfo.builder()
                 .name(parameters.getName())
                 .nickName(parameters.getNickname())
                 .password(EncodingPassword)
                 .email(parameters.getEmail())
-                .userRole(userRoleConverter.convertToEntityAttribute(parameters.getUserRole()))
+                .userRole(UserRole.MENTEE)
                 .coinCount(0L)
-                .job(job)
+                .job(jobRepository.findById(1L).orElse(null))
                 .etcJobName(parameters.getEtcJobName().equals("NONE") ? "NONE": parameters.getEtcJobName())
                 .phoneNumber(parameters.getPhoneNumber())
                 .build();

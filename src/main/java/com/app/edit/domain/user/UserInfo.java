@@ -119,6 +119,19 @@ public class UserInfo extends BaseEntity{
     @Column(name = "state", columnDefinition = "varchar(10) default 'ACTIVE'")
     private State state;
 
+    /**
+     * default 값 정의
+     */
+    @PrePersist
+    public void prePersist() {
+        this.isCertificatedMentor =
+                this.isCertificatedMentor == null ? AuthenticationCheck.NO : this.isCertificatedMentor;
+        this.withdrawal =
+                this.withdrawal == null ? "ACTIVE" : this.withdrawal;
+        this.state =
+                this.state == null ? State.ACTIVE : this.state;
+    }
+
 
     @OneToOne(mappedBy = "userInfo",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private MentorInfo mentorInfo;
