@@ -196,4 +196,21 @@ public class UserController {
         }
     }
 
+    /**
+     * 비밀번호 인증
+     * [GET] /api/users/authentication-password
+     */
+    @GetMapping(value = "/users/authentication-password")
+    @ApiOperation(value = "비밀번호 인증", notes = "비밀번호 인증")
+    public BaseResponse<Void> authenticationPassword(
+            @RequestParam(value = "password") String password) {
+
+        try {
+            userService.searchPassword(name, email, phoneNumber);
+            return new BaseResponse<>(SUCCESS);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
 }
