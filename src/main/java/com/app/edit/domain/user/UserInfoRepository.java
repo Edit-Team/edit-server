@@ -18,4 +18,8 @@ public interface UserInfoRepository extends JpaRepository<UserInfo,Long> {
     Optional<UserInfo> findByStateAndNameAndPhoneNumber(State active, String name, String phoneNumber);
 
     Optional<UserInfo> findByStateAndNameAndPhoneNumberAndEmail(State active, String name, String phoneNumber, String email);
+
+    Optional<UserInfo> findByStateAndPassword(State active, String password);
+
+    Optional<UserInfo> findByStateAndId(State active, Long userId);
 }

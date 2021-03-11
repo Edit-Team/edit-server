@@ -10,6 +10,7 @@ import com.app.edit.response.user.GetUserRes;
 import com.app.edit.response.user.PostUserRes;
 import com.app.edit.response.user.DuplicationCheck;
 import com.app.edit.service.UserService;
+import com.app.edit.utils.JwtService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -30,12 +31,15 @@ public class UserController {
 
     private final UserProvider userProvider;
     private final UserService userService;
+    private final JwtService jwtService;
 
     @Autowired
     public UserController(UserProvider userProvider,
-                          UserService userService) {
+                          UserService userService,
+                          JwtService jwtService) {
         this.userProvider = userProvider;
         this.userService = userService;
+        this.jwtService = jwtService;
     }
 
     /**
@@ -201,13 +205,19 @@ public class UserController {
      * [GET] /api/users/authentication-password
      */
     @GetMapping(value = "/users/authentication-password")
-    @ApiOperation(value = "비밀번호 인증", notes = "비밀번호 인증")
-    public BaseResponse<Void> authenticationPassword(
+    @ApiOperation(value = "비밀번호 인증", notes = "비밀번호 인증\n"+"YES = 인증됨, NO = 인증안됨")
+    public BaseResponse<AuthenticationCheck> authenticationPassword(
+            @RequestHeader(value = "X-ACCESS-TOKEN") String jwt,
             @RequestParam(value = "password") String password) {
 
         try {
-            userService.searchPassword(name, email, phoneNumber);
-            return new BaseResponse<>(SUCCESS);
+            Long userId = jwtService.getUserInfo().getUserId();
+
+            if (userId == null || userId <= 0) {
+                return new BaseResponse<>(EMPTY_USERID);
+            }
+            AuthenticationCheck authenticationCheck = userProvider.authenticationPassword(userId,password);
+            return new BaseResponse<>(SUCCESS, authenticationCheck);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
