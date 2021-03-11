@@ -9,6 +9,7 @@ import com.app.edit.request.coverletter.PostWritingCoverLetterReq;
 import com.app.edit.response.coverletter.GetCoverLettersRes;
 import com.app.edit.response.coverletter.GetMainCoverLettersRes;
 import com.app.edit.service.CoverLetterService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -36,6 +37,7 @@ public class CoverLetterController {
     /*
      * 메인 화면 조회 API
      **/
+    @ApiOperation(value = "메인 화면 조회 API")
     @GetMapping("/main")
     public BaseResponse<GetMainCoverLettersRes> getMainCoverLetters() {
         return new BaseResponse<>(BaseResponseStatus.SUCCESS, coverLetterProvider.retrieveMainCoverLetters());
@@ -45,6 +47,7 @@ public class CoverLetterController {
      * 오늘의 문장 조회 API
      * 먼저 등록된 순서대로 정렬
      **/
+    @ApiOperation(value = "오늘의 문장 조회 API")
     @GetMapping("/today-cover-letters")
     public BaseResponse<List<GetCoverLettersRes>> getTodayCoverLetters(@RequestParam Integer page) {
         PageRequest pageRequest = com.app.edit.config.PageRequest
@@ -56,6 +59,7 @@ public class CoverLetterController {
      * 코멘트를 기다리고 있어요 조회 API
      * 코멘트가 없는 자소서 -> 먼저 등록된 순서대로 정렬
      **/
+    @ApiOperation(value = "코멘트를 기다리고 있어요 조회 API")
     @GetMapping("/waiting-for-comment-cover-letters")
     public BaseResponse<List<GetCoverLettersRes>> getWaitingForCommentCoverLetters(@RequestParam Integer page) {
         PageRequest pageRequest = com.app.edit.config.PageRequest
@@ -68,6 +72,7 @@ public class CoverLetterController {
      * 채택이 완료되었어요 조회 API
      * 조회 시점으로부터 가장 가까운 시점에 채택된 순서대로 정렬
      **/
+    @ApiOperation(value = "채택이 완료되었어요 조회 API")
     @GetMapping("/adopted-cover-letters")
     public BaseResponse<List<GetCoverLettersRes>> getAdoptedCoverLetters(@RequestParam Integer page) {
         PageRequest pageRequest = com.app.edit.config.PageRequest
@@ -81,6 +86,7 @@ public class CoverLetterController {
      * 조회시점으로부터 3일 전에 등록된 자소서까지만 조회
      * 공감 수가 많은 순서대로 정렬
      **/
+    @ApiOperation(value = "많은 분들이 공감하고 있어요 조회 API")
     @GetMapping("/many-sympathies-cover-letters")
     public BaseResponse<List<GetCoverLettersRes>> getManySympathiesCoverLetters(@RequestParam Integer page) {
         PageRequest pageRequest = com.app.edit.config.PageRequest.of(page, DEFAULT_PAGE_SIZE);
@@ -91,6 +97,7 @@ public class CoverLetterController {
     /*
      * 작성중인 자소서 등록 API
      **/
+    @ApiOperation(value = "작성중인 자소서 등록 API")
     @PostMapping("/writing-cover-letters")
     public BaseResponse<Long> postWritingCoverLetter(@RequestBody @Valid PostWritingCoverLetterReq request) throws BaseException {
         return new BaseResponse<>(BaseResponseStatus.SUCCESS, coverLetterService.createWritingCoverLetter(request));
@@ -99,6 +106,7 @@ public class CoverLetterController {
     /*
      * 완성중인 자소서 등록 API
      **/
+    @ApiOperation(value = "완성중인 자소서 등록 API")
     @PostMapping("/completing-cover-letters")
     public BaseResponse<Long> postCompletingCoverLetter(@RequestBody @Valid PostCompletingCoverLetterReq request) throws BaseException {
         return new BaseResponse<>(BaseResponseStatus.SUCCESS, coverLetterService.createCompletingCoverLetter(request));
@@ -108,6 +116,7 @@ public class CoverLetterController {
      * 내가 등록한 자소서 조회 API
      * 먼저 등록한 순서대로 정렬
      **/
+    @ApiOperation(value = "내가 등록한 자소서 조회 API")
     @GetMapping("/my-cover-letters")
     public BaseResponse<List<GetCoverLettersRes>> getMyCoverLetters(@RequestParam Integer page) {
         PageRequest pageRequest = com.app.edit.config.PageRequest.of(page, DEFAULT_PAGE_SIZE, Sort.by("createdAt"));
