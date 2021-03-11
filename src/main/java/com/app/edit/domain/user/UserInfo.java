@@ -66,6 +66,13 @@ public class UserInfo extends BaseEntity{
      */
     @Column(name = "phoneNumber", nullable = false, length = 15)
     private String phoneNumber;
+
+    /**
+     * 유저 비밀번호
+     */
+    @Column(name = "password", nullable = false)
+    private String password;
+
     /**
      * 유저 역할
      */
@@ -80,12 +87,12 @@ public class UserInfo extends BaseEntity{
     @Column(name = "isCertificatedMentor", columnDefinition = "varchar(3) default 'NO'")
     private AuthenticationCheck isCertificatedMentor;
 
-    /**
-     * 이메일 인증 여부
-     */
-    @Enumerated(EnumType.STRING)
-    @Column(name = "isCertificatedEmail", columnDefinition = "varchar(3) default 'NO'")
-    private AuthenticationCheck isCertificatedEmail;
+//    /**
+//     * 이메일 인증 여부
+//     */
+//    @Enumerated(EnumType.STRING)
+//    @Column(name = "isCertificatedEmail", columnDefinition = "varchar(3) default 'NO'")
+//    private AuthenticationCheck isCertificatedEmail;
 
     /**
      * 기타 입력 직군 이름

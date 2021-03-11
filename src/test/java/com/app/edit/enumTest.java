@@ -1,3 +1,5 @@
+package com.app.edit;
+
 import com.app.edit.domain.user.UserInfo;
 import com.app.edit.enums.UserRole;
 
@@ -7,7 +9,6 @@ public class enumTest {
                 .id(1L)
                 .email("test")
                 .etcJobName("test")
-                .isCertificatedEmail(null)
                 .isCertificatedMentor(null)
                 .name("test")
                 .coinCount(1L)
