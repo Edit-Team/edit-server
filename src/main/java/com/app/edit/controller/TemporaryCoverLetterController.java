@@ -6,6 +6,7 @@ import com.app.edit.config.BaseResponseStatus;
 import com.app.edit.request.temporarycoverletter.PostCompletingTemporaryCoverLetterReq;
 import com.app.edit.request.temporarycoverletter.PostWritingTemporaryCoverLetterReq;
 import com.app.edit.service.TemporaryCoverLetterService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,6 +29,7 @@ public class TemporaryCoverLetterController {
     /*
      * 작성중인 자소서 임시 저장 API
      **/
+    @ApiOperation(value = "작성중인 자소서 임시 저장 API")
     @PostMapping("/writing-temporary-cover-letters")
     public BaseResponse<Long> postWritingTemporaryCoverLetter(@RequestBody @Valid PostWritingTemporaryCoverLetterReq request) throws BaseException {
         return new BaseResponse<>(BaseResponseStatus.SUCCESS,
@@ -37,6 +39,7 @@ public class TemporaryCoverLetterController {
     /*
      * 완성중인 자소서 임시 저장 API
      **/
+    @ApiOperation(value = "완성중인 자소서 임시 저장 API")
     @PostMapping("/completing-temporary-cover-letters")
     public BaseResponse<Long> postCompletingTemporaryCoverLetter(@RequestBody @Valid PostCompletingTemporaryCoverLetterReq request) throws BaseException {
         return new BaseResponse<>(BaseResponseStatus.SUCCESS,
