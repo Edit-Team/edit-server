@@ -29,14 +29,14 @@ public class TemporaryComment extends BaseEntity {
     /*
      * 코멘트를 임시 저장한 유저 ID
      **/
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userInfoId", nullable = false, updatable = false)
     private UserInfo userInfo;
 
     /*
      * 임시 저장된 코멘트를 달려고 했던 자소서 ID
      **/
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "coverLetterId", nullable = false, updatable = false)
     private CoverLetter coverLetter;
 

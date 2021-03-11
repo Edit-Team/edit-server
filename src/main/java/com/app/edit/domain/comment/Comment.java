@@ -7,6 +7,7 @@ import com.app.edit.domain.coverletter.CoverLetter;
 import com.app.edit.domain.user.UserInfo;
 import com.app.edit.enums.IsAdopted;
 import com.app.edit.enums.State;
+import com.app.edit.response.comment.GetCommentsRes;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -33,14 +34,14 @@ public class Comment extends BaseEntity {
     /*
      * 코멘트 등록한 유저 ID
      **/
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userInfoId", nullable = false, updatable = false)
     private UserInfo userInfo;
 
     /*
      * 자소서 ID
      **/
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "coverLetterId", nullable = false, updatable = false)
     private CoverLetter coverLetter;
 
@@ -125,5 +126,19 @@ public class Comment extends BaseEntity {
         this.state = state;
         this.commentDeclarations = commentDeclarations;
         this.appreciates = appreciates;
+    }
+
+    public GetCommentsRes toGetCommentsRes() {
+        Long commentId = this.id;
+        String nickName = this.userInfo.getNickName();
+        String jobName = this.userInfo.getJob().getName();
+        String sentenceEvaluation = this.sentenceEvaluation;
+        String concretenessLogic = this.concretenessLogic;
+        String sincerity = this.sincerity;
+        String activity = this.activity;
+        String commentContent = this.content;
+        IsAdopted isAdopted = this.isAdopted;
+        return new GetCommentsRes(commentId, nickName, jobName, sentenceEvaluation, concretenessLogic,
+                sincerity, activity, commentContent, isAdopted);
     }
 }

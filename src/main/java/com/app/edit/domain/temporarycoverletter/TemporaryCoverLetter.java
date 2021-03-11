@@ -31,7 +31,7 @@ public class TemporaryCoverLetter extends BaseEntity {
     /*
      * 임시 자소서 작성 유저 ID
      **/
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userInfoId", nullable = false, updatable = false)
     private UserInfo userInfo;
 
@@ -50,6 +50,12 @@ public class TemporaryCoverLetter extends BaseEntity {
     private CoverLetterType type;
 
     /*
+     * 완성한 자소서일 경우, 기존에 작성한 자소서 ID
+     **/
+    @Column(name = "originalCoverLetterId", updatable = false, columnDefinition = "bigint default 0")
+    private Long originalCoverLetterId;
+
+    /*
      * 자소서 삭제 여부
      * ACTIVE - 삭제되지 않음, INACTIVE - 삭제됨
      **/
@@ -60,16 +66,16 @@ public class TemporaryCoverLetter extends BaseEntity {
     /*
      * 자소서 종류(카테고리) ID
      **/
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "coverLetterCategoryId", nullable = false)
     private CoverLetterCategory coverLetterCategory;
 
     @Builder
-    public TemporaryCoverLetter(UserInfo userInfo, String content, CoverLetterType type, State state,
-                                CoverLetterCategory coverLetterCategory) {
+    public TemporaryCoverLetter(UserInfo userInfo, String content, CoverLetterType type, Long originalCoverLetterId, State state, CoverLetterCategory coverLetterCategory) {
         this.userInfo = userInfo;
         this.content = content;
         this.type = type;
+        this.originalCoverLetterId = originalCoverLetterId;
         this.state = state;
         this.coverLetterCategory = coverLetterCategory;
     }

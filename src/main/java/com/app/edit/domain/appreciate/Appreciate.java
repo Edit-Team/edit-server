@@ -26,12 +26,12 @@ public class Appreciate extends BaseEntity {
     private AppreciateId appreciateId;
 
     @MapsId(value = "commentId")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "commentId", nullable = false)
     private Comment comment;
 
     @MapsId(value = "userInfoId")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userInfoId", nullable = false)
     private UserInfo userInfo;
 

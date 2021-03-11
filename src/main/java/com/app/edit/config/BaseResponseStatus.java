@@ -19,7 +19,7 @@ public enum BaseResponseStatus {
     SUCCESS_READ_SEARCH_USERS(true, 1017, "회원 검색 조회에 성공하였습니다."),
 
     // 2000 : Request 오류
-    REQUEST_ERROR(false, 2000, "입력값을 확인해주세요."),
+    REQUEST_ERROR(false, 2000, "요청 바디의 입력값을 확인해주세요."),
     EMPTY_USERID(false, 2001, "유저 아이디 값을 확인해주세요."),
     EMPTY_JWT(false, 2010, "JWT를 입력해주세요."),
     INVALID_JWT(false, 2011, "유효하지 않은 JWT입니다."),
@@ -31,6 +31,11 @@ public enum BaseResponseStatus {
     DO_NOT_MATCH_PASSWORD(false, 2033, "비밀번호와 비밀번호확인 값이 일치하지 않습니다."),
     EMPTY_NICKNAME(false, 2040, "닉네임을 입력해주세요."),
 
+    // colt
+    REQUEST_PARAMETER_MISSING(false, 2050, "요청에 필수 파라미터가 누락되어 있습니다."),
+    REQUEST_PARAMETER_MISMATCH(false, 2051, "요청 파라미터 타입이 맞지 않습니다."),
+    COVER_LETTER_CONTENT_LENGTH_CAN_NOT_BE_GREATER_THAN_LENGTH_LIMIT(false, 2100, "자소서의 내용 길이는 90자를 초과할 수 없습니다."),
+
     // 3000 : Response 오류
     RESPONSE_ERROR(false, 3000, "값을 불러오는데 실패하였습니다."),
     NOT_FOUND_USER(false, 3010, "존재하지 않는 회원입니다."),
@@ -40,6 +45,12 @@ public enum BaseResponseStatus {
     FAILED_TO_LOGIN(false, 3014, "로그인에 실패하였습니다."),
     FAILED_TO_DELETE_USER(false, 3015, "회원 탈퇴에 실패하였습니다."),
     FAILED_TO_PATCH_USER(false, 3016, "개인정보 수정에 실패하였습니다."),
+
+    // colt
+    NOT_FOUND_COVER_LETTER(false, 3100, "존재하지 않는 자소서입니다."),
+    NOT_FOUND_USER_INFO(false, 3200, "존재하지 않는 유저입니다."),
+    NOT_FOUND_COMMENT(false, 3300, "존재하지 않는 코멘트입니다."),
+    NOT_FOUND_COVER_LETTER_CATEGORY(false, 3400, "존재하지 않는 자소서 종류입니다."),
 
     // 4000 : Database 오류
     SERVER_ERROR(false, 4000, "서버와의 통신에 실패하였습니다."),

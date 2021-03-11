@@ -5,8 +5,9 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.*;
-import java.util.Date;
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -17,14 +18,14 @@ public abstract class BaseEntity {
 //    @Temporal(TIMESTAMP)
     @CreationTimestamp
     @Column(name = "createdAt", nullable = false, updatable = false)
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
 //    @Getter
 //    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP", insertable = false, updatable = false)
 //    @Temporal(TIMESTAMP)
     @UpdateTimestamp
     @Column(name = "updatedAt", nullable = false)
-    private Date updatedAt;
+    private LocalDateTime updatedAt;
 
 //    @PrePersist
 //    void prePersist() {
