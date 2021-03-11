@@ -23,17 +23,17 @@ public class SwaggerConfig {
 
     @Bean
     public Docket api() {
-        ParameterBuilder ParameterBuilder = new ParameterBuilder();
-        ParameterBuilder.name("X-ACCESS-TOKEN") //헤더 이름
-                .description("X-ACCESS-TOKEN") //설명
-                .modelRef(new ModelRef("string"))
-                .parameterType("header")
-                .required(false)
-                .build();
-        List<Parameter> parameterList = new ArrayList<>();
-        parameterList.add(ParameterBuilder.build());
+//        ParameterBuilder ParameterBuilder = new ParameterBuilder();
+//        ParameterBuilder.name("X-ACCESS-TOKEN") //헤더 이름
+//                .description("X-ACCESS-TOKEN") //설명
+//                .modelRef(new ModelRef("string"))
+//                .parameterType("header")
+//                .required(false)
+//                .build();
+//        List<Parameter> parameterList=new ArrayList<>();
+//        parameterList.add(ParameterBuilder.build());
         return new Docket(DocumentationType.SWAGGER_2)
-                .globalOperationParameters(parameterList)
+                //.globalOperationParameters(parameterList)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.app.edit"))
                 .paths(PathSelectors.ant("/api/**"))

@@ -1,4 +1,4 @@
-package com.app.edit.request;
+package com.app.edit.request.user;
 
 import com.amazonaws.services.simpleemail.model.*;
 import lombok.Builder;
@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 public class EmailRequest {
 
-    private String from;
+    private final String from;
     private List<String> to = new ArrayList<>();
     private String subject;
     private String content;

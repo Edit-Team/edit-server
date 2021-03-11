@@ -2,21 +2,20 @@ package com.app.edit.service;
 
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
 import com.amazonaws.services.simpleemail.model.SendEmailResult;
-import com.app.edit.request.EmailRequest;
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import com.app.edit.config.BaseException;
+import com.app.edit.request.user.EmailRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Random;
 
+import static com.app.edit.config.BaseResponseStatus.EMPTY_RECEIVER;
+import static com.app.edit.config.BaseResponseStatus.FAILED_TO_SEND_EMAIL;
+
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class EmailSenderService {
 
     private final AmazonSimpleEmailService amazonSimpleEmailService;
@@ -24,13 +23,17 @@ public class EmailSenderService {
     @Value("${ses.email}")
     private String from;
 
+    public EmailSenderService(AmazonSimpleEmailService amazonSimpleEmailService) {
+        this.amazonSimpleEmailService = amazonSimpleEmailService;
+    }
+
     /**
      * 이메일 전송
      */
-    public void send(String subject, String content, List<String> receivers) {
+    public void send(String subject, String content, List<String> receivers) throws BaseException {
         if(receivers.size() == 0) {
             log.error("메일을 전송할 대상이 없습니다: [{}]", subject);
-            return;
+            throw new BaseException(EMPTY_RECEIVER);
         }
 
         EmailRequest senderDto = EmailRequest.builder()
@@ -47,14 +50,17 @@ public class EmailSenderService {
         }else {
             log.error("[AWS SES] 메일전송 중 에러가 발생했습니다: {}", sendEmailResult.getSdkResponseMetadata().toString());
             log.error("발송실패 대상자: " + senderDto.getTo() + " / subject: " + senderDto.getSubject());
+            throw new BaseException(FAILED_TO_SEND_EMAIL);
         }
     }
 
-    public String createKey() {
+    public String createKey(String type) {
         StringBuilder key = new StringBuilder();
         Random rnd = new Random();
 
-        for (int i = 0; i < 6; i++) { // 인증코드 8자리
+        int size = type.equals("code") ? 6 : 10;
+
+        for (int i = 0; i < size; i++) { // 인증코드 6자리
             int index = rnd.nextInt(3); // 0~2 까지 랜덤
 
             switch (index) {
@@ -75,5 +81,7 @@ public class EmailSenderService {
 
         return key.toString();
     }
+
+
 
 }

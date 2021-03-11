@@ -5,6 +5,8 @@ import com.app.edit.enums.UserRole;
 
 public class enumTest {
     public static void main(String[] args){
+        UserRole roleTest = UserRole.MENTEE;
+        System.out.println(roleTest.name().toString());
         UserInfo userInfo = UserInfo.builder()
                 .id(1L)
                 .email("test")
@@ -18,6 +20,6 @@ public class enumTest {
                 .state(null)
                 .withdrawal("test")
                 .build();
-        System.out.println(userInfo.getUserRole() == UserRole.MENTEE);
+        System.out.println(userInfo.getUserRole().equals(UserRole.MENTEE.name()));
     }
 }

@@ -30,6 +30,12 @@ public enum BaseResponseStatus {
     WRONG_PASSWORD(false, 2032, "비밀번호를 다시 입력해주세요."),
     DO_NOT_MATCH_PASSWORD(false, 2033, "비밀번호와 비밀번호확인 값이 일치하지 않습니다."),
     EMPTY_NICKNAME(false, 2040, "닉네임을 입력해주세요."),
+    INVALID_PHONENUMBER(false, 2041, "전화번호 형식이 다릅니다."),
+    EXPIRED_JWT(false, 2042, "토큰이 만료되었습니다."),
+    EMPTY_RECEIVER(false, 2043, "이메일 수신자가 없습니다."),
+    AUTHENTICATION_TIME_EXPIRED(false, 2044, "인증 시간이 만료되었습니다."),
+
+
 
     // colt
     REQUEST_PARAMETER_MISSING(false, 2050, "요청에 필수 파라미터가 누락되어 있습니다."),
@@ -45,6 +51,11 @@ public enum BaseResponseStatus {
     FAILED_TO_LOGIN(false, 3014, "로그인에 실패하였습니다."),
     FAILED_TO_DELETE_USER(false, 3015, "회원 탈퇴에 실패하였습니다."),
     FAILED_TO_PATCH_USER(false, 3016, "개인정보 수정에 실패하였습니다."),
+    FAILED_TO_SEND_EMAIL(false, 3017, "이메일 전송에 실패했습니다."),
+    FAILED_TO_AUTHENTICATION_CODE(false, 3018, "인증 번호 인증에 실패했습니다."),
+    FAILED_TO_ENCRYPT_PASSWORD(false, 3019, "비밀 번호 암호화에 실패했습니다."),
+    FAILED_TO_UPDATE_USER(false, 3020, "비밀번호 변경에 실패했습니다."),
+
 
     // colt
     NOT_FOUND_COVER_LETTER(false, 3100, "존재하지 않는 자소서입니다."),

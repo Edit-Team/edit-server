@@ -1,5 +1,5 @@
 server:
-  port: 9001
+  port: 9000
 
 spring:
   profiles:
@@ -9,7 +9,7 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
-      ddl-auto: none
+      ddl-auto: create-drop
       # create, update, create-drop, none 등의 옵션이 있습니다.
       # create: 기존테이블 삭제 후 다시 생성
       # update: 변경된 부분만 반영
@@ -28,9 +28,9 @@ spring:
 
   datasource:
     platform: mysql
-    url: jdbc:mysql://edit-server-db.cdlzwe9h6r65.ap-northeast-2.rds.amazonaws.com:3306/edit
-    username: admin
-    password: editadmin
+    url: jdbc:mysql://mywebserverrdstest1.caf5bqcjx6lw.ap-northeast-2.rds.amazonaws.com/edit
+    username: root
+    password: 112233ll
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 cloud:
