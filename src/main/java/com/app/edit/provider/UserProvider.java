@@ -4,6 +4,7 @@ import com.app.edit.config.BaseException;
 import com.app.edit.domain.user.UserInfo;
 import com.app.edit.domain.user.UserInfoRepository;
 import com.app.edit.enums.State;
+import com.app.edit.response.user.DuplicationCheck;
 import com.app.edit.response.user.GetUserRes;
 import com.app.edit.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,6 +21,7 @@ import static com.app.edit.config.BaseResponseStatus.FAILED_TO_GET_USER;
 import static com.app.edit.config.BaseResponseStatus.NOT_FOUND_USER;
 
 @Service
+@Transactional(readOnly = true)
 public class UserProvider {
 
     private final UserInfoRepository userInfoRepository;
@@ -36,7 +40,6 @@ public class UserProvider {
      * @return
      * @throws BaseException
      */
-    @Transactional(readOnly = true)
     public List<GetUserRes> retrieveUserList() throws BaseException {
 
         List<UserInfo> userList;
@@ -62,6 +65,12 @@ public class UserProvider {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * 중복 이메일이 있는지 검사
+     * @param email
+     * @return
+     * @throws BaseException
+     */
     public UserInfo retrieveUserByEmail(String email) throws BaseException {
         List<UserInfo> existsUserList;
 
@@ -81,5 +90,30 @@ public class UserProvider {
         }
 
         return user;
+    }
+
+    /**
+     * 이메일, 닉네임 중복 검사
+     * @param email
+     * @return
+     * @throws BaseException
+     */
+    public DuplicationCheck checkDuplication(String email, String nickName) throws BaseException{
+
+        List<UserInfo> userInfoList = new LinkedList<>();
+
+        //nickName이 null이면 이메일 검증
+        if(nickName == null){
+            userInfoList = userInfoRepository.findByStateAndEmailIsContaining(State.ACTIVE,email);
+        }
+
+        //email이 null이면 닉네임 검증
+        if(email == null){
+            userInfoList = userInfoRepository.findByStateAndEmailIsContaining(State.ACTIVE,nickName);
+        }
+        return userInfoList.size() == 0 ?
+                DuplicationCheck.builder().duplicationCheck("NO").build() :
+                DuplicationCheck.builder().duplicationCheck("YES").build() ;
+        
     }
 }
