@@ -252,4 +252,27 @@ public class UserProvider {
                 .build();
     }
 
+    /**
+     * 비밀번호 인증
+     * YES가 인증됨, NO는 인증 안됨
+     * @param password
+     * @return
+     */
+    public AuthenticationCheck authenticationPassword(Long userId,String password) throws BaseException{
+
+        UserInfo userInfo = userInfoRepository.findByStateAndId(State.ACTIVE,userId)
+                .orElseThrow(() -> new BaseException(FAILED_TO_GET_USER));
+
+        String encodingPassword;
+        try{
+            encodingPassword = new AES128(Secret.USER_INFO_PASSWORD_KEY).encrypt(password);
+        }catch (Exception ignore){
+            throw new BaseException(FAILED_TO_ENCRYPT_PASSWORD);
+        }
+
+        if(userInfo.getPassword().equals(encodingPassword))
+            return AuthenticationCheck.YES;
+        else
+            return AuthenticationCheck.NO;
+    }
 }
