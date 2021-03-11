@@ -26,12 +26,12 @@ public class Sympathy extends BaseEntity {
     private SympathyId sympathyId;
 
     @MapsId(value = "coverLetterId")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "coverLetterId", nullable = false)
     private CoverLetter coverLetter;
 
     @MapsId(value = "userInfoId")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userInfoId", nullable = false)
     private UserInfo userInfo;
 
