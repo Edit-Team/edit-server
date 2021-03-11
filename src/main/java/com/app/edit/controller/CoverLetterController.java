@@ -1,18 +1,20 @@
 package com.app.edit.controller;
 
+import com.app.edit.config.BaseException;
 import com.app.edit.config.BaseResponse;
 import com.app.edit.config.BaseResponseStatus;
 import com.app.edit.provider.CoverLetterProvider;
+import com.app.edit.request.coverletter.PostCompletingCoverLetterReq;
+import com.app.edit.request.coverletter.PostWritingCoverLetterReq;
 import com.app.edit.response.coverletter.GetCoverLettersRes;
 import com.app.edit.response.coverletter.GetMainCoverLettersRes;
+import com.app.edit.service.CoverLetterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static com.app.edit.config.Constant.DEFAULT_PAGE_SIZE;
@@ -23,10 +25,12 @@ import static com.app.edit.config.Constant.DEFAULT_PAGE_SIZE;
 public class CoverLetterController {
 
     private final CoverLetterProvider coverLetterProvider;
+    private final CoverLetterService coverLetterService;
 
     @Autowired
-    public CoverLetterController(CoverLetterProvider coverLetterProvider) {
+    public CoverLetterController(CoverLetterProvider coverLetterProvider, CoverLetterService coverLetterService) {
         this.coverLetterProvider = coverLetterProvider;
+        this.coverLetterService = coverLetterService;
     }
 
     /*
@@ -82,5 +86,31 @@ public class CoverLetterController {
         PageRequest pageRequest = com.app.edit.config.PageRequest.of(page, DEFAULT_PAGE_SIZE);
         return new BaseResponse<>(BaseResponseStatus.SUCCESS,
                 coverLetterProvider.retrieveManySympathiesCoverLetters(pageRequest));
+    }
+
+    /*
+     * 작성중인 자소서 등록 API
+     **/
+    @PostMapping("/writing-cover-letters")
+    public BaseResponse<Long> postWritingCoverLetter(@RequestBody @Valid PostWritingCoverLetterReq request) throws BaseException {
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS, coverLetterService.createWritingCoverLetter(request));
+    }
+
+    /*
+     * 완성중인 자소서 등록 API
+     **/
+    @PostMapping("/completing-cover-letters")
+    public BaseResponse<Long> postCompletingCoverLetter(@RequestBody @Valid PostCompletingCoverLetterReq request) throws BaseException {
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS, coverLetterService.createCompletingCoverLetter(request));
+    }
+
+    /*
+     * 내가 등록한 자소서 조회 API
+     * 먼저 등록한 순서대로 정렬
+     **/
+    @GetMapping("/my-cover-letters")
+    public BaseResponse<List<GetCoverLettersRes>> getMyCoverLetters(@RequestParam Integer page) {
+        PageRequest pageRequest = com.app.edit.config.PageRequest.of(page, DEFAULT_PAGE_SIZE, Sort.by("createdAt"));
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS, coverLetterProvider.retrieveMyCoverLetters(pageRequest));
     }
 }

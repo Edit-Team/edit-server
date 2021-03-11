@@ -55,7 +55,7 @@ public class CoverLetterProvider {
         LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
         LocalDateTime startOfTomorrow = startOfToday.plusDays(ONE);
         Page<CoverLetter> coverLettersOnToday = coverLetterRepository
-                .findCoverLettersOnToday(pageable, startOfToday, startOfTomorrow);
+                .findCoverLettersOnToday(pageable, startOfToday, startOfTomorrow, State.ACTIVE);
         return getCoverLettersResponses(coverLettersOnToday);
     }
 
@@ -63,7 +63,7 @@ public class CoverLetterProvider {
      * 코멘트를 기다리고 있어요 조회
      **/
     public List<GetCoverLettersRes> retrieveWaitingForCommentCoverLetters(Pageable pageable) {
-        Page<CoverLetter> coverLettersHasNotComment = coverLetterRepository.findCoverLettersHasNotComment(pageable);
+        Page<CoverLetter> coverLettersHasNotComment = coverLetterRepository.findCoverLettersHasNotComment(pageable, State.ACTIVE);
         return getCoverLettersResponses(coverLettersHasNotComment);
     }
 
@@ -71,7 +71,7 @@ public class CoverLetterProvider {
      * 채택이 완료되었어요 조회
      **/
     public List<GetCoverLettersRes> retrieveAdoptedCoverLetters(Pageable pageable) {
-        Page<CoverLetter> coverLettersHasAdoptedComment = coverLetterRepository.findCoverLettersHasAdoptedComment(pageable, IsAdopted.YES);
+        Page<CoverLetter> coverLettersHasAdoptedComment = coverLetterRepository.findCoverLettersHasAdoptedComment(pageable, IsAdopted.YES, State.ACTIVE);
         return getCoverLettersResponses(coverLettersHasAdoptedComment);
     }
 
@@ -101,5 +101,14 @@ public class CoverLetterProvider {
             throw new BaseException(BaseResponseStatus.NOT_FOUND_COVER_LETTER);
         }
         return coverLetter.get();
+    }
+
+    /*
+     * 내가 등록한 자소서 목록 조회
+     **/
+    public List<GetCoverLettersRes> retrieveMyCoverLetters(Pageable pageable) {
+        Long userInfoId = 1L;
+        Page<CoverLetter> myCoverLetters = coverLetterRepository.findMyCoverLetters(pageable, userInfoId, State.ACTIVE);
+        return getCoverLettersResponses(myCoverLetters);
     }
 }

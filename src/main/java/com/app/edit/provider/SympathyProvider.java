@@ -5,7 +5,9 @@ import com.app.edit.domain.sympathy.SympathyRepository;
 import com.app.edit.enums.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional(readOnly = true)
 @Service
 public class SympathyProvider {
 

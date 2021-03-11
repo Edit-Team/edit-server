@@ -43,17 +43,19 @@ values (6, current_timestamp, current_timestamp, 0, concat('email', 6), 'NONE', 
         'ACTIVE', 'MENTOR', 'NONE', 1);
 
 insert into cover_letter_category
-values (1, current_timestamp, current_timestamp, concat('coverLetterCategory', 1));
+values (1, current_timestamp, current_timestamp, '지원동기');
 insert into cover_letter_category
-values (2, current_timestamp, current_timestamp, concat('coverLetterCategory', 2));
+values (2, current_timestamp, current_timestamp, '성장배경');
 insert into cover_letter_category
-values (3, current_timestamp, current_timestamp, concat('coverLetterCategory', 3));
+values (3, current_timestamp, current_timestamp, '성격의 장단점');
 insert into cover_letter_category
-values (4, current_timestamp, current_timestamp, concat('coverLetterCategory', 4));
+values (4, current_timestamp, current_timestamp, '직무 관련 경험');
 insert into cover_letter_category
-values (5, current_timestamp, current_timestamp, concat('coverLetterCategory', 5));
+values (5, current_timestamp, current_timestamp, '도전, 성취, 실제극복 경험');
 insert into cover_letter_category
-values (6, current_timestamp, current_timestamp, concat('coverLetterCategory', 6));
+values (6, current_timestamp, current_timestamp, '취미 / 특기');
+insert into cover_letter_category
+values (7, current_timestamp, current_timestamp, '기타');
 
 insert into cover_letter
 values (1, current_timestamp, current_timestamp, concat('content', 1), 1, 'ACTIVE', 'WRITING', 1, 1);
