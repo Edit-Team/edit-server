@@ -5,6 +5,7 @@ import com.app.edit.config.BaseResponse;
 import com.app.edit.config.BaseResponseStatus;
 import com.app.edit.request.coverletter.PostCoverLetterDeclarationReq;
 import com.app.edit.service.CoverLetterDeclarationService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,6 +28,7 @@ public class CoverLetterDeclarationController {
     /*
      * 자소서 신고 API
      **/
+    @ApiOperation(value = "자소서 신고 API")
     @PostMapping("/declare-cover-letters")
     public BaseResponse<Long> postCoverLetterDeclaration(@RequestBody @Valid PostCoverLetterDeclarationReq request) throws BaseException {
         return new BaseResponse<>(BaseResponseStatus.SUCCESS,
