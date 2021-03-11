@@ -1,4 +1,4 @@
-package com.app.edit.response;
+package com.app.edit.response.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,5 +8,5 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class PostUserRes {
-    private final String name;
+    private final String jwt;
 }

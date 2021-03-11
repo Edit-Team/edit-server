@@ -9,4 +9,6 @@ import java.util.List;
 
 public interface UserInfoRepository extends JpaRepository<UserInfo,Long> {
     List<UserInfo> findByState(State state);
+
+    List<UserInfo> findByStateAndEmailIsContaining(State active, String email);
 }

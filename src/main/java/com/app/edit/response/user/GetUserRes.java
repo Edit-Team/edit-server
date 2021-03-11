@@ -1,4 +1,4 @@
-package com.app.edit.response;
+package com.app.edit.response.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
