@@ -216,8 +216,45 @@ public class UserController {
             if (userId == null || userId <= 0) {
                 return new BaseResponse<>(EMPTY_USERID);
             }
+
             AuthenticationCheck authenticationCheck = userProvider.authenticationPassword(userId,password);
             return new BaseResponse<>(SUCCESS, authenticationCheck);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    /**
+     * 비밀번호 수정
+     * [PATCH] /api/users/password
+     */
+    @PatchMapping(value = "/users/password")
+    @ApiOperation(value = "비밀번호 수정", notes = "비밀번호 수정")
+    public BaseResponse<Void> UpdatePassword(
+            @RequestHeader(value = "X-ACCESS-TOKEN") String jwt,
+            @RequestParam(value = "password") String password,
+            @RequestParam(value = "authenticationPassword") String authenticationPassword) {
+
+        try {
+            Long userId = jwtService.getUserInfo().getUserId();
+
+            if (password == null || password.length() == 0) {
+                return new BaseResponse<>(EMPTY_PASSWORD);
+            }
+
+            if (authenticationPassword == null || authenticationPassword.length() == 0) {
+                return new BaseResponse<>(EMPTY_CONFIRM_PASSWORD);
+            }
+
+            if (!password.equals(authenticationPassword)) {
+                return new BaseResponse<>(DO_NOT_MATCH_PASSWORD);
+            }
+
+            if (userId == null || userId <= 0) {
+                return new BaseResponse<>(EMPTY_USERID);
+            }
+            userProvider.updatePassword(userId,password);
+            return new BaseResponse<>(SUCCESS);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }

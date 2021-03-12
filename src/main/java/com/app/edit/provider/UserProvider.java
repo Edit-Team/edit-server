@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -274,5 +273,21 @@ public class UserProvider {
             return AuthenticationCheck.YES;
         else
             return AuthenticationCheck.NO;
+    }
+
+    @Transactional
+    public void updatePassword(Long userId, String password) throws BaseException {
+
+        UserInfo userInfo = userInfoRepository.findByStateAndId(State.ACTIVE,userId)
+                .orElseThrow(() -> new BaseException(FAILED_TO_GET_USER));
+
+        String encodingPassword;
+        try{
+            encodingPassword = new AES128(Secret.USER_INFO_PASSWORD_KEY).encrypt(password);
+        }catch (Exception ignore){
+            throw new BaseException(FAILED_TO_ENCRYPT_PASSWORD);
+        }
+
+        userInfo.setPassword(encodingPassword);
     }
 }

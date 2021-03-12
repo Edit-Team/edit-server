@@ -2,7 +2,7 @@ spring:
   application:
     name: edit
   profiles:
-    active: dev
+    active: test
 
 ses:
   email: hr.seongeun@gmail.com
