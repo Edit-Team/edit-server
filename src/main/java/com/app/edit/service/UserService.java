@@ -2,20 +2,27 @@ package com.app.edit.service;
 
 import com.app.edit.config.BaseException;
 import com.app.edit.config.secret.Secret;
+import com.app.edit.domain.certificationRequest.CertificationRequest;
+import com.app.edit.domain.certificationRequest.CertificationRequestRepository;
 import com.app.edit.domain.job.JobRepository;
 import com.app.edit.domain.user.UserInfo;
 import com.app.edit.domain.user.UserInfoRepository;
+import com.app.edit.enums.IsProcessing;
 import com.app.edit.enums.State;
 import com.app.edit.enums.UserRole;
 import com.app.edit.provider.UserProvider;
+import com.app.edit.request.user.DeleteUserReq;
 import com.app.edit.request.user.PostUserReq;
 import com.app.edit.response.user.PostUserRes;
 import com.app.edit.utils.AES128;
 import com.app.edit.utils.JwtService;
+import com.app.edit.utils.S3Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import static com.app.edit.config.BaseResponseStatus.*;
@@ -28,18 +35,24 @@ public class UserService {
     private final JobRepository jobRepository;
     private final UserProvider userProvider;
     private final JwtService jwtService;
+    private final S3Service s3Service;
+    private final CertificationRequestRepository certificationRequestRepository;
 
     @Autowired
     public UserService(UserInfoRepository userRepository,
                        EmailSenderService emailSenderService,
                        JobRepository jobRepository,
                        UserProvider userProvider,
-                       JwtService jwtService) {
+                       JwtService jwtService,
+                       S3Service s3Service,
+                       CertificationRequestRepository certificationRequestRepository) {
         this.userInfoRepository = userRepository;
         this.emailSenderService = emailSenderService;
         this.jobRepository = jobRepository;
         this.userProvider = userProvider;
         this.jwtService = jwtService;
+        this.s3Service = s3Service;
+        this.certificationRequestRepository = certificationRequestRepository;
     }
 
     public PostUserRes createUserInfo(PostUserReq parameters) throws BaseException {
@@ -147,5 +160,69 @@ public class UserService {
         }
         emailSenderService.send(subject, emailContent.toString(), to);
         user.setPassword(encodingPassword);
+    }
+
+    @Transactional
+    public void updatePassword(Long userId, String password) throws BaseException {
+
+        UserInfo userInfo = userInfoRepository.findByStateAndId(State.ACTIVE,userId)
+                .orElseThrow(() -> new BaseException(FAILED_TO_GET_USER));
+
+        String encodingPassword;
+        try{
+            encodingPassword = new AES128(Secret.USER_INFO_PASSWORD_KEY).encrypt(password);
+        }catch (Exception ignore){
+            throw new BaseException(FAILED_TO_ENCRYPT_PASSWORD);
+        }
+
+        userInfo.setPassword(encodingPassword);
+    }
+
+    //TODO
+    @Transactional
+    public void updateProfile(Long userId, String colorName, Long emotionNumber) throws BaseException {
+
+        UserInfo userInfo = userInfoRepository.findByStateAndId(State.ACTIVE,userId)
+                .orElseThrow(() -> new BaseException(FAILED_TO_GET_USER));
+
+    }
+
+    @Transactional
+    public void deleteUser(Long userId, DeleteUserReq parameters) throws BaseException {
+
+        UserInfo userInfo = userInfoRepository.findByStateAndId(State.ACTIVE,userId)
+                .orElseThrow(() -> new BaseException(FAILED_TO_GET_USER));
+
+        if(parameters.getWithdrawalContent().equals("기타"))
+            userInfo.setEtcWithdrawalContent(parameters.getEtcWithdrawalContent());
+
+        userInfo.setWithdrawalContent(parameters.getWithdrawalContent());
+        userInfo.setState(State.INACTIVE);
+    }
+
+    /**
+     * 멘토 인증 신청
+     * @param userId
+     * @param authenticationFile
+     * @throws IOException
+     * @throws BaseException
+     */
+    public void AuthenticationMentor(Long userId, MultipartFile authenticationFile) throws IOException, BaseException {
+
+        UserInfo userInfo = userInfoRepository.findByStateAndId(State.ACTIVE,userId)
+                .orElseThrow(() -> new BaseException(NOT_FOUND_USER));
+
+        String imgPath = s3Service.upload(authenticationFile);
+
+        CertificationRequest certificationRequest = CertificationRequest.builder()
+                .userInfo(userInfo)
+                .imageUrl(imgPath)
+                .build();
+
+        try{
+            certificationRequestRepository.save(certificationRequest);
+        }catch (Exception exception){
+            throw new BaseException(FAILED_TO_POST_CERTIFICATION_REQUEST);
+        }
     }
 }

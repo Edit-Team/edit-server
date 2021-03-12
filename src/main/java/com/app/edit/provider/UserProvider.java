@@ -6,10 +6,7 @@ import com.app.edit.domain.user.UserInfo;
 import com.app.edit.domain.user.UserInfoRepository;
 import com.app.edit.enums.AuthenticationCheck;
 import com.app.edit.enums.State;
-import com.app.edit.response.user.DuplicationCheck;
-import com.app.edit.response.user.GetEmailRes;
-import com.app.edit.response.user.GetUserRes;
-import com.app.edit.response.user.PostUserRes;
+import com.app.edit.response.user.*;
 import com.app.edit.service.EmailSenderService;
 import com.app.edit.utils.AES128;
 import com.app.edit.utils.GetDateTime;
@@ -73,7 +70,8 @@ public class UserProvider {
                         .phoneNumber(user.getPhoneNumber())
                         .etcJobName(user.getEtcJobName())
                         .email(user.getEmail())
-                        .withdrawal(user.getWithdrawal())
+                        .withdrawalContent(user.getWithdrawalContent())
+                        .etcWithdrawalContent(user.getEtcWithdrawalContent())
                         .coinCount(user.getCoinCount())
                         .build())
                 .collect(Collectors.toList());
@@ -123,7 +121,7 @@ public class UserProvider {
 
         //email이 null이면 닉네임 검증
         if(email == null){
-            userInfoList = userInfoRepository.findByStateAndEmailIsContaining(State.ACTIVE,nickName);
+            userInfoList = userInfoRepository.findByStateAndNickNameIsContaining(State.ACTIVE,nickName);
         }
         return userInfoList.size() == 0 ?
                 DuplicationCheck.builder().duplicationCheck("NO").build() :
@@ -275,19 +273,20 @@ public class UserProvider {
             return AuthenticationCheck.NO;
     }
 
-    @Transactional
-    public void updatePassword(Long userId, String password) throws BaseException {
+    /**
+     * 내 프로필 조회
+     * @param userId
+     * @return
+     */
+    public GetProfileRes retrieveProfile(Long userId) throws BaseException{
 
         UserInfo userInfo = userInfoRepository.findByStateAndId(State.ACTIVE,userId)
                 .orElseThrow(() -> new BaseException(FAILED_TO_GET_USER));
 
-        String encodingPassword;
-        try{
-            encodingPassword = new AES128(Secret.USER_INFO_PASSWORD_KEY).encrypt(password);
-        }catch (Exception ignore){
-            throw new BaseException(FAILED_TO_ENCRYPT_PASSWORD);
-        }
-
-        userInfo.setPassword(encodingPassword);
+        return GetProfileRes.builder()
+                .name(userInfo.getName())
+                .emotionName("test1")
+                .colorName("test1")
+                .build();
     }
 }

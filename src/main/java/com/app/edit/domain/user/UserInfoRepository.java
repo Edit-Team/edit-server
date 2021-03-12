@@ -22,4 +22,6 @@ public interface UserInfoRepository extends JpaRepository<UserInfo,Long> {
     Optional<UserInfo> findByStateAndPassword(State active, String password);
 
     Optional<UserInfo> findByStateAndId(State active, Long userId);
+
+    List<UserInfo> findByStateAndNickNameIsContaining(State active, String nickName);
 }

@@ -55,6 +55,7 @@ public enum BaseResponseStatus {
     FAILED_TO_AUTHENTICATION_CODE(false, 3018, "인증 번호 인증에 실패했습니다."),
     FAILED_TO_ENCRYPT_PASSWORD(false, 3019, "비밀 번호 암호화에 실패했습니다."),
     FAILED_TO_UPDATE_USER(false, 3020, "비밀번호 변경에 실패했습니다."),
+    FAILED_TO_POST_CERTIFICATION_REQUEST(false, 3021, "멘토 변경 인증 생성에 실패했습니다."),
 
 
     // colt

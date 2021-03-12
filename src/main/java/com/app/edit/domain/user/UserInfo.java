@@ -109,8 +109,14 @@ public class UserInfo extends BaseEntity{
     /**
      * 탈퇴 사유
      */
-    @Column(name = "withdrawal", columnDefinition = "varchar(100) default 'NONE'")
-    private String withdrawal;
+    @Column(name = "withdrawalContent", columnDefinition = "varchar(100) default 'NONE'")
+    private String withdrawalContent;
+
+    /**
+     * 기타일 경우 탈퇴 의견
+     */
+    @Column(name = "etcWithdrawalContent", columnDefinition = "varchar(100) default 'NONE'")
+    private String etcWithdrawalContent;
 
     /**
      * 회원 상태
@@ -126,8 +132,10 @@ public class UserInfo extends BaseEntity{
     public void prePersist() {
         this.isCertificatedMentor =
                 this.isCertificatedMentor == null ? AuthenticationCheck.NO : this.isCertificatedMentor;
-        this.withdrawal =
-                this.withdrawal == null ? "ACTIVE" : this.withdrawal;
+        this.withdrawalContent =
+                this.withdrawalContent == null ? "NONE" : this.withdrawalContent;
+        this.etcWithdrawalContent =
+                this.etcWithdrawalContent == null ? "NONE" : this.etcWithdrawalContent;
         this.state =
                 this.state == null ? State.ACTIVE : this.state;
     }

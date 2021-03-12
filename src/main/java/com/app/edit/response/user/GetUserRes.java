@@ -10,7 +10,8 @@ import lombok.Getter;
 public class GetUserRes {
     private final String name;
     private final String nickname;
-    private final String withdrawal;
+    private final String withdrawalContent;
+    private final String etcWithdrawalContent;
     private final Long coinCount;
     private final String email;
     private final String phoneNumber;

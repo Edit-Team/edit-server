@@ -32,12 +32,3 @@ spring:
     username: admin
     password: editadmin
     driver-class-name: com.mysql.cj.jdbc.Driver
-
-cloud:
-  aws:
-    s3:
-      bucket: edit-server-bucket
-    region:
-      static: ap-northeast-2
-    stack:
-      auto: false
