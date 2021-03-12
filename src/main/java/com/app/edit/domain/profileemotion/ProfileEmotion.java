@@ -30,8 +30,8 @@ public class ProfileEmotion extends BaseEntity {
     /**
      * 프로필 캐릭터 색상 이미지
      */
-    @Column(name = "name", columnDefinition = "TEXT")
-    private String imageUrl;
+    @Column(name = "name", nullable = false, length = 20)
+    private String name;
 
     /**
      * 프로필 색깔 상태

@@ -2,6 +2,7 @@ package com.app.edit.controller;
 
 import com.app.edit.config.BaseException;
 import com.app.edit.config.BaseResponse;
+import com.app.edit.domain.user.UserInfo;
 import com.app.edit.enums.AuthenticationCheck;
 import com.app.edit.provider.UserProvider;
 import com.app.edit.request.user.DeleteUserReq;
@@ -294,7 +295,7 @@ public class UserController {
     public BaseResponse<Void> UpdateProfile(
             @RequestHeader(value = "X-ACCESS-TOKEN") String jwt,
             @RequestParam(value = "colorName") String colorName,
-            @RequestParam(value = "emotionNumber") Long emotionNumber
+            @RequestParam(value = "emotionName") String emotionName
             ){
 
         try {
@@ -303,7 +304,7 @@ public class UserController {
             if (userId == null || userId <= 0) {
                 return new BaseResponse<>(EMPTY_USERID);
             }
-            userService.updateProfile(userId,colorName,emotionNumber);
+            userService.updateProfile(userId,colorName,emotionName);
             return new BaseResponse<>(SUCCESS);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());

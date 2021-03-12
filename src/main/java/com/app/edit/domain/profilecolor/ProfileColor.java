@@ -30,7 +30,7 @@ public class ProfileColor extends BaseEntity {
     /**
      * 프로필 캐릭터 색상 이름
      */
-    @Column(name = "name", nullable = false, length = 10)
+    @Column(name = "name", nullable = false, length = 20)
     private String name;
 
     /**

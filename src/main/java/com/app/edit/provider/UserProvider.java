@@ -62,7 +62,6 @@ public class UserProvider {
             throw new BaseException(FAILED_TO_GET_USER);
         }
 
-
         return userList.stream()
                 .map(user -> GetUserRes.builder()
                         .name(user.getName())
@@ -73,6 +72,9 @@ public class UserProvider {
                         .withdrawalContent(user.getWithdrawalContent())
                         .etcWithdrawalContent(user.getEtcWithdrawalContent())
                         .coinCount(user.getCoinCount())
+                        .colorName(user.getUserProfile().getProfileColor().getName())
+                        .emotionName(user.getUserProfile().getProfileEmotion().getName())
+                        .jobName(user.getJob().getName())
                         .build())
                 .collect(Collectors.toList());
     }
@@ -285,8 +287,8 @@ public class UserProvider {
 
         return GetProfileRes.builder()
                 .name(userInfo.getName())
-                .emotionName("test1")
-                .colorName("test1")
+                .emotionName(userInfo.getUserProfile().getProfileEmotion().getName())
+                .colorName(userInfo.getUserProfile().getProfileColor().getName())
                 .build();
     }
 }

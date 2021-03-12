@@ -9,6 +9,7 @@ import com.app.edit.domain.mentor.MentorInfo;
 import com.app.edit.domain.sympathy.Sympathy;
 import com.app.edit.domain.temporarycomment.TemporaryComment;
 import com.app.edit.domain.temporarycoverletter.TemporaryCoverLetter;
+import com.app.edit.domain.userprofile.UserProfile;
 import com.app.edit.enums.AuthenticationCheck;
 import com.app.edit.enums.State;
 import com.app.edit.enums.UserRole;
@@ -140,6 +141,9 @@ public class UserInfo extends BaseEntity{
                 this.state == null ? State.ACTIVE : this.state;
     }
 
+
+    @OneToOne(mappedBy = "userInfo",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    private UserProfile userProfile;
 
     @OneToOne(mappedBy = "userInfo",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private MentorInfo mentorInfo;

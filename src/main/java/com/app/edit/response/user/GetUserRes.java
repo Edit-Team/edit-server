@@ -16,4 +16,7 @@ public class GetUserRes {
     private final String email;
     private final String phoneNumber;
     private final String etcJobName;
+    private final String colorName;
+    private final String emotionName;
+    private final String jobName;
 }
