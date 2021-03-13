@@ -59,7 +59,8 @@ public enum BaseResponseStatus {
     NOT_FOUND_COLOR(false, 3022, "색상 조회에 실패했습니다."),
     NOT_FOUND_EMOTION(false, 3023, "이모티콘 조회에 실패했습니다."),
     FAILED_TO_POST_USER_PROFILE(false, 3024, "유저 프로필 등록에 실패했습니다."),
-    FAILED_TO_GET_JOB(false, 3024, "직권 조회에 실패했습니다."),
+    FAILED_TO_GET_JOB(false, 3025, "직군 조회에 실패했습니다."),
+    FAILED_TO_GET_CERTIFICATION_REQUEST(false, 3026, "인증 요청 조회에 실패했습니다."),
 
 
     // colt

@@ -337,31 +337,31 @@ public class UserController {
         }
     }
 
-//    /**
-//     * 멘토 인증 상태 조회
-//     * [GET] /users/authentication
-//     * @return BaseResponse<Void>
-//     */
-//    @PostMapping(value = "/users/authentication")
-//    @ApiOperation(value = "멘토 인증 상태 조회", notes = "멘토 인증")
-//    public BaseResponse<Void> userAuthentication(
-//            @RequestHeader("X-ACCESS-TOKEN") String jwt,
-//            @RequestParam(value = "authenticationImage") MultipartFile multipartFile) throws IOException {
-//        try {
-//
-//            Long userId = jwtService.getUserInfo().getUserId();
-//
-//            if (userId == null || userId <= 0) {
-//                return new BaseResponse<>(EMPTY_USERID);
-//            }
-//
-//            userService.AuthenticationMentor(userId,multipartFile);
-//
-//            return new BaseResponse<>(SUCCESS);
-//        } catch (BaseException exception) {
-//            return new BaseResponse<>(exception.getStatus());
-//        }
-//    }
+    /**
+     * 멘토 인증 상태 조회
+     * [GET] /users/authentication
+     * @return BaseResponse<Void>
+     */
+    @GetMapping(value = "/users/authentication")
+    @ApiOperation(value = "멘토 인증 상태 조회", notes = "멘토 인증")
+    public BaseResponse<GetAuthenticationRes> userAuthentication(
+            @RequestHeader("X-ACCESS-TOKEN") String jwt){
+
+        try {
+
+            Long userId = jwtService.getUserInfo().getUserId();
+
+            if (userId == null || userId <= 0) {
+                return new BaseResponse<>(EMPTY_USERID);
+            }
+
+            GetAuthenticationRes getAuthenticationRes = userProvider.AuthenticationMentor(userId);
+
+            return new BaseResponse<>(SUCCESS, getAuthenticationRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
 
     /**
      * 회원 탈퇴

@@ -2,10 +2,14 @@ package com.app.edit.provider;
 
 import com.app.edit.config.BaseException;
 import com.app.edit.config.secret.Secret;
+import com.app.edit.domain.certificationRequest.CertificationRequest;
+import com.app.edit.domain.certificationRequest.CertificationRequestRepository;
 import com.app.edit.domain.user.UserInfo;
 import com.app.edit.domain.user.UserInfoRepository;
 import com.app.edit.enums.AuthenticationCheck;
+import com.app.edit.enums.IsProcessing;
 import com.app.edit.enums.State;
+import com.app.edit.enums.UserRole;
 import com.app.edit.response.user.*;
 import com.app.edit.service.EmailSenderService;
 import com.app.edit.utils.AES128;
@@ -17,10 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.app.edit.config.BaseResponseStatus.*;
@@ -33,16 +34,19 @@ public class UserProvider {
     private final EmailSenderService sesEmailEmailSender;
     private final GetDateTime getDateTime;
     private final HashMap<String,String> authenticationCodeRepository;
+    private final CertificationRequestRepository certificationRequestRepository;
     private final JwtService jwtService;
 
     @Autowired
     public UserProvider(UserInfoRepository userRepository,
                         EmailSenderService sesEmailEmailSender,
-                        GetDateTime getDateTime, HashMap<String, String> authenticationCodeRepository, JwtService jwtService) {
+                        GetDateTime getDateTime, HashMap<String, String> authenticationCodeRepository,
+                        CertificationRequestRepository certificationRequestRepository, JwtService jwtService) {
         this.userInfoRepository = userRepository;
         this.sesEmailEmailSender = sesEmailEmailSender;
         this.getDateTime = getDateTime;
         this.authenticationCodeRepository = authenticationCodeRepository;
+        this.certificationRequestRepository = certificationRequestRepository;
         this.jwtService = jwtService;
     }
 
@@ -290,5 +294,45 @@ public class UserProvider {
                 .emotionName(userInfo.getUserProfile().getProfileEmotion().getName())
                 .colorName(userInfo.getUserProfile().getProfileColor().getName())
                 .build();
+    }
+
+    /**
+     * 현재 인증 상태 조회
+     * @param userId
+     * @return
+     */
+    public GetAuthenticationRes AuthenticationMentor(Long userId) throws BaseException{
+
+        //유저 조회
+        UserInfo userInfo = userInfoRepository.findByStateAndId(State.ACTIVE,userId)
+                .orElseThrow(() -> new BaseException(FAILED_TO_GET_USER));
+
+
+        //승인되었다면 YES -> 이미 멘토입니다.
+        if(userInfo.getUserRole().equals(UserRole.MENTOR))
+            return GetAuthenticationRes.builder()
+                    .presentState(AuthenticationCheck.YES.name())
+                    .build();
+
+
+        //IsProcessing = yes -> NO 반환 (승인 거부)
+        Optional<CertificationRequest> certificationRequest =
+                certificationRequestRepository.findByIsProcessingAndUserInfo(IsProcessing.YES,userInfo);
+
+        if(certificationRequest.isPresent())
+            return GetAuthenticationRes.builder()
+                    .presentState(AuthenticationCheck.NO.name())
+                    .build();
+
+        //IsProcessing = no -> 처리중이면 Waiting 반환
+        Optional<CertificationRequest> certificationRequest1 =
+                certificationRequestRepository.findByIsProcessingAndUserInfo(IsProcessing.NO,userInfo);
+
+        if(certificationRequest1.isPresent())
+            return GetAuthenticationRes.builder()
+                    .presentState(AuthenticationCheck.WAITING.name())
+                    .build();
+
+        throw new BaseException(FAILED_TO_GET_CERTIFICATION_REQUEST);
     }
 }
