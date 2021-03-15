@@ -129,6 +129,14 @@ public class UserProvider {
         if(email == null){
             userInfoList = userInfoRepository.findByStateAndNickNameIsContaining(State.ACTIVE,nickName);
         }
+
+        if(nickName == null && email == null)
+            throw new BaseException(EMPTY_CONTENT);
+
+
+        if(nickName != null && email != null)
+            throw new BaseException(INVAILD_CONTENT);
+
         return userInfoList.size() == 0 ?
                 DuplicationCheck.builder().duplicationCheck("NO").build() :
                 DuplicationCheck.builder().duplicationCheck("YES").build() ;
@@ -303,26 +311,8 @@ public class UserProvider {
      */
     public GetAuthenticationRes AuthenticationMentor(Long userId) throws BaseException{
 
-        //유저 조회
         UserInfo userInfo = userInfoRepository.findByStateAndId(State.ACTIVE,userId)
-                .orElseThrow(() -> new BaseException(FAILED_TO_GET_USER));
-
-
-        //승인되었다면 YES -> 이미 멘토입니다.
-        if(userInfo.getUserRole().equals(UserRole.MENTOR))
-            return GetAuthenticationRes.builder()
-                    .presentState(AuthenticationCheck.YES.name())
-                    .build();
-
-
-        //IsProcessing = yes -> NO 반환 (승인 거부)
-        Optional<CertificationRequest> certificationRequest =
-                certificationRequestRepository.findByIsProcessingAndUserInfo(IsProcessing.YES,userInfo);
-
-        if(certificationRequest.isPresent())
-            return GetAuthenticationRes.builder()
-                    .presentState(AuthenticationCheck.NO.name())
-                    .build();
+                 .orElseThrow(() -> new BaseException(FAILED_TO_GET_USER));
 
         //IsProcessing = no -> 처리중이면 Waiting 반환
         Optional<CertificationRequest> certificationRequest1 =
@@ -333,6 +323,35 @@ public class UserProvider {
                     .presentState(AuthenticationCheck.WAITING.name())
                     .build();
 
+        //IsProcessing = yes -> 인증 성공 = YES, 인증 실패 = NO
+        Optional<CertificationRequest> certificationRequest =
+                certificationRequestRepository.findByIsProcessingAndUserInfo(IsProcessing.YES,userInfo);
+
+        if(certificationRequest.isPresent()) {
+            if(userInfo.getIsCertificatedMentor().equals(AuthenticationCheck.YES)) {
+                return GetAuthenticationRes.builder()
+                        .presentState(AuthenticationCheck.YES.name())
+                        .build();
+            }else{
+                return GetAuthenticationRes.builder()
+                        .presentState(AuthenticationCheck.NO.name())
+                        .build();
+            }
+        }
         throw new BaseException(FAILED_TO_GET_CERTIFICATION_REQUEST);
+    }
+
+    /**
+     * 이름 조회
+     * @param userId
+     * @return
+     */
+    public GetNameRes retrieveName(Long userId) throws BaseException{
+
+        return  GetNameRes.builder()
+                .name(userInfoRepository.findByStateAndId(State.ACTIVE, userId)
+                        .orElseThrow(() -> new BaseException(FAILED_TO_GET_USER)).getName())
+                .build();
+
     }
 }

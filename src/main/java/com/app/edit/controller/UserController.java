@@ -4,6 +4,7 @@ import com.app.edit.config.BaseException;
 import com.app.edit.config.BaseResponse;
 import com.app.edit.domain.user.UserInfo;
 import com.app.edit.enums.AuthenticationCheck;
+import com.app.edit.enums.UserRole;
 import com.app.edit.provider.UserProvider;
 import com.app.edit.request.user.DeleteUserReq;
 import com.app.edit.request.user.PostUserReq;
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.app.edit.config.BaseResponseStatus.*;
@@ -232,7 +234,7 @@ public class UserController {
      */
     @PatchMapping(value = "/users/password")
     @ApiOperation(value = "비밀번호 수정", notes = "비밀번호 수정")
-    public BaseResponse<Void> UpdatePassword(
+    public BaseResponse<GetNameRes> UpdatePassword(
             @RequestHeader(value = "X-ACCESS-TOKEN") String jwt,
             @RequestParam(value = "password") String password,
             @RequestParam(value = "authenticationPassword") String authenticationPassword) {
@@ -255,8 +257,8 @@ public class UserController {
             if (userId == null || userId <= 0) {
                 return new BaseResponse<>(EMPTY_USERID);
             }
-            userService.updatePassword(userId,password);
-            return new BaseResponse<>(SUCCESS);
+            GetNameRes getNameRes = userService.updatePassword(userId,password);
+            return new BaseResponse<>(SUCCESS, getNameRes);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
@@ -285,6 +287,27 @@ public class UserController {
         }
     }
 
+    /**
+     * 내 이름 조회
+     * [GET] /api/users/profile
+     */
+    @GetMapping(value = "/users/name")
+    @ApiOperation(value = "이름 조회", notes = "이름 조회")
+    public BaseResponse<GetNameRes> getName(
+            @RequestHeader(value = "X-ACCESS-TOKEN") String jwt){
+
+        try {
+            Long userId = jwtService.getUserInfo().getUserId();
+
+            if (userId == null || userId <= 0) {
+                return new BaseResponse<>(EMPTY_USERID);
+            }
+            GetNameRes getNameRes = userProvider.retrieveName(userId);
+            return new BaseResponse<>(SUCCESS, getNameRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
 
     /**
      * 캐릭터 및 색상 변경
@@ -311,13 +334,14 @@ public class UserController {
         }
     }
 
+    //TODO 이미 처리되었는지 확인하기
     /**
      * 멘토 인증
      * [POST] /users/authentication
      * @return BaseResponse<Void>
      */
     @PostMapping(value = "/users/authentication")
-    @ApiOperation(value = "멘토 인증", notes = "멘토 인증")
+    @ApiOperation(value = "멘토 인증(미완성)", notes = "멘토 인증")
     public BaseResponse<Void> userAuthentication(
             @RequestHeader("X-ACCESS-TOKEN") String jwt,
             @RequestParam(value = "authenticationImage") MultipartFile multipartFile) throws IOException {
@@ -332,32 +356,6 @@ public class UserController {
             userService.AuthenticationMentor(userId,multipartFile);
 
             return new BaseResponse<>(SUCCESS);
-        } catch (BaseException exception) {
-            return new BaseResponse<>(exception.getStatus());
-        }
-    }
-
-    /**
-     * 멘토 인증 상태 조회
-     * [GET] /users/authentication
-     * @return BaseResponse<Void>
-     */
-    @GetMapping(value = "/users/authentication")
-    @ApiOperation(value = "멘토 인증 상태 조회", notes = "멘토 인증")
-    public BaseResponse<GetAuthenticationRes> userAuthentication(
-            @RequestHeader("X-ACCESS-TOKEN") String jwt){
-
-        try {
-
-            Long userId = jwtService.getUserInfo().getUserId();
-
-            if (userId == null || userId <= 0) {
-                return new BaseResponse<>(EMPTY_USERID);
-            }
-
-            GetAuthenticationRes getAuthenticationRes = userProvider.AuthenticationMentor(userId);
-
-            return new BaseResponse<>(SUCCESS, getAuthenticationRes);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
@@ -381,6 +379,68 @@ public class UserController {
                 return new BaseResponse<>(EMPTY_USERID);
             }
             userService.deleteUser(userId,parameters);
+            return new BaseResponse<>(SUCCESS);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    /**
+     * 멘토 인증 상태 조회
+     * [GET] /users/authentication
+     * @return BaseResponse<Void>
+     */
+    @GetMapping(value = "/users/authentication")
+    @ApiOperation(value = "멘토 인증 상태 조회(미완성)", notes = "멘토 인증")
+    public BaseResponse<GetAuthenticationRes> userAuthentication(
+            @RequestHeader("X-ACCESS-TOKEN") String jwt){
+
+        try {
+
+            GetUserInfo getUserInfo = jwtService.getUserInfo();
+            Long userId = getUserInfo.getUserId();
+            UserRole userRole = Arrays.stream(UserRole.values())
+                    .filter(userRole1 -> userRole1.name().equals(getUserInfo.getRole()))
+                    .findFirst()
+                    .orElseThrow(() -> new BaseException(FAILED_TO_GET_ROLE));
+
+            if (userId == null || userId <= 0) {
+                return new BaseResponse<>(EMPTY_USERID);
+            }
+
+            if (userRole.equals(UserRole.MENTEE))
+                throw new BaseException(UNAUTHORIZED_AUTHORITY);
+
+            GetAuthenticationRes getAuthenticationRes = userProvider.AuthenticationMentor(userId);
+
+            return new BaseResponse<>(SUCCESS, getAuthenticationRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    /**
+     * 직군 변경
+     * [PATCH] /api/users
+     */
+    @PatchMapping(value = "/users/jobs")
+    @ApiOperation(value = "직군 변경", notes = "직군 변경")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "jobName", value = "개발\n 경영\n  기획\n  디자인 \n 마케팅 / 홍보 \n 서무 / 서비스 \n 생산 / 기술\n  영업\n  인사 / 교육 \n 재무 / 회계 \n 총무 \n C/S \n 기타"),
+            @ApiImplicitParam(name = "etcJobName", value = "기타일 경우 내용 추가\n 기타가 아니면 NONE")
+    })
+    public BaseResponse<Void> UpdateJob(
+            @RequestHeader(value = "X-ACCESS-TOKEN") String jwt,
+            @RequestParam(value = "jobName") String jobName,
+            @RequestParam(value = "etcJobName") String etcJobName){
+
+        try {
+            Long userId = jwtService.getUserInfo().getUserId();
+
+            if (userId == null || userId <= 0) {
+                return new BaseResponse<>(EMPTY_USERID);
+            }
+            userService.updateJobs(userId,jobName,etcJobName);
             return new BaseResponse<>(SUCCESS);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());

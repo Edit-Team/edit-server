@@ -19,6 +19,7 @@ import com.app.edit.enums.UserRole;
 import com.app.edit.provider.UserProvider;
 import com.app.edit.request.user.DeleteUserReq;
 import com.app.edit.request.user.PostUserReq;
+import com.app.edit.response.user.GetNameRes;
 import com.app.edit.response.user.PostUserRes;
 import com.app.edit.utils.AES128;
 import com.app.edit.utils.JwtService;
@@ -101,7 +102,7 @@ public class UserService {
                 .nickName(parameters.getNickname())
                 .password(EncodingPassword)
                 .email(parameters.getEmail())
-                .userRole(UserRole.MENTEE)
+                .userRole(parameters.getUserRole())
                 .coinCount(0L)
                 .job(jobRepository.findByName(parameters.getJobName())
                         .orElseThrow(() -> new BaseException(FAILED_TO_GET_JOB)))
@@ -202,7 +203,7 @@ public class UserService {
      * @throws BaseException
      */
     @Transactional
-    public void updatePassword(Long userId, String password) throws BaseException {
+    public GetNameRes updatePassword(Long userId, String password) throws BaseException {
 
         UserInfo userInfo = userInfoRepository.findByStateAndId(State.ACTIVE,userId)
                 .orElseThrow(() -> new BaseException(FAILED_TO_GET_USER));
@@ -215,6 +216,9 @@ public class UserService {
         }
 
         userInfo.setPassword(encodingPassword);
+        return GetNameRes.builder()
+                .name(userInfo.getName())
+                .build();
     }
 
     /**
@@ -241,6 +245,12 @@ public class UserService {
 
     }
 
+    /**
+     * 회원 탈퇴
+     * @param userId
+     * @param parameters
+     * @throws BaseException
+     */
     @Transactional
     public void deleteUser(Long userId, DeleteUserReq parameters) throws BaseException {
 
@@ -278,5 +288,26 @@ public class UserService {
         }catch (Exception exception){
             throw new BaseException(FAILED_TO_POST_CERTIFICATION_REQUEST);
         }
+    }
+
+    /**
+     * 직군 변경
+     * @param userId
+     * @param jobName
+     * @param etcJobName
+     */
+    @Transactional
+    public void updateJobs(Long userId, String jobName, String etcJobName) throws BaseException {
+
+        UserInfo userInfo = userInfoRepository.findByStateAndId(State.ACTIVE,userId)
+                .orElseThrow(() -> new BaseException(NOT_FOUND_USER));
+
+        if(etcJobName.equals("NONE"))
+            userInfo.setEtcJobName(etcJobName);
+
+        Job job = jobRepository.findByName(jobName)
+                .orElseThrow(() -> new BaseException(FAILED_TO_GET_JOB));
+
+        userInfo.setJob(job);
     }
 }
