@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 import static com.app.edit.config.BaseResponseStatus.CAN_NOT_ADOPT_COMMENT_MORE_THAN_ONE;
+import static com.app.edit.config.BaseResponseStatus.DO_NOT_HAVE_PERMISSION;
 
 @Transactional
 @Service
@@ -28,11 +29,19 @@ public class CommentService {
     }
 
     public Long updateCommentAdoptedById(Long commentId) throws BaseException {
+        Long userInfoId = 1L;
         Comment selectedComment = commentProvider.getCommentById(commentId);
+        validateUserInfo(userInfoId, selectedComment);
         validateAdoptedComment(selectedComment);
         selectedComment.setIsAdopted(IsAdopted.YES);
         commentRepository.save(selectedComment);
         return selectedComment.getId();
+    }
+
+    private void validateUserInfo(Long userInfoId, Comment selectedComment) throws BaseException {
+        if (!selectedComment.getCoverLetter().getUserInfo().getId().equals(userInfoId)) {
+            throw new BaseException(DO_NOT_HAVE_PERMISSION);
+        }
     }
 
     private void validateAdoptedComment(Comment selectedComment) throws BaseException {
