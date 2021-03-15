@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.app.edit.config.Constant.*;
+import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 
 @Transactional(readOnly = true)
@@ -80,8 +81,10 @@ public class CoverLetterProvider {
      **/
     public List<GetCoverLettersRes> retrieveManySympathiesCoverLetters(Pageable pageable) {
         LocalDateTime beforeThreeDays = LocalDateTime.now().minusDays(CAN_STAY_DAY);
-        Page<CoverLetter> coverLettersHasManySympathies = coverLetterRepository.findCoverLettersHasManySympathies(pageable, beforeThreeDays, State.ACTIVE.name());
-        return getCoverLettersResponses(coverLettersHasManySympathies);
+        Page<CoverLetter> coverLettersHasManySympathies = coverLetterRepository.findCoverLettersHasManySympathies(pageable, beforeThreeDays, State.ACTIVE);
+        return getCoverLettersResponses(coverLettersHasManySympathies).stream()
+                .sorted(comparing(GetCoverLettersRes::getSympathiesCount).reversed())
+                .collect(toList());
     }
 
     private List<GetCoverLettersRes> getCoverLettersResponses(Page<CoverLetter> coverLetterPage) {
