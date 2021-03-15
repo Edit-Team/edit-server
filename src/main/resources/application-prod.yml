@@ -32,4 +32,3 @@ spring:
     username: admin
     password: editadmin
     driver-class-name: com.mysql.cj.jdbc.Driver
-d
