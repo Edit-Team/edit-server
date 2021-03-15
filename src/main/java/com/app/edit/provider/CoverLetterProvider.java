@@ -5,6 +5,7 @@ import com.app.edit.config.BaseResponseStatus;
 import com.app.edit.config.PageRequest;
 import com.app.edit.domain.coverletter.CoverLetter;
 import com.app.edit.domain.coverletter.CoverLetterRepository;
+import com.app.edit.enums.CoverLetterType;
 import com.app.edit.enums.IsAdopted;
 import com.app.edit.enums.State;
 import com.app.edit.response.coverletter.GetCoverLettersRes;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.app.edit.config.Constant.*;
+import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 
 @Transactional(readOnly = true)
@@ -80,8 +82,10 @@ public class CoverLetterProvider {
      **/
     public List<GetCoverLettersRes> retrieveManySympathiesCoverLetters(Pageable pageable) {
         LocalDateTime beforeThreeDays = LocalDateTime.now().minusDays(CAN_STAY_DAY);
-        Page<CoverLetter> coverLettersHasManySympathies = coverLetterRepository.findCoverLettersHasManySympathies(pageable, beforeThreeDays, State.ACTIVE.name());
-        return getCoverLettersResponses(coverLettersHasManySympathies);
+        Page<CoverLetter> coverLettersHasManySympathies = coverLetterRepository.findCoverLettersHasManySympathies(pageable, beforeThreeDays, State.ACTIVE);
+        return getCoverLettersResponses(coverLettersHasManySympathies).stream()
+                .sorted(comparing(GetCoverLettersRes::getSympathiesCount).reversed())
+                .collect(toList());
     }
 
     private List<GetCoverLettersRes> getCoverLettersResponses(Page<CoverLetter> coverLetterPage) {
@@ -103,12 +107,27 @@ public class CoverLetterProvider {
         return coverLetter.get();
     }
 
-    /*
+    /**
      * 내가 등록한 자소서 목록 조회
-     **/
-    public List<GetCoverLettersRes> retrieveMyCoverLetters(Pageable pageable) {
+     * @param pageable
+     * @return
+     */
+    public List<GetCoverLettersRes> retrieveMyWritingCoverLetters(Pageable pageable) {
         Long userInfoId = 1L;
-        Page<CoverLetter> myCoverLetters = coverLetterRepository.findMyCoverLetters(pageable, userInfoId, State.ACTIVE);
+        Page<CoverLetter> myCoverLetters = coverLetterRepository
+                .findMyCoverLetters(pageable, userInfoId, State.ACTIVE, CoverLetterType.WRITING);
         return getCoverLettersResponses(myCoverLetters);
+    }
+
+    /**
+     * 내가 완성한 자소서 목록 조회
+     * @param pageable
+     * @return
+     */
+    public List<GetCoverLettersRes> retrieveMyCompletingCoverLetters(Pageable pageable) {
+        Long userInfoId = 1L;
+        Page<CoverLetter> completingCoverLetters = coverLetterRepository
+                .findMyCoverLetters(pageable, userInfoId, State.ACTIVE, CoverLetterType.COMPLETING);
+        return getCoverLettersResponses(completingCoverLetters);
     }
 }

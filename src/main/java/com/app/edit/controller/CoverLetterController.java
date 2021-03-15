@@ -117,9 +117,29 @@ public class CoverLetterController {
      * 먼저 등록한 순서대로 정렬
      **/
     @ApiOperation(value = "내가 등록한 자소서 조회 API")
-    @GetMapping("/my-cover-letters")
+    @GetMapping("/my-writing-cover-letters")
     public BaseResponse<List<GetCoverLettersRes>> getMyCoverLetters(@RequestParam Integer page) {
-        PageRequest pageRequest = com.app.edit.config.PageRequest.of(page, DEFAULT_PAGE_SIZE, Sort.by("createdAt"));
-        return new BaseResponse<>(BaseResponseStatus.SUCCESS, coverLetterProvider.retrieveMyCoverLetters(pageRequest));
+        PageRequest pageRequest = com.app.edit.config.PageRequest.of(page, DEFAULT_PAGE_SIZE);
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS, coverLetterProvider.retrieveMyWritingCoverLetters(pageRequest));
+    }
+
+    /**
+     * 등록한 자소서 삭제하기 API
+     */
+    @ApiOperation(value = "등록한 자소서 삭제하기 API")
+    @DeleteMapping("/cover-letters/{cover-letters-id}")
+    public BaseResponse<Long> deleteCoverLetter(@PathVariable("cover-letters-id") Long coverLetterId) throws BaseException {
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS, coverLetterService.deleteCoverLetterById(coverLetterId));
+    }
+
+    /**
+     * 내가 완성한 자소서 조회 API
+     */
+    @ApiOperation(value = "완성한 자소서 목록 조회 API")
+    @GetMapping("/my-completing-cover-letters")
+    public BaseResponse<List<GetCoverLettersRes>> getCompletingCoverLetters(@RequestParam Integer page) {
+        PageRequest pageRequest = com.app.edit.config.PageRequest.of(page, DEFAULT_PAGE_SIZE);
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS,
+                coverLetterProvider.retrieveMyCompletingCoverLetters(pageRequest));
     }
 }

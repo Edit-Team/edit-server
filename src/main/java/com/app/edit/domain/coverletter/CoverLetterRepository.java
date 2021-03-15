@@ -1,5 +1,6 @@
 package com.app.edit.domain.coverletter;
 
+import com.app.edit.enums.CoverLetterType;
 import com.app.edit.enums.IsAdopted;
 import com.app.edit.enums.State;
 import com.app.edit.response.coverletter.GetCoverLettersRes;
@@ -38,16 +39,13 @@ public interface CoverLetterRepository extends JpaRepository<CoverLetter, Long> 
     /*
      * 많은 분들이 공감하고 있어요 조회 쿼리
      **/
-    @Query(value = "select * " +
-            "from cover_letter cl " +
-            "where cl.created_At >= :beforeThreeDays " +
-            "order by (select count(*) from sympathy s where s.cover_letter_id = cl.id and s.state = :state) desc ",
-            nativeQuery = true)
-    Page<CoverLetter> findCoverLettersHasManySympathies(Pageable pageable, @Param("beforeThreeDays") LocalDateTime beforeThreeDays, @Param("state") String state);
+    @Query(value = "select cl from CoverLetter cl where cl.createdAt >= :beforeThreeDays and cl.state = :state")
+    Page<CoverLetter> findCoverLettersHasManySympathies(Pageable pageable, @Param("beforeThreeDays") LocalDateTime beforeThreeDays, @Param("state") State state);
 
     /*
-     * 내가 등록한 자소서 목록 조회 쿼리
+     * 내가 등록한/완성한 자소서 목록 조회 쿼리
      **/
-    @Query(value = "select c from CoverLetter c where c.userInfo.id = :userInfoId and c.state = :state")
-    Page<CoverLetter> findMyCoverLetters(Pageable pageable, @Param("userInfoId") Long userInfoId, @Param("state") State state);
+    @Query(value = "select c from CoverLetter c where c.userInfo.id = :userInfoId and c.state = :state and c.type = :type order by c.createdAt desc ")
+    Page<CoverLetter> findMyCoverLetters(Pageable pageable, @Param("userInfoId") Long userInfoId,
+                                         @Param("state") State state, @Param("type") CoverLetterType type);
 }
