@@ -1,6 +1,7 @@
 package com.app.edit.service;
 
 import com.app.edit.config.BaseException;
+import com.app.edit.config.BaseResponseStatus;
 import com.app.edit.domain.coverletter.CoverLetter;
 import com.app.edit.domain.coverletter.CoverLetterRepository;
 import com.app.edit.domain.coverlettercategory.CoverLetterCategory;
@@ -73,5 +74,20 @@ public class CoverLetterService {
         userInfo.addCoverLetter(requestedCompletingCoverLetter);
         CoverLetter savedTemporaryCoverLetter = coverLetterRepository.save(requestedCompletingCoverLetter);
         return savedTemporaryCoverLetter.getId();
+    }
+
+    public Long deleteCoverLetterById(Long coverLetterId) throws BaseException {
+        Long userInfoId = 1L;
+        CoverLetter selectedCoverLetter = coverLetterProvider.getCoverLetterById(coverLetterId);
+        validateUser(userInfoId, selectedCoverLetter);
+        selectedCoverLetter.setState(State.INACTIVE);
+        coverLetterRepository.save(selectedCoverLetter);
+        return selectedCoverLetter.getId();
+    }
+
+    private void validateUser(Long userInfoId, CoverLetter selectedCoverLetter) throws BaseException {
+        if (!selectedCoverLetter.getUserInfo().getId().equals(userInfoId)) {
+            throw new BaseException(BaseResponseStatus.DO_NOT_HAVE_PERMISSION);
+        }
     }
 }
