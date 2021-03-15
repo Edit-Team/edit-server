@@ -37,6 +37,12 @@ public enum BaseResponseStatus {
     EMPTY_CONTENT(false, 2045, "이메일이나 닉네임 중 하나를 입력하세요."),
     INVAILD_CONTENT(false, 2046, "이메일이나 닉네임 중 하나만 입력하세요."),
     UNAUTHORIZED_AUTHORITY(false, 2047, "권한이 없습니다."),
+    EMPTY_JOBNAME(false, 2048, "직군이 비었습니다."),
+    EMPTY_ETCJOBNAME(false, 2049, "기타 직군이 비었습니다."),
+    EMPTY_NAME(false, 2050, "이름이 비었습니다."),
+    EMPTY_PHONENUMBER(false, 2500, "핸드폰 번호가 비었습니다."),
+    EMPTY_COLORNAME(false, 2501, "색상 이름이 비었습니다."),
+    EMPTY_EMOTIONNAME(false, 2502, "감정표현 이름이 비었습니다."),
 
 
 
