@@ -120,7 +120,7 @@ public class CoverLetterController {
     @GetMapping("/my-cover-letters")
     public BaseResponse<List<GetCoverLettersRes>> getMyCoverLetters(@RequestParam Integer page) {
         PageRequest pageRequest = com.app.edit.config.PageRequest.of(page, DEFAULT_PAGE_SIZE, Sort.by("createdAt"));
-        return new BaseResponse<>(BaseResponseStatus.SUCCESS, coverLetterProvider.retrieveMyCoverLetters(pageRequest));
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS, coverLetterProvider.retrieveMyWritingCoverLetters(pageRequest));
     }
 
     /**
@@ -130,5 +130,16 @@ public class CoverLetterController {
     @DeleteMapping("/cover-letters/{cover-letters-id}")
     public BaseResponse<Long> deleteCoverLetter(@PathVariable("cover-letters-id") Long coverLetterId) throws BaseException {
         return new BaseResponse<>(BaseResponseStatus.SUCCESS, coverLetterService.deleteCoverLetterById(coverLetterId));
+    }
+
+    /**
+     * 내가 완성한 자소서 조회 API
+     */
+    @ApiOperation(value = "완성한 자소서 목록 조회 API")
+    @GetMapping("/my-completing-cover-letters")
+    public BaseResponse<List<GetCoverLettersRes>> getCompletingCoverLetters(@RequestParam Integer page) {
+        PageRequest pageRequest = com.app.edit.config.PageRequest.of(page, DEFAULT_PAGE_SIZE, Sort.by("createdAt"));
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS,
+                coverLetterProvider.retrieveMyCompletingCoverLetters(pageRequest));
     }
 }
