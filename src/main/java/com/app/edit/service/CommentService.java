@@ -1,7 +1,6 @@
 package com.app.edit.service;
 
 import com.app.edit.config.BaseException;
-import com.app.edit.config.BaseResponseStatus;
 import com.app.edit.domain.comment.Comment;
 import com.app.edit.domain.comment.CommentRepository;
 import com.app.edit.enums.IsAdopted;
@@ -9,8 +8,6 @@ import com.app.edit.provider.CommentProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 import static com.app.edit.config.BaseResponseStatus.CAN_NOT_ADOPT_COMMENT_MORE_THAN_ONE;
 import static com.app.edit.config.BaseResponseStatus.DO_NOT_HAVE_PERMISSION;
@@ -31,14 +28,14 @@ public class CommentService {
     public Long updateCommentAdoptedById(Long commentId) throws BaseException {
         Long userInfoId = 1L;
         Comment selectedComment = commentProvider.getCommentById(commentId);
-        validateUserInfo(userInfoId, selectedComment);
+        validateUser(userInfoId, selectedComment);
         validateAdoptedComment(selectedComment);
         selectedComment.setIsAdopted(IsAdopted.YES);
         commentRepository.save(selectedComment);
         return selectedComment.getId();
     }
 
-    private void validateUserInfo(Long userInfoId, Comment selectedComment) throws BaseException {
+    private void validateUser(Long userInfoId, Comment selectedComment) throws BaseException {
         if (!selectedComment.getCoverLetter().getUserInfo().getId().equals(userInfoId)) {
             throw new BaseException(DO_NOT_HAVE_PERMISSION);
         }
