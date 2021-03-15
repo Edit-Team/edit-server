@@ -17,14 +17,14 @@ public abstract class BaseEntity {
 //    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", insertable = false, updatable = false)
 //    @Temporal(TIMESTAMP)
     @CreationTimestamp
-    @Column(name = "createdAt", nullable = false, updatable = false)
+    @Column(name = "createdAt", nullable = false, updatable = false, columnDefinition = "timestamp default current_timestamp")
     private LocalDateTime createdAt;
 
 //    @Getter
 //    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP", insertable = false, updatable = false)
 //    @Temporal(TIMESTAMP)
     @UpdateTimestamp
-    @Column(name = "updatedAt", nullable = false)
+    @Column(name = "updatedAt", nullable = false, columnDefinition = "timestamp default current_timestamp on update current_timestamp")
     private LocalDateTime updatedAt;
 
 //    @PrePersist
