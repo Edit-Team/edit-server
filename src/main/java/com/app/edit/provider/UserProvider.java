@@ -2,14 +2,15 @@ package com.app.edit.provider;
 
 import com.app.edit.config.BaseException;
 import com.app.edit.config.secret.Secret;
+import com.app.edit.domain.certificationRequest.CertificationRequest;
+import com.app.edit.domain.certificationRequest.CertificationRequestRepository;
 import com.app.edit.domain.user.UserInfo;
 import com.app.edit.domain.user.UserInfoRepository;
 import com.app.edit.enums.AuthenticationCheck;
+import com.app.edit.enums.IsProcessing;
 import com.app.edit.enums.State;
-import com.app.edit.response.user.DuplicationCheck;
-import com.app.edit.response.user.GetEmailRes;
-import com.app.edit.response.user.GetUserRes;
-import com.app.edit.response.user.PostUserRes;
+import com.app.edit.enums.UserRole;
+import com.app.edit.response.user.*;
 import com.app.edit.service.EmailSenderService;
 import com.app.edit.utils.AES128;
 import com.app.edit.utils.GetDateTime;
@@ -19,12 +20,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.app.edit.config.BaseResponseStatus.*;
@@ -37,16 +34,19 @@ public class UserProvider {
     private final EmailSenderService sesEmailEmailSender;
     private final GetDateTime getDateTime;
     private final HashMap<String,String> authenticationCodeRepository;
+    private final CertificationRequestRepository certificationRequestRepository;
     private final JwtService jwtService;
 
     @Autowired
     public UserProvider(UserInfoRepository userRepository,
                         EmailSenderService sesEmailEmailSender,
-                        GetDateTime getDateTime, HashMap<String, String> authenticationCodeRepository, JwtService jwtService) {
+                        GetDateTime getDateTime, HashMap<String, String> authenticationCodeRepository,
+                        CertificationRequestRepository certificationRequestRepository, JwtService jwtService) {
         this.userInfoRepository = userRepository;
         this.sesEmailEmailSender = sesEmailEmailSender;
         this.getDateTime = getDateTime;
         this.authenticationCodeRepository = authenticationCodeRepository;
+        this.certificationRequestRepository = certificationRequestRepository;
         this.jwtService = jwtService;
     }
 
@@ -66,7 +66,6 @@ public class UserProvider {
             throw new BaseException(FAILED_TO_GET_USER);
         }
 
-
         return userList.stream()
                 .map(user -> GetUserRes.builder()
                         .name(user.getName())
@@ -74,8 +73,12 @@ public class UserProvider {
                         .phoneNumber(user.getPhoneNumber())
                         .etcJobName(user.getEtcJobName())
                         .email(user.getEmail())
-                        .withdrawal(user.getWithdrawal())
+                        .withdrawalContent(user.getWithdrawalContent())
+                        .etcWithdrawalContent(user.getEtcWithdrawalContent())
                         .coinCount(user.getCoinCount())
+                        .colorName(user.getUserProfile().getProfileColor().getName())
+                        .emotionName(user.getUserProfile().getProfileEmotion().getName())
+                        .jobName(user.getJob().getName())
                         .build())
                 .collect(Collectors.toList());
     }
@@ -124,8 +127,16 @@ public class UserProvider {
 
         //email이 null이면 닉네임 검증
         if(email == null){
-            userInfoList = userInfoRepository.findByStateAndEmailIsContaining(State.ACTIVE,nickName);
+            userInfoList = userInfoRepository.findByStateAndNickNameIsContaining(State.ACTIVE,nickName);
         }
+
+        if(nickName == null && email == null)
+            throw new BaseException(EMPTY_CONTENT);
+
+
+        if(nickName != null && email != null)
+            throw new BaseException(INVAILD_CONTENT);
+
         return userInfoList.size() == 0 ?
                 DuplicationCheck.builder().duplicationCheck("NO").build() :
                 DuplicationCheck.builder().duplicationCheck("YES").build() ;
@@ -274,5 +285,73 @@ public class UserProvider {
             return AuthenticationCheck.YES;
         else
             return AuthenticationCheck.NO;
+    }
+
+    /**
+     * 내 프로필 조회
+     * @param userId
+     * @return
+     */
+    public GetProfileRes retrieveProfile(Long userId) throws BaseException{
+
+        UserInfo userInfo = userInfoRepository.findByStateAndId(State.ACTIVE,userId)
+                .orElseThrow(() -> new BaseException(FAILED_TO_GET_USER));
+
+        return GetProfileRes.builder()
+                .name(userInfo.getName())
+                .emotionName(userInfo.getUserProfile().getProfileEmotion().getName())
+                .colorName(userInfo.getUserProfile().getProfileColor().getName())
+                .build();
+    }
+
+    /**
+     * 현재 인증 상태 조회
+     * @param userId
+     * @return
+     */
+    public GetAuthenticationRes AuthenticationMentor(Long userId) throws BaseException{
+
+        UserInfo userInfo = userInfoRepository.findByStateAndId(State.ACTIVE,userId)
+                 .orElseThrow(() -> new BaseException(FAILED_TO_GET_USER));
+
+        //IsProcessing = no -> 처리중이면 Waiting 반환
+        Optional<CertificationRequest> certificationRequest1 =
+                certificationRequestRepository.findByIsProcessingAndUserInfo(IsProcessing.NO,userInfo);
+
+        if(certificationRequest1.isPresent())
+            return GetAuthenticationRes.builder()
+                    .presentState(AuthenticationCheck.WAITING.name())
+                    .build();
+
+        //IsProcessing = yes -> 인증 성공 = YES, 인증 실패 = NO
+        Optional<CertificationRequest> certificationRequest =
+                certificationRequestRepository.findByIsProcessingAndUserInfo(IsProcessing.YES,userInfo);
+
+        if(certificationRequest.isPresent()) {
+            if(userInfo.getIsCertificatedMentor().equals(AuthenticationCheck.YES)) {
+                return GetAuthenticationRes.builder()
+                        .presentState(AuthenticationCheck.YES.name())
+                        .build();
+            }else{
+                return GetAuthenticationRes.builder()
+                        .presentState(AuthenticationCheck.NO.name())
+                        .build();
+            }
+        }
+        throw new BaseException(FAILED_TO_GET_CERTIFICATION_REQUEST);
+    }
+
+    /**
+     * 이름 조회
+     * @param userId
+     * @return
+     */
+    public GetNameRes retrieveName(Long userId) throws BaseException{
+
+        return  GetNameRes.builder()
+                .name(userInfoRepository.findByStateAndId(State.ACTIVE, userId)
+                        .orElseThrow(() -> new BaseException(FAILED_TO_GET_USER)).getName())
+                .build();
+
     }
 }

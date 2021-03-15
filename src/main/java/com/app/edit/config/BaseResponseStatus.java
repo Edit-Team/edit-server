@@ -34,6 +34,9 @@ public enum BaseResponseStatus {
     EXPIRED_JWT(false, 2042, "토큰이 만료되었습니다."),
     EMPTY_RECEIVER(false, 2043, "이메일 수신자가 없습니다."),
     AUTHENTICATION_TIME_EXPIRED(false, 2044, "인증 시간이 만료되었습니다."),
+    EMPTY_CONTENT(false, 2045, "이메일이나 닉네임 중 하나를 입력하세요."),
+    INVAILD_CONTENT(false, 2046, "이메일이나 닉네임 중 하나만 입력하세요."),
+    UNAUTHORIZED_AUTHORITY(false, 2047, "권한이 없습니다."),
 
 
 
@@ -55,7 +58,13 @@ public enum BaseResponseStatus {
     FAILED_TO_AUTHENTICATION_CODE(false, 3018, "인증 번호 인증에 실패했습니다."),
     FAILED_TO_ENCRYPT_PASSWORD(false, 3019, "비밀 번호 암호화에 실패했습니다."),
     FAILED_TO_UPDATE_USER(false, 3020, "비밀번호 변경에 실패했습니다."),
-
+    FAILED_TO_POST_CERTIFICATION_REQUEST(false, 3021, "멘토 변경 인증 생성에 실패했습니다."),
+    NOT_FOUND_COLOR(false, 3022, "색상 조회에 실패했습니다."),
+    NOT_FOUND_EMOTION(false, 3023, "이모티콘 조회에 실패했습니다."),
+    FAILED_TO_POST_USER_PROFILE(false, 3024, "유저 프로필 등록에 실패했습니다."),
+    FAILED_TO_GET_JOB(false, 3025, "직군 조회에 실패했습니다."),
+    FAILED_TO_GET_CERTIFICATION_REQUEST(false, 3026, "인증 요청 조회에 실패했습니다."),
+    FAILED_TO_GET_ROLE(false, 3027, "역할을 찾을수 없습니다."),
 
     // colt
     NOT_FOUND_COVER_LETTER(false, 3100, "존재하지 않는 자소서입니다."),

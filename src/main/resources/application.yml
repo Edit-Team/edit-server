@@ -2,12 +2,10 @@ spring:
   application:
     name: edit
   profiles:
+    include: credentials
     active: dev
 
-ses:
-  email: hr.seongeun@gmail.com
-  access-key: AKIAJKTMKM4CXTVZXKSA
-  secret-key: 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
+
 #  mail:
 #    host: smtp.gmail.com
 #    port: 587

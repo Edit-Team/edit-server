@@ -2,13 +2,13 @@ package com.app.edit.controller;
 
 import com.app.edit.config.BaseException;
 import com.app.edit.config.BaseResponse;
+import com.app.edit.domain.user.UserInfo;
 import com.app.edit.enums.AuthenticationCheck;
+import com.app.edit.enums.UserRole;
 import com.app.edit.provider.UserProvider;
+import com.app.edit.request.user.DeleteUserReq;
 import com.app.edit.request.user.PostUserReq;
-import com.app.edit.response.user.GetEmailRes;
-import com.app.edit.response.user.GetUserRes;
-import com.app.edit.response.user.PostUserRes;
-import com.app.edit.response.user.DuplicationCheck;
+import com.app.edit.response.user.*;
 import com.app.edit.service.UserService;
 import com.app.edit.utils.JwtService;
 import io.swagger.annotations.ApiImplicitParam;
@@ -17,7 +17,11 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.app.edit.config.BaseResponseStatus.*;
@@ -216,8 +220,228 @@ public class UserController {
             if (userId == null || userId <= 0) {
                 return new BaseResponse<>(EMPTY_USERID);
             }
+
             AuthenticationCheck authenticationCheck = userProvider.authenticationPassword(userId,password);
             return new BaseResponse<>(SUCCESS, authenticationCheck);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    /**
+     * 비밀번호 수정
+     * [PATCH] /api/users/password
+     */
+    @PatchMapping(value = "/users/password")
+    @ApiOperation(value = "비밀번호 수정", notes = "비밀번호 수정")
+    public BaseResponse<GetNameRes> UpdatePassword(
+            @RequestHeader(value = "X-ACCESS-TOKEN") String jwt,
+            @RequestParam(value = "password") String password,
+            @RequestParam(value = "authenticationPassword") String authenticationPassword) {
+
+        try {
+            Long userId = jwtService.getUserInfo().getUserId();
+
+            if (password == null || password.length() == 0) {
+                return new BaseResponse<>(EMPTY_PASSWORD);
+            }
+
+            if (authenticationPassword == null || authenticationPassword.length() == 0) {
+                return new BaseResponse<>(EMPTY_CONFIRM_PASSWORD);
+            }
+
+            if (!password.equals(authenticationPassword)) {
+                return new BaseResponse<>(DO_NOT_MATCH_PASSWORD);
+            }
+
+            if (userId == null || userId <= 0) {
+                return new BaseResponse<>(EMPTY_USERID);
+            }
+            GetNameRes getNameRes = userService.updatePassword(userId,password);
+            return new BaseResponse<>(SUCCESS, getNameRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+
+    /**
+     * 내 프로필 조회
+     * [GET] /api/users/profile
+     */
+    @GetMapping(value = "/users/profile")
+    @ApiOperation(value = "내 프로필 조회", notes = "내 프로필 조회")
+    public BaseResponse<GetProfileRes> getProfile(
+            @RequestHeader(value = "X-ACCESS-TOKEN") String jwt){
+
+        try {
+            Long userId = jwtService.getUserInfo().getUserId();
+
+            if (userId == null || userId <= 0) {
+                return new BaseResponse<>(EMPTY_USERID);
+            }
+            GetProfileRes getProfileRes = userProvider.retrieveProfile(userId);
+            return new BaseResponse<>(SUCCESS, getProfileRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    /**
+     * 내 이름 조회
+     * [GET] /api/users/profile
+     */
+    @GetMapping(value = "/users/name")
+    @ApiOperation(value = "이름 조회", notes = "이름 조회")
+    public BaseResponse<GetNameRes> getName(
+            @RequestHeader(value = "X-ACCESS-TOKEN") String jwt){
+
+        try {
+            Long userId = jwtService.getUserInfo().getUserId();
+
+            if (userId == null || userId <= 0) {
+                return new BaseResponse<>(EMPTY_USERID);
+            }
+            GetNameRes getNameRes = userProvider.retrieveName(userId);
+            return new BaseResponse<>(SUCCESS, getNameRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    /**
+     * 캐릭터 및 색상 변경
+     * [PATCH] /api/users/profile
+     */
+    @PatchMapping(value = "/users/profile")
+    @ApiOperation(value = "캐릭터 및 색상 변경", notes = "캐릭터 및 색상 변경")
+    public BaseResponse<Void> UpdateProfile(
+            @RequestHeader(value = "X-ACCESS-TOKEN") String jwt,
+            @RequestParam(value = "colorName") String colorName,
+            @RequestParam(value = "emotionName") String emotionName
+            ){
+
+        try {
+            Long userId = jwtService.getUserInfo().getUserId();
+
+            if (userId == null || userId <= 0) {
+                return new BaseResponse<>(EMPTY_USERID);
+            }
+            userService.updateProfile(userId,colorName,emotionName);
+            return new BaseResponse<>(SUCCESS);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    //TODO 이미 처리되었는지 확인하기
+    /**
+     * 멘토 인증
+     * [POST] /users/authentication
+     * @return BaseResponse<Void>
+     */
+    @PostMapping(value = "/users/authentication")
+    @ApiOperation(value = "멘토 인증(미완성)", notes = "멘토 인증")
+    public BaseResponse<Void> userAuthentication(
+            @RequestHeader("X-ACCESS-TOKEN") String jwt,
+            @RequestParam(value = "authenticationImage") MultipartFile multipartFile) throws IOException {
+        try {
+
+            Long userId = jwtService.getUserInfo().getUserId();
+
+            if (userId == null || userId <= 0) {
+                return new BaseResponse<>(EMPTY_USERID);
+            }
+
+            userService.AuthenticationMentor(userId,multipartFile);
+
+            return new BaseResponse<>(SUCCESS);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    /**
+     * 회원 탈퇴
+     * [DELETE] /api/users
+     */
+    @DeleteMapping(value = "/users")
+    @ApiOperation(value = "회원 탈퇴", notes = "회원 탈퇴")
+    public BaseResponse<Void> UpdateProfile(
+            @RequestHeader(value = "X-ACCESS-TOKEN") String jwt,
+            @Valid
+            @RequestBody DeleteUserReq parameters){
+
+        try {
+            Long userId = jwtService.getUserInfo().getUserId();
+
+            if (userId == null || userId <= 0) {
+                return new BaseResponse<>(EMPTY_USERID);
+            }
+            userService.deleteUser(userId,parameters);
+            return new BaseResponse<>(SUCCESS);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    /**
+     * 멘토 인증 상태 조회
+     * [GET] /users/authentication
+     * @return BaseResponse<Void>
+     */
+    @GetMapping(value = "/users/authentication")
+    @ApiOperation(value = "멘토 인증 상태 조회(미완성)", notes = "멘토 인증")
+    public BaseResponse<GetAuthenticationRes> userAuthentication(
+            @RequestHeader("X-ACCESS-TOKEN") String jwt){
+
+        try {
+
+            GetUserInfo getUserInfo = jwtService.getUserInfo();
+            Long userId = getUserInfo.getUserId();
+            UserRole userRole = Arrays.stream(UserRole.values())
+                    .filter(userRole1 -> userRole1.name().equals(getUserInfo.getRole()))
+                    .findFirst()
+                    .orElseThrow(() -> new BaseException(FAILED_TO_GET_ROLE));
+
+            if (userId == null || userId <= 0) {
+                return new BaseResponse<>(EMPTY_USERID);
+            }
+
+            if (userRole.equals(UserRole.MENTEE))
+                throw new BaseException(UNAUTHORIZED_AUTHORITY);
+
+            GetAuthenticationRes getAuthenticationRes = userProvider.AuthenticationMentor(userId);
+
+            return new BaseResponse<>(SUCCESS, getAuthenticationRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    /**
+     * 직군 변경
+     * [PATCH] /api/users
+     */
+    @PatchMapping(value = "/users/jobs")
+    @ApiOperation(value = "직군 변경", notes = "직군 변경")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "jobName", value = "개발\n 경영\n  기획\n  디자인 \n 마케팅 / 홍보 \n 서무 / 서비스 \n 생산 / 기술\n  영업\n  인사 / 교육 \n 재무 / 회계 \n 총무 \n C/S \n 기타"),
+            @ApiImplicitParam(name = "etcJobName", value = "기타일 경우 내용 추가\n 기타가 아니면 NONE")
+    })
+    public BaseResponse<Void> UpdateJob(
+            @RequestHeader(value = "X-ACCESS-TOKEN") String jwt,
+            @RequestParam(value = "jobName") String jobName,
+            @RequestParam(value = "etcJobName") String etcJobName){
+
+        try {
+            Long userId = jwtService.getUserInfo().getUserId();
+
+            if (userId == null || userId <= 0) {
+                return new BaseResponse<>(EMPTY_USERID);
+            }
+            userService.updateJobs(userId,jobName,etcJobName);
+            return new BaseResponse<>(SUCCESS);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }

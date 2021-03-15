@@ -2,20 +2,35 @@ package com.app.edit.service;
 
 import com.app.edit.config.BaseException;
 import com.app.edit.config.secret.Secret;
+import com.app.edit.domain.certificationRequest.CertificationRequest;
+import com.app.edit.domain.certificationRequest.CertificationRequestRepository;
+import com.app.edit.domain.job.Job;
 import com.app.edit.domain.job.JobRepository;
+import com.app.edit.domain.profilecolor.ProfileColor;
+import com.app.edit.domain.profilecolor.ProfileColorRepository;
+import com.app.edit.domain.profileemotion.ProfileEmotion;
+import com.app.edit.domain.profileemotion.ProfileEmotionRepository;
 import com.app.edit.domain.user.UserInfo;
 import com.app.edit.domain.user.UserInfoRepository;
+import com.app.edit.domain.userprofile.UserProfile;
+import com.app.edit.domain.userprofile.UserProfileRepository;
 import com.app.edit.enums.State;
 import com.app.edit.enums.UserRole;
 import com.app.edit.provider.UserProvider;
+import com.app.edit.request.user.DeleteUserReq;
 import com.app.edit.request.user.PostUserReq;
+import com.app.edit.response.user.GetNameRes;
 import com.app.edit.response.user.PostUserRes;
 import com.app.edit.utils.AES128;
 import com.app.edit.utils.JwtService;
+import com.app.edit.utils.S3Service;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import static com.app.edit.config.BaseResponseStatus.*;
@@ -27,21 +42,37 @@ public class UserService {
     private final EmailSenderService emailSenderService;
     private final JobRepository jobRepository;
     private final UserProvider userProvider;
+    private final UserProfileRepository userProfileRepository;
+    private final ProfileEmotionRepository profileEmotionRepository;
+    private final ProfileColorRepository profileColorRepository;
     private final JwtService jwtService;
+    private final S3Service s3Service;
+    private final CertificationRequestRepository certificationRequestRepository;
 
     @Autowired
     public UserService(UserInfoRepository userRepository,
                        EmailSenderService emailSenderService,
                        JobRepository jobRepository,
                        UserProvider userProvider,
-                       JwtService jwtService) {
+                       UserProfileRepository userProfileRepository,
+                       ProfileEmotionRepository profileEmotionRepository,
+                       ProfileColorRepository profileColorRepository,
+                       JwtService jwtService,
+                       S3Service s3Service,
+                       CertificationRequestRepository certificationRequestRepository) {
         this.userInfoRepository = userRepository;
         this.emailSenderService = emailSenderService;
         this.jobRepository = jobRepository;
         this.userProvider = userProvider;
+        this.userProfileRepository = userProfileRepository;
+        this.profileEmotionRepository = profileEmotionRepository;
+        this.profileColorRepository = profileColorRepository;
         this.jwtService = jwtService;
+        this.s3Service = s3Service;
+        this.certificationRequestRepository = certificationRequestRepository;
     }
 
+    @Transactional
     public PostUserRes createUserInfo(PostUserReq parameters) throws BaseException {
 
         UserInfo existsUser = null;
@@ -71,9 +102,10 @@ public class UserService {
                 .nickName(parameters.getNickname())
                 .password(EncodingPassword)
                 .email(parameters.getEmail())
-                .userRole(UserRole.MENTEE)
+                .userRole(parameters.getUserRole())
                 .coinCount(0L)
-                .job(jobRepository.findById(1L).orElse(null))
+                .job(jobRepository.findByName(parameters.getJobName())
+                        .orElseThrow(() -> new BaseException(FAILED_TO_GET_JOB)))
                 .etcJobName(parameters.getEtcJobName().equals("NONE") ? "NONE": parameters.getEtcJobName())
                 .phoneNumber(parameters.getPhoneNumber())
                 .build();
@@ -83,6 +115,21 @@ public class UserService {
             newUser = userInfoRepository.save(newUser);
         } catch (Exception exception) {
             throw new BaseException(FAILED_TO_POST_USER);
+        }
+
+        UserProfile userProfile = UserProfile.builder()
+                .profileColor(profileColorRepository.findById(1L)
+                        .orElseThrow(() -> new BaseException(NOT_FOUND_COLOR)))
+                .profileEmotion(profileEmotionRepository.findById(1L)
+                        .orElseThrow(() -> new BaseException(NOT_FOUND_EMOTION)))
+                .userInfo(newUser)
+                .build();
+
+        try{
+            UserProfile profile = userProfileRepository.save(userProfile);
+            newUser.setUserProfile(profile);
+        }catch (Exception exception){
+            throw new BaseException(FAILED_TO_POST_USER_PROFILE);
         }
 
         // 4. JWT 생성
@@ -147,5 +194,120 @@ public class UserService {
         }
         emailSenderService.send(subject, emailContent.toString(), to);
         user.setPassword(encodingPassword);
+    }
+
+    /**
+     * 비밀번호 수정
+     * @param userId
+     * @param password
+     * @throws BaseException
+     */
+    @Transactional
+    public GetNameRes updatePassword(Long userId, String password) throws BaseException {
+
+        UserInfo userInfo = userInfoRepository.findByStateAndId(State.ACTIVE,userId)
+                .orElseThrow(() -> new BaseException(FAILED_TO_GET_USER));
+
+        String encodingPassword;
+        try{
+            encodingPassword = new AES128(Secret.USER_INFO_PASSWORD_KEY).encrypt(password);
+        }catch (Exception ignore){
+            throw new BaseException(FAILED_TO_ENCRYPT_PASSWORD);
+        }
+
+        userInfo.setPassword(encodingPassword);
+        return GetNameRes.builder()
+                .name(userInfo.getName())
+                .build();
+    }
+
+    /**
+     * 내 프로필 수정
+     * @param userId
+     * @param colorName
+     * @param emotionName
+     * @throws BaseException
+     */
+    @Transactional
+    public void updateProfile(Long userId, String colorName, String emotionName) throws BaseException {
+
+        UserInfo userInfo = userInfoRepository.findByStateAndId(State.ACTIVE,userId)
+                .orElseThrow(() -> new BaseException(FAILED_TO_GET_USER));
+
+        ProfileColor profileColor = profileColorRepository.findByStateAndName(State.ACTIVE, colorName)
+                .orElseThrow(() -> new BaseException(NOT_FOUND_COLOR));
+
+        ProfileEmotion profileEmotion = profileEmotionRepository.findByStateAndName(State.ACTIVE, emotionName)
+                .orElseThrow(() -> new BaseException(NOT_FOUND_EMOTION));
+
+        userInfo.getUserProfile().setProfileEmotion(profileEmotion);
+        userInfo.getUserProfile().setProfileColor(profileColor);
+
+    }
+
+    /**
+     * 회원 탈퇴
+     * @param userId
+     * @param parameters
+     * @throws BaseException
+     */
+    @Transactional
+    public void deleteUser(Long userId, DeleteUserReq parameters) throws BaseException {
+
+        UserInfo userInfo = userInfoRepository.findByStateAndId(State.ACTIVE,userId)
+                .orElseThrow(() -> new BaseException(FAILED_TO_GET_USER));
+
+        if(parameters.getWithdrawalContent().equals("기타"))
+            userInfo.setEtcWithdrawalContent(parameters.getEtcWithdrawalContent());
+
+        userInfo.setWithdrawalContent(parameters.getWithdrawalContent());
+        userInfo.setState(State.INACTIVE);
+    }
+
+    /**
+     * 멘토 인증 신청
+     * @param userId
+     * @param authenticationFile
+     * @throws IOException
+     * @throws BaseException
+     */
+    public void AuthenticationMentor(Long userId, MultipartFile authenticationFile) throws IOException, BaseException {
+
+        UserInfo userInfo = userInfoRepository.findByStateAndId(State.ACTIVE,userId)
+                .orElseThrow(() -> new BaseException(NOT_FOUND_USER));
+
+        String imgPath = s3Service.upload(authenticationFile);
+
+        CertificationRequest certificationRequest = CertificationRequest.builder()
+                .userInfo(userInfo)
+                .imageUrl(imgPath)
+                .build();
+
+        try{
+            certificationRequestRepository.save(certificationRequest);
+        }catch (Exception exception){
+            throw new BaseException(FAILED_TO_POST_CERTIFICATION_REQUEST);
+        }
+    }
+
+    /**
+     * 직군 변경
+     * @param userId
+     * @param jobName
+     * @param etcJobName
+     */
+    @Transactional
+    public void updateJobs(Long userId, String jobName, String etcJobName) throws BaseException {
+
+        UserInfo userInfo = userInfoRepository.findByStateAndId(State.ACTIVE,userId)
+                .orElseThrow(() -> new BaseException(NOT_FOUND_USER));
+
+        if(etcJobName.equals("NONE"))
+            userInfo.setEtcJobName(etcJobName);
+
+        Job job = jobRepository.findByName(jobName)
+                .orElseThrow(() -> new BaseException(FAILED_TO_GET_JOB));
+
+        userInfo.setJob(job);
     }
 }

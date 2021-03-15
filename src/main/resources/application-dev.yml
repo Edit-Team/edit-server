@@ -24,12 +24,4 @@ spring:
     password:
     data: classpath:testData.sql
 
-cloud:
-  aws:
-    s3:
-      bucket: edit-server-bucket
-    region:
-      static: ap-northeast-2
-    stack:
-      auto: false
 

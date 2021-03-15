@@ -1,46 +1,108 @@
 insert into job
-values (1, current_timestamp, current_timestamp, concat('job', 1));
+values (1, current_timestamp, current_timestamp, '개발');
 insert into job
-values (2, current_timestamp, current_timestamp, concat('job', 2));
+values (2, current_timestamp, current_timestamp, '경영');
 insert into job
-values (3, current_timestamp, current_timestamp, concat('job', 3));
+values (3, current_timestamp, current_timestamp, '기획');
 insert into job
-values (4, current_timestamp, current_timestamp, concat('job', 4));
+values (4, current_timestamp, current_timestamp, '디자인');
 insert into job
-values (5, current_timestamp, current_timestamp, concat('job', 5));
+values (5, current_timestamp, current_timestamp, '마케팅 / 홍보');
 insert into job
-values (6, current_timestamp, current_timestamp, concat('job', 6));
+values (6, current_timestamp, current_timestamp, '서무 / 서비스');
+insert into job
+values (7, current_timestamp, current_timestamp, '생산 / 기술');
+insert into job
+values (8, current_timestamp, current_timestamp, '영업');
+insert into job
+values (9, current_timestamp, current_timestamp, '인사 / 교육');
+insert into job
+values (10, current_timestamp, current_timestamp, '재무 / 회계');
+insert into job
+values (11, current_timestamp, current_timestamp, '총무');
+insert into job
+values (12, current_timestamp, current_timestamp, 'C/S');
+insert into job
+values (13, current_timestamp, current_timestamp, '기타');
 
 insert into user_info
-values (1, current_timestamp, current_timestamp, 0, concat('email', 1), 'NONE', 'YES', 'YES',
+values (1, current_timestamp, current_timestamp, 0, concat('email', 1), 'YES','YES','YES',
         concat('name', 1),
-        concat('nickName', 1), concat('phone', 1),
+        concat('nickName', 1),'123321',concat('phone', 1),
         'ACTIVE', 'MENTOR', 'NONE', 1);
 insert into user_info
-values (2, current_timestamp, current_timestamp, 0, concat('email', 2), 'NONE', 'YES', 'YES',
-        concat('name', 1),
-        concat('nickName', 1), concat('phone', 1),
+values (2, current_timestamp, current_timestamp, 0, concat('email', 2), 'YES','YES','YES',
+        concat('name', 2),
+        concat('nickName', 2),'123321', concat('phone', 2),
         'ACTIVE', 'MENTOR', 'NONE', 1);
 insert into user_info
-values (3, current_timestamp, current_timestamp, 0, concat('email', 3), 'NONE', 'YES', 'YES',
+values (3, current_timestamp, current_timestamp, 0, concat('email', 3), 'YES','YES','YES',
         concat('name', 1),
-        concat('nickName', 1), concat('phone', 1),
+        concat('nickName', 1),'123321', concat('phone', 1),
         'ACTIVE', 'MENTOR', 'NONE', 1);
 insert into user_info
-values (4, current_timestamp, current_timestamp, 0, concat('email', 4), 'NONE', 'YES', 'YES',
+values (4, current_timestamp, current_timestamp, 0, concat('email', 4), 'YES','YES','YES',
         concat('name', 1),
-        concat('nickName', 1), concat('phone', 1),
+        concat('nickName', 1),'123321', concat('phone', 1),
         'ACTIVE', 'MENTOR', 'NONE', 1);
 insert into user_info
-values (5, current_timestamp, current_timestamp, 0, concat('email', 5), 'NONE', 'YES', 'YES',
+values (5, current_timestamp, current_timestamp, 0, concat('email', 5), 'YES','YES','YES',
         concat('name', 1),
-        concat('nickName', 1), concat('phone', 1),
+        concat('nickName', 1),'123321', concat('phone', 1),
         'ACTIVE', 'MENTOR', 'NONE', 1);
 insert into user_info
-values (6, current_timestamp, current_timestamp, 0, concat('email', 6), 'NONE', 'YES', 'YES',
+values (6, current_timestamp, current_timestamp, 0, concat('email', 6), 'YES','YES','YES',
         concat('name', 1),
-        concat('nickName', 1), concat('phone', 1),
+        concat('nickName', 1),'123321', concat('phone', 1),
         'ACTIVE', 'MENTOR', 'NONE', 1);
+
+insert into profile_emotion
+values (1,current_timestamp,current_timestamp(),'relief','ACTIVE');
+
+insert into profile_emotion
+values (2,current_timestamp,current_timestamp(),'bigSmile','ACTIVE');
+
+insert into profile_emotion
+values (3,current_timestamp,current_timestamp(),'surprise','ACTIVE');
+
+insert into profile_emotion
+values (4,current_timestamp,current_timestamp(),'happy','ACTIVE');
+
+insert into profile_emotion
+values (5,current_timestamp,current_timestamp(),'smallSmile','ACTIVE');
+
+insert into profile_emotion
+values (6,current_timestamp,current_timestamp(),'wink','ACTIVE');
+
+insert into profile_color
+values (1, current_timestamp, current_timestamp,'purple','ACTIVE');
+
+insert into profile_color
+values (2, current_timestamp, current_timestamp,'lightPurple','ACTIVE');
+
+insert into profile_color
+values (3, current_timestamp, current_timestamp,'lightBlue','ACTIVE');
+
+insert into profile_color
+values (4, current_timestamp, current_timestamp,'blue','ACTIVE');
+
+insert into user_profile
+values (1,current_timestamp, current_timestamp,'ACTIVE',1,1);
+
+insert into user_profile
+values (2,current_timestamp, current_timestamp,'ACTIVE',1,1);
+
+insert into user_profile
+values (3,current_timestamp, current_timestamp,'ACTIVE',1,1);
+
+insert into user_profile
+values (4,current_timestamp, current_timestamp,'ACTIVE',1,1);
+
+insert into user_profile
+values (5,current_timestamp, current_timestamp,'ACTIVE',1,1);
+
+insert into user_profile
+values (6,current_timestamp, current_timestamp,'ACTIVE',1,1);
 
 insert into cover_letter_category
 values (1, current_timestamp, current_timestamp, '지원동기');
