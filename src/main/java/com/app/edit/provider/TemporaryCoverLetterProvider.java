@@ -6,7 +6,6 @@ import com.app.edit.domain.temporarycoverletter.TemporaryCoverLetterRepository;
 import com.app.edit.domain.user.UserInfo;
 import com.app.edit.enums.CoverLetterType;
 import com.app.edit.enums.State;
-import com.app.edit.response.coverletter.GetCoverLettersRes;
 import com.app.edit.response.temporarycoverletter.GetTemporaryCoverLettersRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

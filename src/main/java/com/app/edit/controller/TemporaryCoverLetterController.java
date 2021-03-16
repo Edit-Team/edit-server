@@ -3,27 +3,34 @@ package com.app.edit.controller;
 import com.app.edit.config.BaseException;
 import com.app.edit.config.BaseResponse;
 import com.app.edit.config.BaseResponseStatus;
+import com.app.edit.enums.CoverLetterType;
+import com.app.edit.provider.TemporaryCoverLetterProvider;
 import com.app.edit.request.temporarycoverletter.PostCompletingTemporaryCoverLetterReq;
 import com.app.edit.request.temporarycoverletter.PostWritingTemporaryCoverLetterReq;
+import com.app.edit.response.coverletter.GetCoverLettersRes;
+import com.app.edit.response.temporarycoverletter.GetTemporaryCoverLettersRes;
 import com.app.edit.service.TemporaryCoverLetterService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+
+import static com.app.edit.config.Constant.DEFAULT_PAGE_SIZE;
 
 @RequestMapping("/api")
 @RestController
 public class TemporaryCoverLetterController {
 
     private final TemporaryCoverLetterService temporaryCoverLetterService;
+    private final TemporaryCoverLetterProvider temporaryCoverLetterProvider;
 
     @Autowired
-    public TemporaryCoverLetterController(TemporaryCoverLetterService temporaryCoverLetterService) {
+    public TemporaryCoverLetterController(TemporaryCoverLetterService temporaryCoverLetterService, TemporaryCoverLetterProvider temporaryCoverLetterProvider) {
         this.temporaryCoverLetterService = temporaryCoverLetterService;
+        this.temporaryCoverLetterProvider = temporaryCoverLetterProvider;
     }
 
     /*
@@ -44,5 +51,20 @@ public class TemporaryCoverLetterController {
     public BaseResponse<Long> postCompletingTemporaryCoverLetter(@RequestBody @Valid PostCompletingTemporaryCoverLetterReq request) throws BaseException {
         return new BaseResponse<>(BaseResponseStatus.SUCCESS,
                 temporaryCoverLetterService.createCompletingTemporaryCoverLetter(request));
+    }
+
+    /**
+     * 임시 저장한 작성중/완성중인 자소서 목록 조회 API
+     * @param page
+     * @param coverLetterType
+     * @return
+     * @throws BaseException
+     */
+    @ApiOperation(value = "임시 저장한 작성중/완성중인 자소서 목록 조회 API")
+    @GetMapping("/temporary-cover-letters")
+    public BaseResponse<List<GetTemporaryCoverLettersRes>> getTemporaryCoverLetters(@RequestParam Integer page, @RequestParam CoverLetterType coverLetterType) throws BaseException {
+        PageRequest pageRequest = com.app.edit.config.PageRequest.of(page, DEFAULT_PAGE_SIZE);
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS,
+                temporaryCoverLetterProvider.retrieveTemporaryCoverLetters(pageRequest, coverLetterType));
     }
 }
