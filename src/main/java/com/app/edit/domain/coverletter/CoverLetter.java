@@ -21,8 +21,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.app.edit.config.Constant.DEFAULT_SYMPATHIES_COUNT;
-import static com.app.edit.config.Constant.DEFAULT_SYMPATHY;
+import static com.app.edit.config.Constant.*;
 
 @Accessors(chain = true)
 @NoArgsConstructor
@@ -143,8 +142,9 @@ public class CoverLetter extends BaseEntity {
         String coverLetterContent = this.getContent();
         boolean isSympathy = DEFAULT_SYMPATHY;
         Long sympathiesCount = DEFAULT_SYMPATHIES_COUNT;
+        boolean isMine = DEFAULT_IS_MINE;
         return new GetCoverLettersRes(coverLetterId, nickName, jobName,
-                coverLetterCategoryName, coverLetterContent, isSympathy, sympathiesCount);
+                coverLetterCategoryName, coverLetterContent, isSympathy, sympathiesCount, isMine);
     }
 
     /*

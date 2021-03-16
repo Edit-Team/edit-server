@@ -1,6 +1,10 @@
 package com.app.edit.config;
 
 public class Constant {
+
+    private Constant() {
+    }
+
     public static int ZERO = 0;
     public static int ONE = 1;
     public static int CAN_STAY_DAY = 3;
@@ -11,4 +15,5 @@ public class Constant {
     public static int MAIN_ANOTHER_COVER_LETTERS_COUNT = 2;
     public static Long DEFAULT_ORIGINAL_COVER_LETTER_ID = 0L;
     public static int COVER_LETTER_CONTENT_LIMIT_LENGTH = 90;
+    public static boolean DEFAULT_IS_MINE = false;
 }

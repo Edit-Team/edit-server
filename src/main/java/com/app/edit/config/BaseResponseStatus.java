@@ -79,6 +79,8 @@ public enum BaseResponseStatus {
     NOT_FOUND_COVER_LETTER_CATEGORY(false, 3400, "존재하지 않는 자소서 종류입니다."),
     CAN_NOT_ADOPT_COMMENT_MORE_THAN_ONE(false, 3500, "코멘트는 하나만 채택할 수 있습니다."),
     DO_NOT_HAVE_PERMISSION(false, 3600, "권한이 없습니다."),
+    ALREADY_DELETED_COVER_LETTER(false, 3700, "이미 삭제된 자소서입니다."),
+    ALREADY_DELETED_COMMENT(false, 3800, "이미 삭제된 코멘트입니다."),
 
 
     // 4000 : Database 오류

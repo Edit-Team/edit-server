@@ -104,6 +104,9 @@ public class CoverLetterProvider {
         if (coverLetter.isEmpty()) {
             throw new BaseException(BaseResponseStatus.NOT_FOUND_COVER_LETTER);
         }
+        if (coverLetter.get().getState().equals(State.INACTIVE)) {
+            throw new BaseException(BaseResponseStatus.ALREADY_DELETED_COVER_LETTER);
+        }
         return coverLetter.get();
     }
 
@@ -129,5 +132,17 @@ public class CoverLetterProvider {
         Page<CoverLetter> completingCoverLetters = coverLetterRepository
                 .findMyCoverLetters(pageable, userInfoId, State.ACTIVE, CoverLetterType.COMPLETING);
         return getCoverLettersResponses(completingCoverLetters);
+    }
+
+    /**
+     * 유저가 오늘 작성한 자소서 개수 조회
+     * @return
+     */
+    public Long retrieveTodayWritingCoverLetterCount() {
+        Long userInfoId = 1L;
+        LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
+        LocalDateTime startOfTomorrow = startOfToday.plusDays(ONE);
+        return coverLetterRepository
+                .getTodayWritingCoverLetterCount(userInfoId, startOfToday, startOfTomorrow, State.ACTIVE);
     }
 }

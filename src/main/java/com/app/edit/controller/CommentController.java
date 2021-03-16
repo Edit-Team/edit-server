@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 import static com.app.edit.config.Constant.DEFAULT_PAGE_SIZE;
 
 @RequestMapping("/api")
@@ -33,7 +31,7 @@ public class CommentController {
      **/
     @ApiOperation(value = "자소서에 달린 코멘트 조회 API")
     @GetMapping("/cover-letters/{cover-letter-id}/comments")
-    public BaseResponse<List<GetCommentsRes>> getComments(@PathVariable("cover-letter-id") Long coverLetterId,
+    public BaseResponse<GetCommentsRes> getComments(@PathVariable("cover-letter-id") Long coverLetterId,
                                                           @RequestParam Integer page) throws BaseException {
         PageRequest pageRequest = com.app.edit.config.PageRequest.of(page, DEFAULT_PAGE_SIZE);
         return new BaseResponse<>(BaseResponseStatus.SUCCESS,

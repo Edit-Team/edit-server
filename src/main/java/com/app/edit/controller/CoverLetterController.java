@@ -130,8 +130,8 @@ public class CoverLetterController {
      * @throws BaseException
      */
     @ApiOperation(value = "등록/완성한 자소서 삭제하기 API")
-    @DeleteMapping("/cover-letters/{cover-letters-id}")
-    public BaseResponse<Long> deleteCoverLetter(@PathVariable("cover-letters-id") Long coverLetterId) throws BaseException {
+    @DeleteMapping("/cover-letters/{cover-letter-id}")
+    public BaseResponse<Long> deleteCoverLetter(@PathVariable("cover-letter-id") Long coverLetterId) throws BaseException {
         return new BaseResponse<>(BaseResponseStatus.SUCCESS, coverLetterService.deleteCoverLetterById(coverLetterId));
     }
 
@@ -146,5 +146,16 @@ public class CoverLetterController {
         PageRequest pageRequest = com.app.edit.config.PageRequest.of(page, DEFAULT_PAGE_SIZE);
         return new BaseResponse<>(BaseResponseStatus.SUCCESS,
                 coverLetterProvider.retrieveMyCompletingCoverLetters(pageRequest));
+    }
+
+    /**
+     * 유저가 오늘 작성한 자소서 개수 조회 API
+     * @return
+     */
+    @ApiOperation(value = "유저가 오늘 작성한 자소서 개수 조회 API")
+    @GetMapping("/today-writing-cover-letter-count")
+    public BaseResponse<Long> getTodayWritingCoverLetterCount() {
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS,
+                coverLetterProvider.retrieveTodayWritingCoverLetterCount());
     }
 }
