@@ -48,4 +48,16 @@ public interface CoverLetterRepository extends JpaRepository<CoverLetter, Long> 
     @Query(value = "select c from CoverLetter c where c.userInfo.id = :userInfoId and c.state = :state and c.type = :type order by c.createdAt desc ")
     Page<CoverLetter> findMyCoverLetters(Pageable pageable, @Param("userInfoId") Long userInfoId,
                                          @Param("state") State state, @Param("type") CoverLetterType type);
+
+    /**
+     * 유저가 오늘 작성한 자소서 개수 조회 쿼리
+     * @param userInfoId
+     * @param startOfToday
+     * @param startOfTomorrow
+     * @param state
+     * @return
+     */
+    @Query(value = "select count(cl) from CoverLetter cl where cl.userInfo.id = :userInfoId and cl.createdAt >= :startOfToday and cl.createdAt < :startOfTomorrow and cl.state = :state")
+    Long getTodayWritingCoverLetterCount(@Param("userInfoId") Long userInfoId, @Param("startOfToday") LocalDateTime startOfToday,
+                                         @Param("startOfTomorrow") LocalDateTime startOfTomorrow, @Param("state") State state);
 }
