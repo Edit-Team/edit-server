@@ -81,11 +81,8 @@ public enum BaseResponseStatus {
     DO_NOT_HAVE_PERMISSION(false, 3600, "권한이 없습니다."),
     ALREADY_DELETED_COVER_LETTER(false, 3700, "이미 삭제된 자소서입니다."),
     ALREADY_DELETED_COMMENT(false, 3800, "이미 삭제된 코멘트입니다."),
-
-
-    // 4000 : Database 오류
-    SERVER_ERROR(false, 4000, "서버와의 통신에 실패하였습니다."),
-    DATABASE_ERROR(false, 4001, "데이터베이스 연결에 실패하였습니다.");
+    NOT_FOUND_TEMPORARY_COVER_LETTER(false, 3900, "존재하지 않는 임시 자소서입니다."),
+    ALREADY_DELETED_TEMPORARY_COVER_LETTER(false, 4000, "이미 삭제된 임시 자소서입니다.");
 
     // 5000 : 필요시 만들어서 쓰세요
     // 6000 : 필요시 만들어서 쓰세요
