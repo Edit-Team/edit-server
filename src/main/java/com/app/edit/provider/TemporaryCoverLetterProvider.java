@@ -14,7 +14,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
+import static com.app.edit.config.BaseResponseStatus.ALREADY_DELETED_TEMPORARY_COVER_LETTER;
+import static com.app.edit.config.BaseResponseStatus.NOT_FOUND_TEMPORARY_COVER_LETTER;
 import static java.util.stream.Collectors.toList;
 
 @Transactional(readOnly = true)
@@ -57,5 +60,17 @@ public class TemporaryCoverLetterProvider {
                             jobName, coverLetterCategoryName, temporaryCoverLetterContent);
                 })
                 .collect(toList());
+    }
+
+    public TemporaryCoverLetter getTemporaryCoverLetterById(Long temporaryCoverLetterId) throws BaseException {
+        Optional<TemporaryCoverLetter> selectedTemporaryCoverLetter = temporaryCoverLetterRepository
+                .findById(temporaryCoverLetterId);
+        if (selectedTemporaryCoverLetter.isEmpty()) {
+            throw new BaseException(NOT_FOUND_TEMPORARY_COVER_LETTER);
+        }
+        if (selectedTemporaryCoverLetter.get().getState().equals(State.INACTIVE)) {
+            throw new BaseException(ALREADY_DELETED_TEMPORARY_COVER_LETTER);
+        }
+        return selectedTemporaryCoverLetter.get();
     }
 }
