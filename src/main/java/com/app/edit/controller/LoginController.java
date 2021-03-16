@@ -3,6 +3,7 @@ package com.app.edit.controller;
 import com.app.edit.config.BaseException;
 import com.app.edit.config.BaseResponse;
 import com.app.edit.provider.UserProvider;
+import com.app.edit.request.user.PostLoginReq;
 import com.app.edit.response.user.PostUserRes;
 import com.app.edit.service.UserService;
 import com.app.edit.utils.JwtService;
@@ -11,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import static com.app.edit.config.BaseResponseStatus.SUCCESS;
+import static com.app.edit.config.BaseResponseStatus.*;
 
 @Slf4j
 @RequestMapping("/api")
@@ -34,14 +35,19 @@ public class LoginController {
      * 로그인
      * [GET] /api/login
      */
-    @GetMapping(value = "/login")
+    @PostMapping(value = "/login")
     @ApiOperation(value = "로그인", notes = "로그인")
     public BaseResponse<PostUserRes> login(
-            @RequestParam(value = "email") String email,
-            @RequestParam(value = "password") String password) {
+            @RequestBody PostLoginReq parameters) throws BaseException{
+
+        if(parameters.getEmail() == null)
+            throw new BaseException(EMPTY_EMAIL);
+
+        if(parameters.getPassword() == null)
+            throw new BaseException(EMPTY_PASSWORD);
 
         try {
-            PostUserRes postUserRes = userProvider.login(email,password);
+            PostUserRes postUserRes = userProvider.login(parameters);
             return new BaseResponse<>(SUCCESS, postUserRes);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());

@@ -28,32 +28,32 @@ values (13, current_timestamp, current_timestamp, '기타');
 insert into user_info
 values (1, current_timestamp, current_timestamp, 0, concat('email', 1), 'YES', 'YES', 'YES',
         concat('name', 1),
-        concat('nickName', 1), '123321', concat('phone', 1),
+        concat('nickName', 1),'Jjhg67XYWl1rwJ8QpW0VDg==',concat('phone', 1),
         'ACTIVE', 'MENTOR', 'NONE', 1);
 insert into user_info
 values (2, current_timestamp, current_timestamp, 0, concat('email', 2), 'YES', 'YES', 'YES',
         concat('name', 2),
-        concat('nickName', 2), '123321', concat('phone', 2),
+        concat('nickName', 2),'Jjhg67XYWl1rwJ8QpW0VDg==', concat('phone', 2),
         'ACTIVE', 'MENTOR', 'NONE', 1);
 insert into user_info
 values (3, current_timestamp, current_timestamp, 0, concat('email', 3), 'YES', 'YES', 'YES',
         concat('name', 1),
-        concat('nickName', 1), '123321', concat('phone', 1),
+        concat('nickName', 1),'Jjhg67XYWl1rwJ8QpW0VDg==', concat('phone', 1),
         'ACTIVE', 'MENTOR', 'NONE', 1);
 insert into user_info
 values (4, current_timestamp, current_timestamp, 0, concat('email', 4), 'YES', 'YES', 'YES',
         concat('name', 1),
-        concat('nickName', 1), '123321', concat('phone', 1),
+        concat('nickName', 1),'Jjhg67XYWl1rwJ8QpW0VDg==', concat('phone', 1),
         'ACTIVE', 'MENTOR', 'NONE', 1);
 insert into user_info
 values (5, current_timestamp, current_timestamp, 0, concat('email', 5), 'YES', 'YES', 'YES',
         concat('name', 1),
-        concat('nickName', 1), '123321', concat('phone', 1),
+        concat('nickName', 1),'Jjhg67XYWl1rwJ8QpW0VDg==', concat('phone', 1),
         'ACTIVE', 'MENTOR', 'NONE', 1);
 insert into user_info
 values (6, current_timestamp, current_timestamp, 0, concat('email', 6), 'YES', 'YES', 'YES',
         concat('name', 1),
-        concat('nickName', 1), '123321', concat('phone', 1),
+        concat('nickName', 1),'Jjhg67XYWl1rwJ8QpW0VDg==', concat('phone', 1),
         'ACTIVE', 'MENTOR', 'NONE', 1);
 
 insert into profile_emotion

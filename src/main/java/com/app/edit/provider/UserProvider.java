@@ -10,6 +10,7 @@ import com.app.edit.enums.AuthenticationCheck;
 import com.app.edit.enums.IsProcessing;
 import com.app.edit.enums.State;
 import com.app.edit.enums.UserRole;
+import com.app.edit.request.user.PostLoginReq;
 import com.app.edit.response.user.*;
 import com.app.edit.service.EmailSenderService;
 import com.app.edit.utils.AES128;
@@ -130,13 +131,6 @@ public class UserProvider {
             userInfoList = userInfoRepository.findByStateAndNickNameIsContaining(State.ACTIVE,nickName);
         }
 
-        if(nickName == null && email == null)
-            throw new BaseException(EMPTY_CONTENT);
-
-
-        if(nickName != null && email != null)
-            throw new BaseException(INVAILD_CONTENT);
-
         return userInfoList.size() == 0 ?
                 DuplicationCheck.builder().duplicationCheck("NO").build() :
                 DuplicationCheck.builder().duplicationCheck("YES").build() ;
@@ -211,20 +205,18 @@ public class UserProvider {
 
     /**
      * 로그인
-     * @param email
-     * @param password
      * @return
      */
-    public PostUserRes login(String email, String password) throws BaseException{
+    public PostUserRes login(PostLoginReq parameters) throws BaseException{
 
         String EncodingPassword;
         try {
-            EncodingPassword = new AES128(Secret.USER_INFO_PASSWORD_KEY).encrypt(password);
+            EncodingPassword = new AES128(Secret.USER_INFO_PASSWORD_KEY).encrypt(parameters.getPassword());
         }catch (Exception ignored) {
             throw new BaseException(FAILED_TO_ENCRYPT_PASSWORD);
         }
 
-        UserInfo user = userInfoRepository.findByStateAndEmailAndPassword(State.ACTIVE, email, EncodingPassword)
+        UserInfo user = userInfoRepository.findByStateAndEmailAndPassword(State.ACTIVE, parameters.getEmail(), EncodingPassword)
                 .orElseThrow(() -> new BaseException(FAILED_TO_LOGIN));
 
         return PostUserRes.builder()

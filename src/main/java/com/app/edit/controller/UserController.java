@@ -2,12 +2,10 @@ package com.app.edit.controller;
 
 import com.app.edit.config.BaseException;
 import com.app.edit.config.BaseResponse;
-import com.app.edit.domain.user.UserInfo;
 import com.app.edit.enums.AuthenticationCheck;
 import com.app.edit.enums.UserRole;
 import com.app.edit.provider.UserProvider;
-import com.app.edit.request.user.DeleteUserReq;
-import com.app.edit.request.user.PostUserReq;
+import com.app.edit.request.user.*;
 import com.app.edit.response.user.*;
 import com.app.edit.service.UserService;
 import com.app.edit.utils.JwtService;
@@ -112,9 +110,9 @@ public class UserController {
 
     /**
      * 중복 이메일 및 닉네임 검증
-     * [GET] /users/duplication
+     * [POST] /users/duplication
      */
-    @GetMapping(value = "/users/duplication")
+    @PostMapping(value = "/users/duplication")
     @ApiOperation(value = "중복 이메일 및 닉네임 검증", notes = "중복 이메일 및 닉네임 검증" +
             "\n YES - 중복된 닉네임, 이메일 존재, NO - 중복된 닉네임,이메일 없음")
     @ApiImplicitParams({
@@ -122,8 +120,17 @@ public class UserController {
             @ApiImplicitParam(name = "nickName", value = "닉네임 검사일 경우 email 비워서 전송")
     })
     public BaseResponse<DuplicationCheck> duplicationEmail(
-            @RequestParam(value = "email",required = false) String email,
-            @RequestParam(value = "nickName",required = false) String nickName) {
+            @RequestBody PostDuplicationReq parameters) throws BaseException{
+
+        String email = parameters.getEmail();
+        String nickName = parameters.getNickName();
+
+        if(nickName == null && email == null)
+            throw new BaseException(EMPTY_CONTENT);
+
+
+        if(nickName != null && email != null)
+            throw new BaseException(INVAILD_CONTENT);
 
         try {
             DuplicationCheck duplicationCheck = userProvider.checkDuplication(email,nickName);
@@ -137,13 +144,16 @@ public class UserController {
      * 이메일 인증
      * [GET] /api/users/authentication-email
      */
-    @GetMapping(value = "/users/authentication-email")
+    @PostMapping(value = "/users/authentication-email")
     @ApiOperation(value = "이메일 인증", notes = "이메일 인증")
     public BaseResponse<Void> AuthenticationEmail(
-            @RequestParam(value = "email") String email) {
+            @RequestBody PostEmailReq parameters) throws BaseException {
+
+        if(parameters.getEmail() == null)
+            throw new BaseException(EMPTY_EMAIL);
 
         try {
-            userProvider.authenticationEmail(email);
+            userProvider.authenticationEmail(parameters.getEmail());
             return new BaseResponse<>(SUCCESS);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
@@ -169,13 +179,21 @@ public class UserController {
 
     /**
      * 이메일 찾기
-     * [GET] /api/users/email
+     * [POST] /api/users/email
      */
-    @GetMapping(value = "/users/email")
+    @PostMapping(value = "/users/email")
     @ApiOperation(value = "이메일 찾기", notes = "이메일 찾기")
     public BaseResponse<GetEmailRes> searchEmail(
-            @RequestParam(value = "name") String name,
-            @RequestParam(value = "phoneNumber") String phoneNumber) {
+            @RequestBody PostSearchEmailReq parameters) throws BaseException {
+
+        String name = parameters.getName();
+        String phoneNumber = parameters.getPhoneNumber();
+
+        if(phoneNumber == null || phoneNumber.length() == 0)
+            throw new BaseException(EMPTY_PHONENUMBER);
+
+        if(name == null || name.length() == 0)
+            throw new BaseException(EMPTY_NAME);
 
         try {
             GetEmailRes getEmailRes = userProvider.searchEmail(name,phoneNumber);
@@ -187,14 +205,27 @@ public class UserController {
 
     /**
      * 비밀번호 찾기
-     * [GET] /api/users/temporary-password
+     * [Patch] /api/users/temporary-password
      */
     @PatchMapping(value = "/users/temporary-password")
-    @ApiOperation(value = "비밀번호 찾기", notes = "비밀번호 찾기")
+    @ApiOperation(value = "비밀번호 찾기", notes = " 찾기")
     public BaseResponse<Void> searchPassword(
-            @RequestParam(value = "name") String name,
-            @RequestParam(value = "email") String email,
-            @RequestParam(value = "phoneNumber") String phoneNumber) {
+            @RequestBody PatchSearchPasswordReq parameters) throws BaseException{
+
+        String email = parameters.getEmail();
+        String name = parameters.getName();
+        String phoneNumber = parameters.getPhoneNumber();
+
+        if(email == null || email.length() == 0)
+            throw new BaseException(EMPTY_EMAIL);
+
+        if(name == null || name.length() == 0)
+            throw new BaseException(EMPTY_NAME);
+
+
+        if(phoneNumber == null || phoneNumber.length() == 0)
+            throw new BaseException(EMPTY_PHONENUMBER);
+
 
         try {
             userService.searchPassword(name, email, phoneNumber);
@@ -208,12 +239,14 @@ public class UserController {
      * 비밀번호 인증
      * [GET] /api/users/authentication-password
      */
-    @GetMapping(value = "/users/authentication-password")
+    @PostMapping(value = "/users/authentication-password")
     @ApiOperation(value = "비밀번호 인증", notes = "비밀번호 인증\n"+"YES = 인증됨, NO = 인증안됨")
-    public BaseResponse<AuthenticationCheck> authenticationPassword(
+    public BaseResponse<AuthenticationCheck> authenticationPassword (
             @RequestHeader(value = "X-ACCESS-TOKEN") String jwt,
-            @RequestParam(value = "password") String password) {
+            @RequestBody GetPasswordReq parameters) throws BaseException{
 
+            if(parameters.getPassword() == null || parameters.getPassword().length() == 0)
+                throw new BaseException(EMPTY_PASSWORD);
         try {
             Long userId = jwtService.getUserInfo().getUserId();
 
@@ -221,7 +254,7 @@ public class UserController {
                 return new BaseResponse<>(EMPTY_USERID);
             }
 
-            AuthenticationCheck authenticationCheck = userProvider.authenticationPassword(userId,password);
+            AuthenticationCheck authenticationCheck = userProvider.authenticationPassword(userId, parameters.getPassword());
             return new BaseResponse<>(SUCCESS, authenticationCheck);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
@@ -236,11 +269,12 @@ public class UserController {
     @ApiOperation(value = "비밀번호 수정", notes = "비밀번호 수정")
     public BaseResponse<GetNameRes> UpdatePassword(
             @RequestHeader(value = "X-ACCESS-TOKEN") String jwt,
-            @RequestParam(value = "password") String password,
-            @RequestParam(value = "authenticationPassword") String authenticationPassword) {
+            @RequestBody UpdatePasswordReq parameters) {
 
         try {
             Long userId = jwtService.getUserInfo().getUserId();
+            String password = parameters.getPassword();
+            String authenticationPassword = parameters.getAuthenticationPassword();
 
             if (password == null || password.length() == 0) {
                 return new BaseResponse<>(EMPTY_PASSWORD);
@@ -317,10 +351,21 @@ public class UserController {
     @ApiOperation(value = "캐릭터 및 색상 변경", notes = "캐릭터 및 색상 변경")
     public BaseResponse<Void> UpdateProfile(
             @RequestHeader(value = "X-ACCESS-TOKEN") String jwt,
-            @RequestParam(value = "colorName") String colorName,
-            @RequestParam(value = "emotionName") String emotionName
-            ){
+            @RequestBody UpdateProfileReq parameters
+            //@RequestParam(value = "colorName") String colorName,
+            //@RequestParam(value = "emotionName") String emotionName
+            ) throws BaseException{
 
+        String colorName = parameters.getColorName();
+        String emotionName = parameters.getEmotionName();
+
+        if (colorName == null || colorName.length() == 0) {
+            return new BaseResponse<>(EMPTY_COLORNAME);
+        }
+
+        if (emotionName == null || emotionName.length() ==  0) {
+            return new BaseResponse<>(EMPTY_EMOTIONNAME);
+        }
         try {
             Long userId = jwtService.getUserInfo().getUserId();
 
@@ -341,17 +386,25 @@ public class UserController {
      * @return BaseResponse<Void>
      */
     @PostMapping(value = "/users/authentication")
-    @ApiOperation(value = "멘토 인증(미완성)", notes = "멘토 인증")
+    @ApiOperation(value = "멘토 인증", notes = "멘토 인증")
     public BaseResponse<Void> userAuthentication(
             @RequestHeader("X-ACCESS-TOKEN") String jwt,
             @RequestParam(value = "authenticationImage") MultipartFile multipartFile) throws IOException {
         try {
 
-            Long userId = jwtService.getUserInfo().getUserId();
+            GetUserInfo getUserInfo = jwtService.getUserInfo();
+            Long userId = getUserInfo.getUserId();
+            UserRole userRole = Arrays.stream(UserRole.values())
+                    .filter(userRole1 -> userRole1.name().equals(getUserInfo.getRole()))
+                    .findFirst()
+                    .orElseThrow(() -> new BaseException(FAILED_TO_GET_ROLE));
 
             if (userId == null || userId <= 0) {
                 return new BaseResponse<>(EMPTY_USERID);
             }
+
+            if( userRole.equals(UserRole.MENTEE))
+                return new BaseResponse<>(UNAUTHORIZED_AUTHORITY);
 
             userService.AuthenticationMentor(userId,multipartFile);
 
@@ -391,7 +444,7 @@ public class UserController {
      * @return BaseResponse<Void>
      */
     @GetMapping(value = "/users/authentication")
-    @ApiOperation(value = "멘토 인증 상태 조회(미완성)", notes = "멘토 인증")
+    @ApiOperation(value = "멘토 인증 상태 조회", notes = "멘토 인증")
     public BaseResponse<GetAuthenticationRes> userAuthentication(
             @RequestHeader("X-ACCESS-TOKEN") String jwt){
 
@@ -431,8 +484,20 @@ public class UserController {
     })
     public BaseResponse<Void> UpdateJob(
             @RequestHeader(value = "X-ACCESS-TOKEN") String jwt,
-            @RequestParam(value = "jobName") String jobName,
-            @RequestParam(value = "etcJobName") String etcJobName){
+            @RequestBody UpdateJobReq parameters)
+            //@RequestParam(value = "jobName") String jobName,
+            //@RequestParam(value = "etcJobName") String etcJobName)
+    {
+
+        String jobName = parameters.getJobName();
+        String etcJobName = parameters.getEtcJobName();
+
+        if (jobName == null || jobName.length() == 0) {
+            return new BaseResponse<>(EMPTY_JOBNAME);
+        }
+        if (etcJobName == null || etcJobName.length() == 0) {
+            return new BaseResponse<>(EMPTY_ETCJOBNAME);
+        }
 
         try {
             Long userId = jwtService.getUserInfo().getUserId();
