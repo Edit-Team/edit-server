@@ -33,4 +33,4 @@ spring:
     password: editadmin
     driver-class-name: com.mysql.cj.jdbc.Driver
     data: classpath:testData.sql
-    initialization-mode: always
+#    initialization-mode: always
