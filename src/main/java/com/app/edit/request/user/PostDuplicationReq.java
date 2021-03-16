@@ -8,6 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PostDuplicationReq {
-    private String Email;
+    private String email;
     private String nickName;
 }

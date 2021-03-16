@@ -124,11 +124,6 @@ public class UserController {
 
         String email = parameters.getEmail();
         String nickName = parameters.getNickName();
-        if(email == null)
-            throw new BaseException(EMPTY_EMAIL);
-
-        if(nickName == null)
-            throw new BaseException(EMPTY_NICKNAME);
 
         try {
             DuplicationCheck duplicationCheck = userProvider.checkDuplication(email,nickName);
@@ -384,17 +379,25 @@ public class UserController {
      * @return BaseResponse<Void>
      */
     @PostMapping(value = "/users/authentication")
-    @ApiOperation(value = "멘토 인증(미완성)", notes = "멘토 인증")
+    @ApiOperation(value = "멘토 인증", notes = "멘토 인증")
     public BaseResponse<Void> userAuthentication(
             @RequestHeader("X-ACCESS-TOKEN") String jwt,
             @RequestParam(value = "authenticationImage") MultipartFile multipartFile) throws IOException {
         try {
 
-            Long userId = jwtService.getUserInfo().getUserId();
+            GetUserInfo getUserInfo = jwtService.getUserInfo();
+            Long userId = getUserInfo.getUserId();
+            UserRole userRole = Arrays.stream(UserRole.values())
+                    .filter(userRole1 -> userRole1.name().equals(getUserInfo.getRole()))
+                    .findFirst()
+                    .orElseThrow(() -> new BaseException(FAILED_TO_GET_ROLE));
 
             if (userId == null || userId <= 0) {
                 return new BaseResponse<>(EMPTY_USERID);
             }
+
+            if( userRole.equals(UserRole.MENTEE))
+                return new BaseResponse<>(UNAUTHORIZED_AUTHORITY);
 
             userService.AuthenticationMentor(userId,multipartFile);
 
