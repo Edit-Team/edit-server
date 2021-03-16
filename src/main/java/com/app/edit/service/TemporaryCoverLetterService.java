@@ -10,7 +10,9 @@ import com.app.edit.enums.CoverLetterType;
 import com.app.edit.enums.State;
 import com.app.edit.provider.CoverLetterCategoryProvider;
 import com.app.edit.provider.CoverLetterProvider;
+import com.app.edit.provider.TemporaryCoverLetterProvider;
 import com.app.edit.provider.UserInfoProvider;
+import com.app.edit.request.temporarycoverletter.PatchWritingTemporaryCoverLetterReq;
 import com.app.edit.request.temporarycoverletter.PostCompletingTemporaryCoverLetterReq;
 import com.app.edit.request.temporarycoverletter.PostWritingTemporaryCoverLetterReq;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +26,15 @@ import static com.app.edit.config.Constant.DEFAULT_ORIGINAL_COVER_LETTER_ID;
 public class TemporaryCoverLetterService {
 
     private final TemporaryCoverLetterRepository temporaryCoverLetterRepository;
+    private final TemporaryCoverLetterProvider temporaryCoverLetterProvider;
     private final CoverLetterCategoryProvider coverLetterCategoryProvider;
     private final CoverLetterProvider coverLetterProvider;
     private final UserInfoProvider userInfoProvider;
 
     @Autowired
-    public TemporaryCoverLetterService(TemporaryCoverLetterRepository temporaryCoverLetterRepository, CoverLetterCategoryProvider coverLetterCategoryProvider, CoverLetterProvider coverLetterProvider, UserInfoProvider userInfoProvider) {
+    public TemporaryCoverLetterService(TemporaryCoverLetterRepository temporaryCoverLetterRepository, TemporaryCoverLetterProvider temporaryCoverLetterProvider, CoverLetterCategoryProvider coverLetterCategoryProvider, CoverLetterProvider coverLetterProvider, UserInfoProvider userInfoProvider) {
         this.temporaryCoverLetterRepository = temporaryCoverLetterRepository;
+        this.temporaryCoverLetterProvider = temporaryCoverLetterProvider;
         this.coverLetterCategoryProvider = coverLetterCategoryProvider;
         this.coverLetterProvider = coverLetterProvider;
         this.userInfoProvider = userInfoProvider;
@@ -73,5 +77,22 @@ public class TemporaryCoverLetterService {
         userInfo.addTemporaryCoverLetter(requestedCompletingTemporaryCoverLetter);
         TemporaryCoverLetter savedTemporaryCoverLetter = temporaryCoverLetterRepository.save(requestedCompletingTemporaryCoverLetter);
         return savedTemporaryCoverLetter.getId();
+    }
+
+    public Long updateWritingTemporaryCoverLetterById(Long temporaryCoverLetterId, PatchWritingTemporaryCoverLetterReq request) throws BaseException {
+        Long userInfoId = 1L;
+        UserInfo userInfo = userInfoProvider.getUserInfoById(userInfoId);
+        Long coverLetterCategoryId = request.getCoverLetterCategoryId();
+        String coverLetterContent = request.getCoverLetterContent();
+        CoverLetterCategory coverLetterCategory = coverLetterCategoryProvider
+                .getCoverLetterCategoryById(coverLetterCategoryId);
+        TemporaryCoverLetter temporaryCoverLetter = temporaryCoverLetterProvider
+                .getTemporaryCoverLetterById(temporaryCoverLetterId);
+
+        temporaryCoverLetter.setCoverLetterCategory(coverLetterCategory);
+        temporaryCoverLetter.setContent(coverLetterContent);
+        userInfo.addTemporaryCoverLetter(temporaryCoverLetter);
+        temporaryCoverLetterRepository.save(temporaryCoverLetter);
+        return temporaryCoverLetterId;
     }
 }
