@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 @Setter
 public class PostCompletingTemporaryCoverLetterReq {
 
-    @NotNull(message = "자소서 종류를 선택해주세요.")
+    @NotNull(message = "원본 자소서를 입력해주세요.")
     private Long originalCoverLetterId;
 
     @NotBlank(message = "자소서 내용은 공백일 수 없습니다.")
