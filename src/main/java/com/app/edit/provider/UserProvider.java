@@ -131,13 +131,6 @@ public class UserProvider {
             userInfoList = userInfoRepository.findByStateAndNickNameIsContaining(State.ACTIVE,nickName);
         }
 
-        if(nickName == null && email == null)
-            throw new BaseException(EMPTY_CONTENT);
-
-
-        if(nickName != null && email != null)
-            throw new BaseException(INVAILD_CONTENT);
-
         return userInfoList.size() == 0 ?
                 DuplicationCheck.builder().duplicationCheck("NO").build() :
                 DuplicationCheck.builder().duplicationCheck("YES").build() ;

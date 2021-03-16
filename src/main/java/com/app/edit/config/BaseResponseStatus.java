@@ -34,7 +34,7 @@ public enum BaseResponseStatus {
     EXPIRED_JWT(false, 2042, "토큰이 만료되었습니다."),
     EMPTY_RECEIVER(false, 2043, "이메일 수신자가 없습니다."),
     AUTHENTICATION_TIME_EXPIRED(false, 2044, "인증 시간이 만료되었습니다."),
-    EMPTY_CONTENT(false, 2045, "이메일이나 닉네임 중 하나를 입력하세요."),
+    EMPTY_CONTENT(false, 2045, "이메일이나 닉네임을 입력하세요."),
     INVAILD_CONTENT(false, 2046, "이메일이나 닉네임 중 하나만 입력하세요."),
     UNAUTHORIZED_AUTHORITY(false, 2047, "권한이 없습니다."),
     EMPTY_JOBNAME(false, 2048, "직군이 비었습니다."),

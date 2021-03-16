@@ -3,7 +3,7 @@ spring:
     name: edit
   profiles:
     include: credentials
-    active: prod
+    active: dev
 
 
 #  mail:
