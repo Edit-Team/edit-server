@@ -124,16 +124,21 @@ public class CoverLetterController {
     }
 
     /**
-     * 등록한 자소서 삭제하기 API
+     * 등록/완성한 자소서 삭제하기 API
+     * @param coverLetterId
+     * @return
+     * @throws BaseException
      */
-    @ApiOperation(value = "등록한 자소서 삭제하기 API")
+    @ApiOperation(value = "등록/완성한 자소서 삭제하기 API")
     @DeleteMapping("/cover-letters/{cover-letters-id}")
     public BaseResponse<Long> deleteCoverLetter(@PathVariable("cover-letters-id") Long coverLetterId) throws BaseException {
         return new BaseResponse<>(BaseResponseStatus.SUCCESS, coverLetterService.deleteCoverLetterById(coverLetterId));
     }
 
     /**
-     * 내가 완성한 자소서 조회 API
+     * 완성한 자소서 목록 조회 API
+     * @param page
+     * @return
      */
     @ApiOperation(value = "완성한 자소서 목록 조회 API")
     @GetMapping("/my-completing-cover-letters")
