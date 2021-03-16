@@ -8,5 +8,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PostEmailReq {
-    private String Email;
+    private String email;
 }
