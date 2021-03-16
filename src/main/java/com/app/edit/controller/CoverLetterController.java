@@ -130,8 +130,8 @@ public class CoverLetterController {
      * @throws BaseException
      */
     @ApiOperation(value = "등록/완성한 자소서 삭제하기 API")
-    @DeleteMapping("/cover-letters/{cover-letters-id}")
-    public BaseResponse<Long> deleteCoverLetter(@PathVariable("cover-letters-id") Long coverLetterId) throws BaseException {
+    @DeleteMapping("/cover-letters/{cover-letter-id}")
+    public BaseResponse<Long> deleteCoverLetter(@PathVariable("cover-letter-id") Long coverLetterId) throws BaseException {
         return new BaseResponse<>(BaseResponseStatus.SUCCESS, coverLetterService.deleteCoverLetterById(coverLetterId));
     }
 
