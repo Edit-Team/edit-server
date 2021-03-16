@@ -125,6 +125,13 @@ public class UserController {
         String email = parameters.getEmail();
         String nickName = parameters.getNickName();
 
+        if(nickName == null && email == null)
+            throw new BaseException(EMPTY_CONTENT);
+
+
+        if(nickName != null && email != null)
+            throw new BaseException(INVAILD_CONTENT);
+
         try {
             DuplicationCheck duplicationCheck = userProvider.checkDuplication(email,nickName);
             return new BaseResponse<>(SUCCESS, duplicationCheck);
