@@ -12,6 +12,7 @@ import com.app.edit.provider.CoverLetterCategoryProvider;
 import com.app.edit.provider.CoverLetterProvider;
 import com.app.edit.provider.TemporaryCoverLetterProvider;
 import com.app.edit.provider.UserInfoProvider;
+import com.app.edit.request.temporarycoverletter.PatchCompletingTemporaryCoverLetterReq;
 import com.app.edit.request.temporarycoverletter.PatchWritingTemporaryCoverLetterReq;
 import com.app.edit.request.temporarycoverletter.PostCompletingTemporaryCoverLetterReq;
 import com.app.edit.request.temporarycoverletter.PostWritingTemporaryCoverLetterReq;
@@ -91,7 +92,18 @@ public class TemporaryCoverLetterService {
 
         temporaryCoverLetter.setCoverLetterCategory(coverLetterCategory);
         temporaryCoverLetter.setContent(coverLetterContent);
-        userInfo.addTemporaryCoverLetter(temporaryCoverLetter);
+        temporaryCoverLetterRepository.save(temporaryCoverLetter);
+        return temporaryCoverLetterId;
+    }
+
+    public Long updateCompletingTemporaryCoverLetterById(Long temporaryCoverLetterId, PatchCompletingTemporaryCoverLetterReq request) throws BaseException {
+        Long userInfoId = 1L;
+        UserInfo userInfo = userInfoProvider.getUserInfoById(userInfoId);
+        String coverLetterContent = request.getCoverLetterContent();
+        TemporaryCoverLetter temporaryCoverLetter = temporaryCoverLetterProvider
+                .getTemporaryCoverLetterById(temporaryCoverLetterId);
+
+        temporaryCoverLetter.setContent(coverLetterContent);
         temporaryCoverLetterRepository.save(temporaryCoverLetter);
         return temporaryCoverLetterId;
     }
