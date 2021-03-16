@@ -33,9 +33,16 @@ public class CommentProvider {
     }
 
     public GetCommentsRes retrieveCommentsByCoverLetterId(Pageable pageable, Long coverLetterId) throws BaseException {
+        Long userInfoId = 1L;
         CoverLetter coverLetter = coverLetterProvider.getCoverLetterById(coverLetterId);
         List<CommentInfo> commentInfos = commentRepository.findCommentsByCoverLetter(pageable, coverLetter, State.ACTIVE).stream()
-                .map(comment -> comment.toCommentInfo())
+                .map(comment -> {
+                    CommentInfo commentInfo = comment.toCommentInfo();
+                    if (comment.getUserInfo().getId().equals(userInfoId)) {
+                        commentInfo.setMine(true);
+                    }
+                    return commentInfo;
+                })
                 .collect(toList());
         GetCoverLettersRes coverLetterInfo = coverLetter.toGetCoverLetterRes();
         return new GetCommentsRes(coverLetterInfo, commentInfos);
