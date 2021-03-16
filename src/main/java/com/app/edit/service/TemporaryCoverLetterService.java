@@ -1,6 +1,7 @@
 package com.app.edit.service;
 
 import com.app.edit.config.BaseException;
+import com.app.edit.config.BaseResponseStatus;
 import com.app.edit.domain.coverletter.CoverLetter;
 import com.app.edit.domain.coverlettercategory.CoverLetterCategory;
 import com.app.edit.domain.temporarycoverletter.TemporaryCoverLetter;
@@ -89,7 +90,7 @@ public class TemporaryCoverLetterService {
                 .getCoverLetterCategoryById(coverLetterCategoryId);
         TemporaryCoverLetter temporaryCoverLetter = temporaryCoverLetterProvider
                 .getTemporaryCoverLetterById(temporaryCoverLetterId);
-
+        validateUser(userInfo, temporaryCoverLetter);
         temporaryCoverLetter.setCoverLetterCategory(coverLetterCategory);
         temporaryCoverLetter.setContent(coverLetterContent);
         temporaryCoverLetterRepository.save(temporaryCoverLetter);
@@ -102,9 +103,15 @@ public class TemporaryCoverLetterService {
         String coverLetterContent = request.getCoverLetterContent();
         TemporaryCoverLetter temporaryCoverLetter = temporaryCoverLetterProvider
                 .getTemporaryCoverLetterById(temporaryCoverLetterId);
-
+        validateUser(userInfo, temporaryCoverLetter);
         temporaryCoverLetter.setContent(coverLetterContent);
         temporaryCoverLetterRepository.save(temporaryCoverLetter);
         return temporaryCoverLetterId;
+    }
+
+    private void validateUser(UserInfo userInfo, TemporaryCoverLetter temporaryCoverLetter) throws BaseException {
+        if (!temporaryCoverLetter.getUserInfo().equals(userInfo)) {
+            throw new BaseException(BaseResponseStatus.DO_NOT_HAVE_PERMISSION);
+        }
     }
 }
