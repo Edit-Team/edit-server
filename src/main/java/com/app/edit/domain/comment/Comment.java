@@ -16,6 +16,8 @@ import lombok.experimental.Accessors;
 import javax.persistence.*;
 import java.util.List;
 
+import static com.app.edit.config.Constant.DEFAULT_IS_MINE;
+
 @Accessors(chain = true)
 @NoArgsConstructor
 @Data
@@ -138,7 +140,8 @@ public class Comment extends BaseEntity {
         String activity = this.activity;
         String commentContent = this.content;
         IsAdopted isAdopted = this.isAdopted;
+        boolean isMine = DEFAULT_IS_MINE;
         return new CommentInfo(commentId, nickName, jobName, sentenceEvaluation, concretenessLogic,
-                sincerity, activity, commentContent, isAdopted);
+                sincerity, activity, commentContent, isAdopted, isMine);
     }
 }

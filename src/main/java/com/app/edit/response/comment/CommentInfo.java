@@ -19,4 +19,5 @@ public class CommentInfo {
     private String activity;
     private String commentContent;
     private IsAdopted isAdopted;
+    private boolean isMine;
 }
