@@ -77,7 +77,7 @@ public class TemporaryCoverLetterController {
      */
     @ApiOperation(value = "임시 저장한 작성중인 자소서 이어서 작성하기(수정하기) API")
     @PatchMapping("/writing-temporary-cover-letters/{temporary-cover-letter-id}")
-    public BaseResponse<Long> patchTemporaryCoverLetter(@PathVariable("temporary-cover-letter-id") Long temporaryCoverLetterId,
+    public BaseResponse<Long> patchWritingTemporaryCoverLetter(@PathVariable("temporary-cover-letter-id") Long temporaryCoverLetterId,
                                                         @RequestBody @Valid PatchWritingTemporaryCoverLetterReq request) throws BaseException {
         return new BaseResponse<>(BaseResponseStatus.SUCCESS,
                 temporaryCoverLetterService.updateWritingTemporaryCoverLetterById(temporaryCoverLetterId, request));
