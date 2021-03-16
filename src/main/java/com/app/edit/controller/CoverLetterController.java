@@ -147,4 +147,15 @@ public class CoverLetterController {
         return new BaseResponse<>(BaseResponseStatus.SUCCESS,
                 coverLetterProvider.retrieveMyCompletingCoverLetters(pageRequest));
     }
+
+    /**
+     * 유저가 오늘 작성한 자소서 개수 조회 API
+     * @return
+     */
+    @ApiOperation(value = "유저가 오늘 작성한 자소서 개수 조회 API")
+    @GetMapping("/today-writing-cover-letter-count")
+    public BaseResponse<Long> getTodayWritingCoverLetterCount() {
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS,
+                coverLetterProvider.retrieveTodayWritingCoverLetterCount());
+    }
 }
