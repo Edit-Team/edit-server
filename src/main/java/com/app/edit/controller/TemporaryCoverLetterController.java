@@ -5,6 +5,7 @@ import com.app.edit.config.BaseResponse;
 import com.app.edit.config.BaseResponseStatus;
 import com.app.edit.enums.CoverLetterType;
 import com.app.edit.provider.TemporaryCoverLetterProvider;
+import com.app.edit.request.temporarycoverletter.PatchCompletingTemporaryCoverLetterReq;
 import com.app.edit.request.temporarycoverletter.PatchWritingTemporaryCoverLetterReq;
 import com.app.edit.request.temporarycoverletter.PostCompletingTemporaryCoverLetterReq;
 import com.app.edit.request.temporarycoverletter.PostWritingTemporaryCoverLetterReq;
@@ -55,6 +56,7 @@ public class TemporaryCoverLetterController {
 
     /**
      * 임시 저장한 작성중/완성중인 자소서 목록 조회 API
+     *
      * @param page
      * @param coverLetterType
      * @return
@@ -70,6 +72,7 @@ public class TemporaryCoverLetterController {
 
     /**
      * 임시 저장한 작성중인 자소서 이어서 작성하기(수정하기) API
+     *
      * @param temporaryCoverLetterId
      * @param request
      * @return
@@ -78,8 +81,16 @@ public class TemporaryCoverLetterController {
     @ApiOperation(value = "임시 저장한 작성중인 자소서 이어서 작성하기(수정하기) API")
     @PatchMapping("/writing-temporary-cover-letters/{temporary-cover-letter-id}")
     public BaseResponse<Long> patchWritingTemporaryCoverLetter(@PathVariable("temporary-cover-letter-id") Long temporaryCoverLetterId,
-                                                        @RequestBody @Valid PatchWritingTemporaryCoverLetterReq request) throws BaseException {
+                                                               @RequestBody @Valid PatchWritingTemporaryCoverLetterReq request) throws BaseException {
         return new BaseResponse<>(BaseResponseStatus.SUCCESS,
                 temporaryCoverLetterService.updateWritingTemporaryCoverLetterById(temporaryCoverLetterId, request));
+    }
+
+    @ApiOperation(value = "임시 저장한 완성중인 자소서 이어서 작성하기(수정하기) API")
+    @PatchMapping("/completing-temporary-cover-letters/{temporary-cover-letter-id}")
+    public BaseResponse<Long> patchCompletingTemporaryCoverLetter(@PathVariable("temporary-cover-letter-id") Long temporaryCoverLetterId,
+                                                                  @RequestBody @Valid PatchCompletingTemporaryCoverLetterReq request) throws BaseException {
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS,
+                temporaryCoverLetterService.updateCompletingTemporaryCoverLetterById(temporaryCoverLetterId, request));
     }
 }
