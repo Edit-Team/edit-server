@@ -205,7 +205,7 @@ public class UserController {
 
     /**
      * 비밀번호 찾기
-     * [GET] /api/users/temporary-password
+     * [Patch] /api/users/temporary-password
      */
     @PatchMapping(value = "/users/temporary-password")
     @ApiOperation(value = "비밀번호 찾기", notes = " 찾기")
@@ -444,7 +444,7 @@ public class UserController {
      * @return BaseResponse<Void>
      */
     @GetMapping(value = "/users/authentication")
-    @ApiOperation(value = "멘토 인증 상태 조회(미완성)", notes = "멘토 인증")
+    @ApiOperation(value = "멘토 인증 상태 조회", notes = "멘토 인증")
     public BaseResponse<GetAuthenticationRes> userAuthentication(
             @RequestHeader("X-ACCESS-TOKEN") String jwt){
 
