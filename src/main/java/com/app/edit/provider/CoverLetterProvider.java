@@ -104,6 +104,9 @@ public class CoverLetterProvider {
         if (coverLetter.isEmpty()) {
             throw new BaseException(BaseResponseStatus.NOT_FOUND_COVER_LETTER);
         }
+        if (coverLetter.get().getState().equals(State.INACTIVE)) {
+            throw new BaseException(BaseResponseStatus.ALREADY_DELETED_COVER_LETTER);
+        }
         return coverLetter.get();
     }
 
