@@ -6,6 +6,7 @@ import com.app.edit.domain.commentdeclaration.CommentDeclaration;
 import com.app.edit.domain.commentdeclaration.CommentDeclarationRepository;
 import com.app.edit.domain.user.UserInfo;
 import com.app.edit.enums.IsProcessing;
+import com.app.edit.provider.CommentDeclarationProvider;
 import com.app.edit.provider.CommentProvider;
 import com.app.edit.provider.UserInfoProvider;
 import com.app.edit.request.comment.PostCommentDeclarationReq;
@@ -20,12 +21,16 @@ public class CommentDeclarationService {
     private final CommentDeclarationRepository commentDeclarationRepository;
     private final UserInfoProvider userInfoProvider;
     private final CommentProvider commentProvider;
+    private final CommentDeclarationProvider commentDeclarationProvider;
 
     @Autowired
-    public CommentDeclarationService(CommentDeclarationRepository commentDeclarationRepository, UserInfoProvider userInfoProvider, CommentProvider commentProvider) {
+    public CommentDeclarationService(CommentDeclarationRepository commentDeclarationRepository,
+                                     UserInfoProvider userInfoProvider, CommentProvider commentProvider,
+                                     CommentDeclarationProvider commentDeclarationProvider) {
         this.commentDeclarationRepository = commentDeclarationRepository;
         this.userInfoProvider = userInfoProvider;
         this.commentProvider = commentProvider;
+        this.commentDeclarationProvider = commentDeclarationProvider;
     }
 
     public Long createCommentDeclaration(PostCommentDeclarationReq request) throws BaseException {
@@ -40,5 +45,12 @@ public class CommentDeclarationService {
         userInfo.addCommentDeclaration(commentDeclaration);
         commentDeclarationRepository.save(commentDeclaration);
         return commentId;
+    }
+
+    public Long processCommentDeclaration(Long commentDeclarationId) throws BaseException {
+        CommentDeclaration commentDeclaration = commentDeclarationProvider.getCommentDeclarationById(commentDeclarationId);
+        commentDeclaration.setIsProcessing(IsProcessing.NO);
+        commentDeclarationRepository.save(commentDeclaration);
+        return commentDeclarationId;
     }
 }
