@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.app.edit.config.BaseResponseStatus.ALREADY_PROCESSED_COMMENT_DECLARATION;
+
 @Transactional
 @Service
 public class CommentDeclarationService {
@@ -52,11 +54,14 @@ public class CommentDeclarationService {
     public Long processCommentDeclaration(Long commentDeclarationId) throws BaseException {
         Long userInfoId = 1L;
         UserInfo userInfo = userInfoProvider.getUserInfoById(userInfoId);
+        CommentDeclaration commentDeclaration = commentDeclarationProvider.getCommentDeclarationById(commentDeclarationId);
         if (!userInfo.getUserRole().equals(UserRole.ADMIN)) {
             throw new BaseException(BaseResponseStatus.DO_NOT_HAVE_PERMISSION);
         }
-        CommentDeclaration commentDeclaration = commentDeclarationProvider.getCommentDeclarationById(commentDeclarationId);
-        commentDeclaration.setIsProcessing(IsProcessing.NO);
+        if (commentDeclaration.getIsProcessing().equals(IsProcessing.YES)) {
+            throw new BaseException(ALREADY_PROCESSED_COMMENT_DECLARATION);
+        }
+        commentDeclaration.setIsProcessing(IsProcessing.YES);
         commentDeclarationRepository.save(commentDeclaration);
         return commentDeclarationId;
     }
