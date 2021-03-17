@@ -1,11 +1,13 @@
 package com.app.edit.provider;
 
 import com.app.edit.config.BaseException;
+import com.app.edit.config.BaseResponseStatus;
 import com.app.edit.domain.temporarycoverletter.TemporaryCoverLetter;
 import com.app.edit.domain.temporarycoverletter.TemporaryCoverLetterRepository;
 import com.app.edit.domain.user.UserInfo;
 import com.app.edit.enums.CoverLetterType;
 import com.app.edit.enums.State;
+import com.app.edit.response.GetWritingTemporaryCoverLetterRes;
 import com.app.edit.response.temporarycoverletter.GetTemporaryCoverLettersRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,8 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-import static com.app.edit.config.BaseResponseStatus.ALREADY_DELETED_TEMPORARY_COVER_LETTER;
-import static com.app.edit.config.BaseResponseStatus.NOT_FOUND_TEMPORARY_COVER_LETTER;
+import static com.app.edit.config.BaseResponseStatus.*;
 import static java.util.stream.Collectors.toList;
 
 @Transactional(readOnly = true)
@@ -72,5 +73,15 @@ public class TemporaryCoverLetterProvider {
             throw new BaseException(ALREADY_DELETED_TEMPORARY_COVER_LETTER);
         }
         return selectedTemporaryCoverLetter.get();
+    }
+
+    public GetWritingTemporaryCoverLetterRes retrieveWritingTemporaryCoverLetter(Long temporaryCoverLetterId) throws BaseException {
+        TemporaryCoverLetter temporaryCoverLetter = getTemporaryCoverLetterById(temporaryCoverLetterId);
+        if (temporaryCoverLetter.getType().equals(CoverLetterType.COMPLETING)) {
+            throw new BaseException(FOUND_COVER_LETTER_TYPE_IS_NOT_WRITING);
+        }
+        Long coverLetterCategoryId = temporaryCoverLetter.getCoverLetterCategory().getId();
+        String content = temporaryCoverLetter.getContent();
+        return new GetWritingTemporaryCoverLetterRes(coverLetterCategoryId, content);
     }
 }
