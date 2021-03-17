@@ -512,4 +512,37 @@ public class UserController {
         }
     }
 
+    /**
+     * 회원 역할 조회 API
+     * [GET] /users/authentication
+     * @return BaseResponse<Void>
+     */
+    @GetMapping(value = "/roles")
+    @ApiOperation(value = "회원 역할 조회", notes = "회원 역할 조회 API")
+    public BaseResponse<GetRoleRes> userRole(
+            @RequestHeader("X-ACCESS-TOKEN") String jwt) throws BaseException{
+
+        try {
+
+            GetUserInfo getUserInfo = jwtService.getUserInfo();
+            Long userId = getUserInfo.getUserId();
+            UserRole userRole = Arrays.stream(UserRole.values())
+                    .filter(userRole1 -> userRole1.name().equals(getUserInfo.getRole()))
+                    .findFirst()
+                    .orElseThrow(() -> new BaseException(FAILED_TO_GET_ROLE));
+
+            if (userId == null || userId <= 0) {
+                return new BaseResponse<>(EMPTY_USERID);
+            }
+
+            GetRoleRes getRoleRes = GetRoleRes.builder()
+                    .userRole(userRole)
+                    .build();
+
+            return new BaseResponse<>(SUCCESS, getRoleRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
 }
