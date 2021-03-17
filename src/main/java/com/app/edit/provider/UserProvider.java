@@ -6,10 +6,7 @@ import com.app.edit.domain.certificationRequest.CertificationRequest;
 import com.app.edit.domain.certificationRequest.CertificationRequestRepository;
 import com.app.edit.domain.user.UserInfo;
 import com.app.edit.domain.user.UserInfoRepository;
-import com.app.edit.enums.AuthenticationCheck;
-import com.app.edit.enums.IsProcessing;
-import com.app.edit.enums.State;
-import com.app.edit.enums.UserRole;
+import com.app.edit.enums.*;
 import com.app.edit.request.user.PostLoginReq;
 import com.app.edit.response.user.*;
 import com.app.edit.service.EmailSenderService;
@@ -361,6 +358,24 @@ public class UserProvider {
         return GetRoleRes.builder()
                 .name(userInfo.getName())
                 .userRole(userInfo.getUserRole())
+                .build();
+    }
+
+    /**
+     * 내 코인 조회
+     * @param userId
+     * @return
+     */
+    public GetCoinRes retrieveCoin(Long userId) throws BaseException{
+
+        UserInfo userInfo = userInfoRepository.findByStateAndId(State.ACTIVE, userId)
+                .orElseThrow(() -> new BaseException(FAILED_TO_GET_USER));
+
+        return GetCoinRes.builder()
+                .coinCount(userInfo.getCoinCount())
+                .appreciateCount((long) userInfo.getAppreciates().size())
+                .adoptCount(userInfo.getComments().stream()
+                        .filter(comment -> comment.getIsAdopted().equals(IsAdopted.YES)).count())
                 .build();
     }
 }

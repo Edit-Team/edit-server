@@ -594,4 +594,26 @@ public class UserController {
         }
     }
 
+    /**
+     * 나의 코인 관리
+     * [GET] /api/coins
+     */
+    @GetMapping(value = "/users/coins")
+    @ApiOperation(value = "나의 코인 조회", notes = "나의 코인 조회")
+    public BaseResponse<GetCoinRes> getMyCoin(
+            @RequestHeader(value = "X-ACCESS-TOKEN") String jwt){
+
+        try {
+            Long userId = jwtService.getUserInfo().getUserId();
+
+            if (userId == null || userId <= 0) {
+                return new BaseResponse<>(EMPTY_USERID);
+            }
+            GetCoinRes getCoinRes = userProvider.retrieveCoin(userId);
+            return new BaseResponse<>(SUCCESS, getCoinRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
 }
