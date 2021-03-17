@@ -1,11 +1,13 @@
 package com.app.edit.service;
 
 import com.app.edit.config.BaseException;
+import com.app.edit.config.BaseResponseStatus;
 import com.app.edit.domain.comment.Comment;
 import com.app.edit.domain.commentdeclaration.CommentDeclaration;
 import com.app.edit.domain.commentdeclaration.CommentDeclarationRepository;
 import com.app.edit.domain.user.UserInfo;
 import com.app.edit.enums.IsProcessing;
+import com.app.edit.enums.UserRole;
 import com.app.edit.provider.CommentDeclarationProvider;
 import com.app.edit.provider.CommentProvider;
 import com.app.edit.provider.UserInfoProvider;
@@ -48,6 +50,11 @@ public class CommentDeclarationService {
     }
 
     public Long processCommentDeclaration(Long commentDeclarationId) throws BaseException {
+        Long userInfoId = 1L;
+        UserInfo userInfo = userInfoProvider.getUserInfoById(userInfoId);
+        if (!userInfo.getUserRole().equals(UserRole.ADMIN)) {
+            throw new BaseException(BaseResponseStatus.DO_NOT_HAVE_PERMISSION);
+        }
         CommentDeclaration commentDeclaration = commentDeclarationProvider.getCommentDeclarationById(commentDeclarationId);
         commentDeclaration.setIsProcessing(IsProcessing.NO);
         commentDeclarationRepository.save(commentDeclaration);
