@@ -9,7 +9,7 @@ import com.app.edit.request.temporarycoverletter.PatchCompletingTemporaryCoverLe
 import com.app.edit.request.temporarycoverletter.PatchWritingTemporaryCoverLetterReq;
 import com.app.edit.request.temporarycoverletter.PostCompletingTemporaryCoverLetterReq;
 import com.app.edit.request.temporarycoverletter.PostWritingTemporaryCoverLetterReq;
-import com.app.edit.response.GetWritingTemporaryCoverLetterRes;
+import com.app.edit.response.temporarycoverletter.GetWritingTemporaryCoverLetterRes;
 import com.app.edit.response.temporarycoverletter.GetTemporaryCoverLettersRes;
 import com.app.edit.service.TemporaryCoverLetterService;
 import io.swagger.annotations.ApiOperation;

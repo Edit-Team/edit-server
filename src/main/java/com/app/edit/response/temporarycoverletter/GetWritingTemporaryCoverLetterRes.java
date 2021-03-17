@@ -1,4 +1,4 @@
-package com.app.edit.response;
+package com.app.edit.response.temporarycoverletter;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
