@@ -9,6 +9,7 @@ import lombok.Setter;
 @Setter
 public class GetWritingTemporaryCoverLetterRes {
 
+    private Long temporaryCoverLetterId;
     private Long coverLetterCategoryId;
     private String content;
 }

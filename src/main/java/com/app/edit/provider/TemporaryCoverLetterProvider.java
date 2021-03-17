@@ -35,6 +35,7 @@ public class TemporaryCoverLetterProvider {
 
     /**
      * 임시 저장한 자소서 조회
+     *
      * @param pageable
      * @param coverLetterType
      * @return
@@ -84,8 +85,9 @@ public class TemporaryCoverLetterProvider {
         if (temporaryCoverLetter.getType().equals(CoverLetterType.COMPLETING)) {
             throw new BaseException(FOUND_COVER_LETTER_TYPE_IS_NOT_WRITING);
         }
+        Long selectedTemporaryCoverLetterId = temporaryCoverLetter.getId();
         Long coverLetterCategoryId = temporaryCoverLetter.getCoverLetterCategory().getId();
         String content = temporaryCoverLetter.getContent();
-        return new GetWritingTemporaryCoverLetterRes(coverLetterCategoryId, content);
+        return new GetWritingTemporaryCoverLetterRes(selectedTemporaryCoverLetterId, coverLetterCategoryId, content);
     }
 }
