@@ -74,6 +74,8 @@ public enum BaseResponseStatus {
 
     // colt
     NOT_FOUND_COVER_LETTER(false, 3100, "존재하지 않는 자소서입니다."),
+    NOT_FOUND_COVER_LETTER_DECLARATION(false, 3150, "존재하지 않는 자소서 신고입니다."),
+    ALREADY_PROCESSED_COVER_LETTER_DECLARATION(false, 3170, "이미 처리된 자소서 신고입니다."),
     NOT_FOUND_USER_INFO(false, 3200, "존재하지 않는 유저입니다."),
     ALREADY_DELETED_USER(false, 3250, "이미 탈퇴한 유저입니다."),
     NOT_FOUND_COMMENT(false, 3300, "존재하지 않는 코멘트입니다."),
