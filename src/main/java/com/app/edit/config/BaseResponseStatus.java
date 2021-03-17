@@ -87,6 +87,8 @@ public enum BaseResponseStatus {
     ALREADY_DELETED_COVER_LETTER(false, 3700, "이미 삭제된 자소서입니다."),
     ALREADY_DELETED_COMMENT(false, 3800, "이미 삭제된 코멘트입니다."),
     NOT_FOUND_TEMPORARY_COVER_LETTER(false, 3900, "존재하지 않는 임시 자소서입니다."),
+    FOUND_COVER_LETTER_TYPE_IS_NOT_WRITING(false, 3930, "작성중인 임시 자소서가 아닙니다."),
+    FOUND_COVER_LETTER_TYPE_IS_NOT_COMPLETING(false, 3960, "완성중인 임시 자소서가 아닙니다."),
     ALREADY_DELETED_TEMPORARY_COVER_LETTER(false, 4000, "이미 삭제된 임시 자소서입니다.");
 
     // 5000 : 필요시 만들어서 쓰세요
