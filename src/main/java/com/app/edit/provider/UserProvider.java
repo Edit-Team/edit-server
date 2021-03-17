@@ -293,6 +293,7 @@ public class UserProvider {
                 .name(userInfo.getName())
                 .emotionName(userInfo.getUserProfile().getProfileEmotion().getName())
                 .colorName(userInfo.getUserProfile().getProfileColor().getName())
+                .userRole(userInfo.getUserRole())
                 .build();
     }
 
@@ -345,5 +346,21 @@ public class UserProvider {
                         .orElseThrow(() -> new BaseException(FAILED_TO_GET_USER)).getName())
                 .build();
 
+    }
+
+    /**
+     * 역할 조회
+     * @param userId
+     * @return
+     */
+    public GetRoleRes retrieveRole(Long userId) throws BaseException{
+
+        UserInfo userInfo = userInfoRepository.findByStateAndId(State.ACTIVE, userId)
+                .orElseThrow(() -> new BaseException(FAILED_TO_GET_USER));
+
+        return GetRoleRes.builder()
+                .name(userInfo.getName())
+                .userRole(userInfo.getUserRole())
+                .build();
     }
 }

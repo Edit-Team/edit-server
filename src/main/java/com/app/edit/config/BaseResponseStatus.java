@@ -71,6 +71,8 @@ public enum BaseResponseStatus {
     FAILED_TO_GET_JOB(false, 3025, "직군 조회에 실패했습니다."),
     FAILED_TO_GET_CERTIFICATION_REQUEST(false, 3026, "인증 요청 조회에 실패했습니다."),
     FAILED_TO_GET_ROLE(false, 3027, "역할을 찾을수 없습니다."),
+    FAILED_TO_POST_CAHNGE_ROLE_REQUEST(false, 3028, "역할 변경 요청 등록에 실패했습니다."),
+    FAILED_TO_GET_CAHNGE_ROLE_CATEGORY(false, 3029, "역할 카테고리 조회에 실패했습니다."),
 
     // colt
     NOT_FOUND_COVER_LETTER(false, 3100, "존재하지 않는 자소서입니다."),

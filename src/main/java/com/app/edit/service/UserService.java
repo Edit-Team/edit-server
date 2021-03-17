@@ -4,6 +4,10 @@ import com.app.edit.config.BaseException;
 import com.app.edit.config.secret.Secret;
 import com.app.edit.domain.certificationRequest.CertificationRequest;
 import com.app.edit.domain.certificationRequest.CertificationRequestRepository;
+import com.app.edit.domain.changerolecategory.ChangeRoleCategory;
+import com.app.edit.domain.changerolecategory.ChangeRoleCategoryRepository;
+import com.app.edit.domain.changerolereqeust.ChangeRoleRequest;
+import com.app.edit.domain.changerolereqeust.ChangeRoleRequestRepository;
 import com.app.edit.domain.job.Job;
 import com.app.edit.domain.job.JobRepository;
 import com.app.edit.domain.profilecolor.ProfileColor;
@@ -14,17 +18,19 @@ import com.app.edit.domain.user.UserInfo;
 import com.app.edit.domain.user.UserInfoRepository;
 import com.app.edit.domain.userprofile.UserProfile;
 import com.app.edit.domain.userprofile.UserProfileRepository;
+import com.app.edit.enums.IsProcessing;
 import com.app.edit.enums.State;
 import com.app.edit.enums.UserRole;
 import com.app.edit.provider.UserProvider;
 import com.app.edit.request.user.DeleteUserReq;
+import com.app.edit.request.user.PatchRoleReq;
 import com.app.edit.request.user.PostUserReq;
 import com.app.edit.response.user.GetNameRes;
+import com.app.edit.response.user.PatchRoleRes;
 import com.app.edit.response.user.PostUserRes;
 import com.app.edit.utils.AES128;
 import com.app.edit.utils.JwtService;
 import com.app.edit.utils.S3Service;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,6 +54,8 @@ public class UserService {
     private final JwtService jwtService;
     private final S3Service s3Service;
     private final CertificationRequestRepository certificationRequestRepository;
+    private final ChangeRoleCategoryRepository changeRoleCategoryRepository;
+    private final ChangeRoleRequestRepository changeRoleRequestRepository;
 
     @Autowired
     public UserService(UserInfoRepository userRepository,
@@ -59,7 +67,9 @@ public class UserService {
                        ProfileColorRepository profileColorRepository,
                        JwtService jwtService,
                        S3Service s3Service,
-                       CertificationRequestRepository certificationRequestRepository) {
+                       CertificationRequestRepository certificationRequestRepository,
+                       ChangeRoleCategoryRepository changeRoleCategoryRepository,
+                       ChangeRoleRequestRepository changeRoleRequestRepository) {
         this.userInfoRepository = userRepository;
         this.emailSenderService = emailSenderService;
         this.jobRepository = jobRepository;
@@ -70,6 +80,8 @@ public class UserService {
         this.jwtService = jwtService;
         this.s3Service = s3Service;
         this.certificationRequestRepository = certificationRequestRepository;
+        this.changeRoleCategoryRepository = changeRoleCategoryRepository;
+        this.changeRoleRequestRepository = changeRoleRequestRepository;
     }
 
     @Transactional
@@ -309,5 +321,48 @@ public class UserService {
                 .orElseThrow(() -> new BaseException(FAILED_TO_GET_JOB));
 
         userInfo.setJob(job);
+    }
+
+    /**
+     * 멘토 -> 멘티 역할 변경
+     * @param userId
+     * @return
+     */
+    @Transactional
+    public PatchRoleRes ChangeRoleToMentee(Long userId, PatchRoleReq patchRoleReq) throws BaseException{
+
+        // 유저 조회
+        UserInfo userInfo = userInfoRepository.findByStateAndId(State.ACTIVE, userId)
+                .orElseThrow(() -> new BaseException(FAILED_TO_GET_USER));
+
+        String changeContent = patchRoleReq.getChangeContent();
+        String etcChangeContent = patchRoleReq.getEtcChangeContent();
+
+        //카테고리 조회
+        ChangeRoleCategory changeRoleCategory = changeRoleCategoryRepository.findByName(changeContent)
+                .orElseThrow(() -> new BaseException(FAILED_TO_GET_CAHNGE_ROLE_CATEGORY));
+
+        // 역할 변경 신청 객체 생성
+        ChangeRoleRequest changeRoleRequest = ChangeRoleRequest.builder()
+                .userInfo(userInfo)
+                .changeRoleCategory(changeRoleCategory)
+                .isProcessing(IsProcessing.YES)
+                .previousRole(userInfo.getUserRole())
+                .content(etcChangeContent)
+                .build();
+
+        //역할 변경 신청 저장
+        try {
+            changeRoleRequestRepository.save(changeRoleRequest);
+        }catch (Exception exception){
+            throw new BaseException(FAILED_TO_POST_CAHNGE_ROLE_REQUEST);
+        }
+
+        // 멘티로 변경
+        userInfo.setUserRole(UserRole.MENTEE);
+
+        return PatchRoleRes.builder()
+                .name(userInfo.getName())
+                .build();
     }
 }

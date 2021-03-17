@@ -343,6 +343,8 @@ public class UserController {
         }
     }
 
+
+
     /**
      * 캐릭터 및 색상 변경
      * [PATCH] /api/users/profile
@@ -525,21 +527,68 @@ public class UserController {
         try {
 
             GetUserInfo getUserInfo = jwtService.getUserInfo();
+
             Long userId = getUserInfo.getUserId();
-            UserRole userRole = Arrays.stream(UserRole.values())
-                    .filter(userRole1 -> userRole1.name().equals(getUserInfo.getRole()))
-                    .findFirst()
-                    .orElseThrow(() -> new BaseException(FAILED_TO_GET_ROLE));
 
             if (userId == null || userId <= 0) {
                 return new BaseResponse<>(EMPTY_USERID);
             }
 
-            GetRoleRes getRoleRes = GetRoleRes.builder()
-                    .userRole(userRole)
-                    .build();
+            GetRoleRes getRoleRes = userProvider.retrieveRole(userId);
+
 
             return new BaseResponse<>(SUCCESS, getRoleRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    /**
+     * 멘토 -> 멘티 역할 변경
+     * [PATCH] /change-roles/to-mentee
+     * @return BaseResponse<PATCH>
+     */
+    @PatchMapping(value = "/change-roles/to-mentee")
+    @ApiOperation(value = "멘토 -> 멘티 역할 변경", notes = "멘토 -> 멘티 역할 변경 API")
+    public BaseResponse<PatchRoleRes> changeRoleToMentee(
+            @RequestHeader("X-ACCESS-TOKEN") String jwt,
+            @RequestBody PatchRoleReq patchRoleReq) throws BaseException{
+
+        try {
+
+            GetUserInfo getUserInfo = jwtService.getUserInfo();
+            Long userId = getUserInfo.getUserId();
+
+            if (userId == null || userId <= 0) {
+                return new BaseResponse<>(EMPTY_USERID);
+            }
+
+            PatchRoleRes patchRoleRes = userService.ChangeRoleToMentee(userId, patchRoleReq);
+            return new BaseResponse<>(SUCCESS, patchRoleRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+
+
+    /**
+     * 나의 에딧 화면 조회
+     * [GET] /api/users/mypage
+     */
+    @GetMapping(value = "/users/mypage")
+    @ApiOperation(value = "나의 에딧 화면 조회", notes = "나의 에딧 화면 조회")
+    public BaseResponse<GetProfileRes> getMyPage(
+            @RequestHeader(value = "X-ACCESS-TOKEN") String jwt){
+
+        try {
+            Long userId = jwtService.getUserInfo().getUserId();
+
+            if (userId == null || userId <= 0) {
+                return new BaseResponse<>(EMPTY_USERID);
+            }
+            GetProfileRes getProfileRes = userProvider.retrieveProfile(userId);
+            return new BaseResponse<>(SUCCESS, getProfileRes);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }

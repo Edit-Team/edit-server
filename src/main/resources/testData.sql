@@ -221,3 +221,9 @@ insert into sympathy values (3, 5, current_timestamp, current_timestamp, 'INACTI
 insert into sympathy values (6, 6, current_timestamp, current_timestamp, 'ACTIVE');
 insert into sympathy values (6, 1, current_timestamp, current_timestamp, 'ACTIVE');
 insert into sympathy values (6, 2, current_timestamp, current_timestamp, 'ACTIVE');
+
+insert into change_role_category values (1,current_timestamp, current_timestamp,'퇴사 및 자소서 준비');
+insert into change_role_category values (2,current_timestamp, current_timestamp,'멘티로 다시 활동하기 위해');
+insert into change_role_category values (3,current_timestamp, current_timestamp,'멘티 활동에 대한 궁금중');
+insert into change_role_category values (4,current_timestamp, current_timestamp,'멘토 활동에 대한 부담감');
+insert into change_role_category values (5,current_timestamp, current_timestamp,'기타');
