@@ -9,6 +9,7 @@ import com.app.edit.request.temporarycoverletter.PatchCompletingTemporaryCoverLe
 import com.app.edit.request.temporarycoverletter.PatchWritingTemporaryCoverLetterReq;
 import com.app.edit.request.temporarycoverletter.PostCompletingTemporaryCoverLetterReq;
 import com.app.edit.request.temporarycoverletter.PostWritingTemporaryCoverLetterReq;
+import com.app.edit.response.GetWritingTemporaryCoverLetterRes;
 import com.app.edit.response.temporarycoverletter.GetTemporaryCoverLettersRes;
 import com.app.edit.service.TemporaryCoverLetterService;
 import io.swagger.annotations.ApiOperation;
@@ -93,4 +94,18 @@ public class TemporaryCoverLetterController {
         return new BaseResponse<>(BaseResponseStatus.SUCCESS,
                 temporaryCoverLetterService.updateCompletingTemporaryCoverLetterById(temporaryCoverLetterId, request));
     }
+
+    /**
+     * 임시 저장한 작성중인 자소서 조회 API
+     * @param temporaryCoverLetterId
+     * @return
+     * @throws BaseException
+     */
+    @ApiOperation(value = "임시 저장한 작성중인 자소서 조회 API")
+    @GetMapping("/writing-temporary-cover-letters/{temporary-cover-letter-id}")
+    public BaseResponse<GetWritingTemporaryCoverLetterRes> getWritingTemporaryCoverLetter(@PathVariable("temporary-cover-letter-id") Long temporaryCoverLetterId) throws BaseException {
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS,
+                temporaryCoverLetterProvider.retrieveWritingTemporaryCoverLetter(temporaryCoverLetterId));
+    }
 }
+
