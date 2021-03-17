@@ -75,7 +75,12 @@ public class TemporaryCoverLetterProvider {
     }
 
     public GetWritingTemporaryCoverLetterRes retrieveWritingTemporaryCoverLetter(Long temporaryCoverLetterId) throws BaseException {
+        Long userInfoId = 1L;
         TemporaryCoverLetter temporaryCoverLetter = getTemporaryCoverLetterById(temporaryCoverLetterId);
+        UserInfo userInfo = userInfoProvider.getUserInfoById(userInfoId);
+        if (!temporaryCoverLetter.getUserInfo().equals(userInfo)) {
+            throw new BaseException(DO_NOT_HAVE_PERMISSION);
+        }
         if (temporaryCoverLetter.getType().equals(CoverLetterType.COMPLETING)) {
             throw new BaseException(FOUND_COVER_LETTER_TYPE_IS_NOT_WRITING);
         }
