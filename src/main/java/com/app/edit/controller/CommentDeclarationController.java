@@ -7,10 +7,7 @@ import com.app.edit.request.comment.PostCommentDeclarationReq;
 import com.app.edit.service.CommentDeclarationService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -32,5 +29,17 @@ public class CommentDeclarationController {
     @PostMapping("/declare-comments")
     public BaseResponse<Long> postCommentDeclaration(@RequestBody @Valid PostCommentDeclarationReq request) throws BaseException {
         return new BaseResponse<>(BaseResponseStatus.SUCCESS, commentDeclarationService.createCommentDeclaration(request));
+    }
+
+    /**
+     * 코멘트 신고 처리 API
+     * @param commentDeclarationId
+     * @return
+     * @throws BaseException
+     */
+    @ApiOperation(value = "코멘트 신고 처리 API")
+    @PatchMapping("/admin/comment-declarations/{comment-declaration-id}")
+    public BaseResponse<Long> patchCommentDeclaration(@PathVariable("comment-declaration-id") Long commentDeclarationId) throws BaseException {
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS, commentDeclarationService.processCommentDeclaration(commentDeclarationId));
     }
 }
