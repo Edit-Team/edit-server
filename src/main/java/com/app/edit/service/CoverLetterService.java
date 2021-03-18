@@ -14,6 +14,7 @@ import com.app.edit.provider.CoverLetterProvider;
 import com.app.edit.provider.UserInfoProvider;
 import com.app.edit.request.coverletter.PostCompletingCoverLetterReq;
 import com.app.edit.request.coverletter.PostWritingCoverLetterReq;
+import com.app.edit.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,19 +29,21 @@ public class CoverLetterService {
     private final UserInfoProvider userInfoProvider;
     private final CoverLetterProvider coverLetterProvider;
     private final CoverLetterCategoryProvider coverLetterCategoryProvider;
+    private final JwtService jwtService;
 
     @Autowired
     public CoverLetterService(CoverLetterRepository coverLetterRepository, UserInfoProvider userInfoProvider,
                               CoverLetterProvider coverLetterProvider,
-                              CoverLetterCategoryProvider coverLetterCategoryProvider) {
+                              CoverLetterCategoryProvider coverLetterCategoryProvider, JwtService jwtService) {
         this.coverLetterRepository = coverLetterRepository;
         this.userInfoProvider = userInfoProvider;
         this.coverLetterProvider = coverLetterProvider;
         this.coverLetterCategoryProvider = coverLetterCategoryProvider;
+        this.jwtService = jwtService;
     }
 
     public Long createWritingCoverLetter(PostWritingCoverLetterReq request) throws BaseException {
-        Long userId = 1L;
+        Long userId = jwtService.getUserInfo().getUserId();
         Long coverLetterCategoryId = request.getCoverLetterCategoryId();
         CoverLetterCategory coverLetterCategory = coverLetterCategoryProvider
                 .getCoverLetterCategoryById(coverLetterCategoryId);
@@ -58,7 +61,7 @@ public class CoverLetterService {
     }
 
     public Long createCompletingCoverLetter(PostCompletingCoverLetterReq request) throws BaseException {
-        Long userInfoId = 1L;
+        Long userInfoId = jwtService.getUserInfo().getUserId();
         Long originalCoverLetterId = request.getOriginalCoverLetterId();
         String content = request.getCoverLetterContent();
         CoverLetter originalCoverLetter = coverLetterProvider.getCoverLetterById(originalCoverLetterId);
@@ -77,7 +80,7 @@ public class CoverLetterService {
     }
 
     public Long deleteCoverLetterById(Long coverLetterId) throws BaseException {
-        Long userInfoId = 1L;
+        Long userInfoId = jwtService.getUserInfo().getUserId();
         CoverLetter selectedCoverLetter = coverLetterProvider.getCoverLetterById(coverLetterId);
         validateUser(userInfoId, selectedCoverLetter);
         selectedCoverLetter.setState(State.INACTIVE);
