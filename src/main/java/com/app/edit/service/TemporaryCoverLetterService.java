@@ -17,6 +17,7 @@ import com.app.edit.request.temporarycoverletter.PatchCompletingTemporaryCoverLe
 import com.app.edit.request.temporarycoverletter.PatchWritingTemporaryCoverLetterReq;
 import com.app.edit.request.temporarycoverletter.PostCompletingTemporaryCoverLetterReq;
 import com.app.edit.request.temporarycoverletter.PostWritingTemporaryCoverLetterReq;
+import com.app.edit.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,18 +33,20 @@ public class TemporaryCoverLetterService {
     private final CoverLetterCategoryProvider coverLetterCategoryProvider;
     private final CoverLetterProvider coverLetterProvider;
     private final UserInfoProvider userInfoProvider;
+    private final JwtService jwtService;
 
     @Autowired
-    public TemporaryCoverLetterService(TemporaryCoverLetterRepository temporaryCoverLetterRepository, TemporaryCoverLetterProvider temporaryCoverLetterProvider, CoverLetterCategoryProvider coverLetterCategoryProvider, CoverLetterProvider coverLetterProvider, UserInfoProvider userInfoProvider) {
+    public TemporaryCoverLetterService(TemporaryCoverLetterRepository temporaryCoverLetterRepository, TemporaryCoverLetterProvider temporaryCoverLetterProvider, CoverLetterCategoryProvider coverLetterCategoryProvider, CoverLetterProvider coverLetterProvider, UserInfoProvider userInfoProvider, JwtService jwtService) {
         this.temporaryCoverLetterRepository = temporaryCoverLetterRepository;
         this.temporaryCoverLetterProvider = temporaryCoverLetterProvider;
         this.coverLetterCategoryProvider = coverLetterCategoryProvider;
         this.coverLetterProvider = coverLetterProvider;
         this.userInfoProvider = userInfoProvider;
+        this.jwtService = jwtService;
     }
 
     public Long createWritingTemporaryCoverLetter(PostWritingTemporaryCoverLetterReq request) throws BaseException {
-        Long userInfoId = 1L;
+        Long userInfoId = jwtService.getUserInfo().getUserId();
         Long coverLetterCategoryId = request.getCoverLetterCategoryId();
         String content = request.getCoverLetterContent();
         UserInfo userInfo = userInfoProvider.getUserInfoById(userInfoId);
@@ -63,7 +66,7 @@ public class TemporaryCoverLetterService {
     }
 
     public Long createCompletingTemporaryCoverLetter(PostCompletingTemporaryCoverLetterReq request) throws BaseException {
-        Long userInfoId = 1L;
+        Long userInfoId = jwtService.getUserInfo().getUserId();
         Long originalCoverLetterId = request.getOriginalCoverLetterId();
         String content = request.getCoverLetterContent();
         CoverLetter originalCoverLetter = coverLetterProvider.getCoverLetterById(originalCoverLetterId);
@@ -82,7 +85,7 @@ public class TemporaryCoverLetterService {
     }
 
     public Long updateWritingTemporaryCoverLetterById(Long temporaryCoverLetterId, PatchWritingTemporaryCoverLetterReq request) throws BaseException {
-        Long userInfoId = 1L;
+        Long userInfoId = jwtService.getUserInfo().getUserId();
         UserInfo userInfo = userInfoProvider.getUserInfoById(userInfoId);
         Long coverLetterCategoryId = request.getCoverLetterCategoryId();
         String coverLetterContent = request.getCoverLetterContent();
@@ -98,7 +101,7 @@ public class TemporaryCoverLetterService {
     }
 
     public Long updateCompletingTemporaryCoverLetterById(Long temporaryCoverLetterId, PatchCompletingTemporaryCoverLetterReq request) throws BaseException {
-        Long userInfoId = 1L;
+        Long userInfoId = jwtService.getUserInfo().getUserId();
         UserInfo userInfo = userInfoProvider.getUserInfoById(userInfoId);
         String coverLetterContent = request.getCoverLetterContent();
         TemporaryCoverLetter temporaryCoverLetter = temporaryCoverLetterProvider
