@@ -12,6 +12,7 @@ import com.app.edit.enums.State;
 import com.app.edit.response.coverletter.GetCoverLetterToCompleteRes;
 import com.app.edit.response.coverletter.GetCoverLettersRes;
 import com.app.edit.response.coverletter.GetMainCoverLettersRes;
+import com.app.edit.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,17 +34,20 @@ public class CoverLetterProvider {
 
     private final CoverLetterRepository coverLetterRepository;
     private final SympathyProvider sympathyProvider;
+    private final JwtService jwtService;
 
     @Autowired
-    public CoverLetterProvider(CoverLetterRepository coverLetterRepository, SympathyProvider sympathyProvider) {
+    public CoverLetterProvider(CoverLetterRepository coverLetterRepository, SympathyProvider sympathyProvider,
+                               JwtService jwtService) {
         this.coverLetterRepository = coverLetterRepository;
         this.sympathyProvider = sympathyProvider;
+        this.jwtService = jwtService;
     }
 
     /*
      * 메인 페이지 자소서 조회
      **/
-    public GetMainCoverLettersRes retrieveMainCoverLetters() {
+    public GetMainCoverLettersRes retrieveMainCoverLetters() throws BaseException {
         Pageable pageableForToday = PageRequest.of(ONE, MAIN_TODAY_COVER_LETTERS_COUNT);
         Pageable pageableForAnother = PageRequest.of(ONE, MAIN_ANOTHER_COVER_LETTERS_COUNT);
         return new GetMainCoverLettersRes(retrieveTodayCoverLetters(pageableForToday),
@@ -55,7 +59,7 @@ public class CoverLetterProvider {
     /*
      * 오늘의 문장 조회
      **/
-    public List<GetCoverLettersRes> retrieveTodayCoverLetters(Pageable pageable) {
+    public List<GetCoverLettersRes> retrieveTodayCoverLetters(Pageable pageable) throws BaseException {
         LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
         LocalDateTime startOfTomorrow = startOfToday.plusDays(ONE);
         Page<CoverLetter> coverLettersOnToday = coverLetterRepository
@@ -66,7 +70,7 @@ public class CoverLetterProvider {
     /*
      * 코멘트를 기다리고 있어요 조회
      **/
-    public List<GetCoverLettersRes> retrieveWaitingForCommentCoverLetters(Pageable pageable) {
+    public List<GetCoverLettersRes> retrieveWaitingForCommentCoverLetters(Pageable pageable) throws BaseException {
         Page<CoverLetter> coverLettersHasNotComment = coverLetterRepository.findCoverLettersHasNotComment(pageable, State.ACTIVE);
         return getCoverLettersResponses(coverLettersHasNotComment);
     }
@@ -74,7 +78,7 @@ public class CoverLetterProvider {
     /*
      * 채택이 완료되었어요 조회
      **/
-    public List<GetCoverLettersRes> retrieveAdoptedCoverLetters(Pageable pageable) {
+    public List<GetCoverLettersRes> retrieveAdoptedCoverLetters(Pageable pageable) throws BaseException {
         Page<CoverLetter> coverLettersHasAdoptedComment = coverLetterRepository.findCoverLettersHasAdoptedComment(pageable, IsAdopted.YES, State.ACTIVE);
         return getCoverLettersResponses(coverLettersHasAdoptedComment);
     }
@@ -82,7 +86,7 @@ public class CoverLetterProvider {
     /*
      * 많은 분들이 공감하고 있어요 조회
      **/
-    public List<GetCoverLettersRes> retrieveManySympathiesCoverLetters(Pageable pageable) {
+    public List<GetCoverLettersRes> retrieveManySympathiesCoverLetters(Pageable pageable) throws BaseException {
         LocalDateTime beforeThreeDays = LocalDateTime.now().minusDays(CAN_STAY_DAY);
         Page<CoverLetter> coverLettersHasManySympathies = coverLetterRepository.findCoverLettersHasManySympathies(pageable, beforeThreeDays, State.ACTIVE);
         return getCoverLettersResponses(coverLettersHasManySympathies).stream()
@@ -90,12 +94,15 @@ public class CoverLetterProvider {
                 .collect(toList());
     }
 
-    private List<GetCoverLettersRes> getCoverLettersResponses(Page<CoverLetter> coverLetterPage) {
+    private List<GetCoverLettersRes> getCoverLettersResponses(Page<CoverLetter> coverLetterPage) throws BaseException {
+        Long userInfoId = jwtService.getUserInfo().getUserId();
         return coverLetterPage.stream()
                 .map(coverLetter -> {
                     GetCoverLettersRes getCoverLettersRes = coverLetter.toGetCoverLetterRes();
+                    boolean isSympathy = sympathyProvider.getIsSympathy(coverLetter.getId(), userInfoId);
                     Long sympathiesCount = sympathyProvider.getSympathiesCount(coverLetter);
                     CoverLetter.setSympathiesCountInCoverLettersRes(getCoverLettersRes, sympathiesCount);
+                    getCoverLettersRes.setSympathy(isSympathy);
                     return getCoverLettersRes;
                 })
                 .collect(toList());
@@ -117,8 +124,8 @@ public class CoverLetterProvider {
      * @param pageable
      * @return
      */
-    public List<GetCoverLettersRes> retrieveMyWritingCoverLetters(Pageable pageable) {
-        Long userInfoId = 1L;
+    public List<GetCoverLettersRes> retrieveMyWritingCoverLetters(Pageable pageable) throws BaseException {
+        Long userInfoId = jwtService.getUserInfo().getUserId();
         Page<CoverLetter> myCoverLetters = coverLetterRepository
                 .findMyCoverLetters(pageable, userInfoId, State.ACTIVE, CoverLetterType.WRITING);
         return getCoverLettersResponses(myCoverLetters);
@@ -129,8 +136,8 @@ public class CoverLetterProvider {
      * @param pageable
      * @return
      */
-    public List<GetCoverLettersRes> retrieveMyCompletingCoverLetters(Pageable pageable) {
-        Long userInfoId = 1L;
+    public List<GetCoverLettersRes> retrieveMyCompletingCoverLetters(Pageable pageable) throws BaseException {
+        Long userInfoId = jwtService.getUserInfo().getUserId();
         Page<CoverLetter> completingCoverLetters = coverLetterRepository
                 .findMyCoverLetters(pageable, userInfoId, State.ACTIVE, CoverLetterType.COMPLETING);
         return getCoverLettersResponses(completingCoverLetters);
@@ -140,8 +147,8 @@ public class CoverLetterProvider {
      * 유저가 오늘 작성한 자소서 개수 조회
      * @return
      */
-    public Long retrieveTodayWritingCoverLetterCount() {
-        Long userInfoId = 1L;
+    public Long retrieveTodayWritingCoverLetterCount() throws BaseException {
+        Long userInfoId = jwtService.getUserInfo().getUserId();
         LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
         LocalDateTime startOfTomorrow = startOfToday.plusDays(ONE);
         return coverLetterRepository
