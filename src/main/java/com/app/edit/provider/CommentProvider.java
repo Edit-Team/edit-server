@@ -8,8 +8,10 @@ import com.app.edit.enums.IsAdopted;
 import com.app.edit.enums.State;
 import com.app.edit.response.comment.CommentInfo;
 import com.app.edit.response.comment.GetCommentsRes;
+import com.app.edit.response.comment.GetNotAdoptedCommentContentsRes;
 import com.app.edit.response.coverletter.GetCoverLettersRes;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,5 +68,15 @@ public class CommentProvider {
             throw new BaseException(NOT_FOUND_ADOPTED_COMMENT);
         }
         return adoptedComment.get();
+    }
+
+    public GetNotAdoptedCommentContentsRes getNotAdoptedCommentContentsById(Long coverLetterId, Pageable pageable) throws BaseException {
+        CoverLetter coverLetter = coverLetterProvider.getCoverLetterById(coverLetterId);
+        Page<Comment> notAdoptedComments = commentRepository
+                .findNotAdoptedCommentsByCoverLetter(pageable, coverLetter, IsAdopted.NO, State.ACTIVE);
+        List<String> notAdoptedCommentContents = notAdoptedComments.stream()
+                .map(Comment::getContent)
+                .collect(toList());
+        return new GetNotAdoptedCommentContentsRes(notAdoptedCommentContents);
     }
 }
