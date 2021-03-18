@@ -138,6 +138,10 @@ public class CoverLetter extends BaseEntity {
         Long coverLetterId = this.getId();
         String nickName = this.getUserInfo().getNickName();
         String jobName = this.getUserInfo().getJob().getName();
+        String etcJobName = this.getUserInfo().getEtcJobName();
+        if (!etcJobName.equals("NONE")) {
+            jobName = etcJobName;
+        }
         String coverLetterCategoryName = this.getCoverLetterCategory().getName();
         String coverLetterContent = this.getContent();
         boolean isSympathy = DEFAULT_SYMPATHY;
