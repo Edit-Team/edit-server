@@ -12,6 +12,7 @@ import com.app.edit.provider.CommentDeclarationProvider;
 import com.app.edit.provider.CommentProvider;
 import com.app.edit.provider.UserInfoProvider;
 import com.app.edit.request.comment.PostCommentDeclarationReq;
+import com.app.edit.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,19 +27,21 @@ public class CommentDeclarationService {
     private final UserInfoProvider userInfoProvider;
     private final CommentProvider commentProvider;
     private final CommentDeclarationProvider commentDeclarationProvider;
+    private final JwtService jwtService;
 
     @Autowired
     public CommentDeclarationService(CommentDeclarationRepository commentDeclarationRepository,
                                      UserInfoProvider userInfoProvider, CommentProvider commentProvider,
-                                     CommentDeclarationProvider commentDeclarationProvider) {
+                                     CommentDeclarationProvider commentDeclarationProvider, JwtService jwtService) {
         this.commentDeclarationRepository = commentDeclarationRepository;
         this.userInfoProvider = userInfoProvider;
         this.commentProvider = commentProvider;
         this.commentDeclarationProvider = commentDeclarationProvider;
+        this.jwtService = jwtService;
     }
 
     public Long createCommentDeclaration(PostCommentDeclarationReq request) throws BaseException {
-        Long userId = 1L;
+        Long userId = jwtService.getUserInfo().getUserId();
         Long commentId = request.getCommentId();
         UserInfo userInfo = userInfoProvider.getUserInfoById(userId);
         Comment comment = commentProvider.getCommentById(commentId);
@@ -52,7 +55,7 @@ public class CommentDeclarationService {
     }
 
     public Long processCommentDeclaration(Long commentDeclarationId) throws BaseException {
-        Long userInfoId = 1L;
+        Long userInfoId = jwtService.getUserInfo().getUserId();
         UserInfo userInfo = userInfoProvider.getUserInfoById(userInfoId);
         CommentDeclaration commentDeclaration = commentDeclarationProvider.getCommentDeclarationById(commentDeclarationId);
         if (!userInfo.getUserRole().equals(UserRole.ADMIN)) {
