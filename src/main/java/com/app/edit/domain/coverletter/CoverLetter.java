@@ -182,13 +182,4 @@ public class CoverLetter extends BaseEntity {
         }
         return adoptedComment.get();
     }
-
-    /*
-     * 자소서에 달린 코멘트가 채택된 시간 얻어오기
-     **/
-    public static LocalDateTime getAdoptedTime(CoverLetter coverLetter) {
-        return coverLetter.getComments().stream()
-                .filter(comment -> comment.getIsAdopted().equals(IsAdopted.YES))
-                .findFirst().get().getUpdatedAt();
-    }
 }
