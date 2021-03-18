@@ -1,11 +1,15 @@
 package com.app.edit.provider;
 
 import com.app.edit.config.BaseException;
+import com.app.edit.domain.comment.Comment;
+import com.app.edit.domain.coverletter.CoverLetter;
 import com.app.edit.domain.temporarycoverletter.TemporaryCoverLetter;
 import com.app.edit.domain.temporarycoverletter.TemporaryCoverLetterRepository;
 import com.app.edit.domain.user.UserInfo;
 import com.app.edit.enums.CoverLetterType;
+import com.app.edit.enums.IsAdopted;
 import com.app.edit.enums.State;
+import com.app.edit.response.temporarycoverletter.GetCompletingTemporaryCoverLetterRes;
 import com.app.edit.response.temporarycoverletter.GetWritingTemporaryCoverLetterRes;
 import com.app.edit.response.temporarycoverletter.GetTemporaryCoverLettersRes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +30,17 @@ public class TemporaryCoverLetterProvider {
 
     private final TemporaryCoverLetterRepository temporaryCoverLetterRepository;
     private final UserInfoProvider userInfoProvider;
+    private final CoverLetterProvider coverLetterProvider;
+    private final CommentProvider commentProvider;
 
     @Autowired
-    public TemporaryCoverLetterProvider(TemporaryCoverLetterRepository temporaryCoverLetterRepository, UserInfoProvider userInfoProvider) {
+    public TemporaryCoverLetterProvider(TemporaryCoverLetterRepository temporaryCoverLetterRepository,
+                                        UserInfoProvider userInfoProvider, CoverLetterProvider coverLetterProvider,
+                                        CommentProvider commentProvider) {
         this.temporaryCoverLetterRepository = temporaryCoverLetterRepository;
         this.userInfoProvider = userInfoProvider;
+        this.coverLetterProvider = coverLetterProvider;
+        this.commentProvider = commentProvider;
     }
 
     /**
@@ -89,5 +99,27 @@ public class TemporaryCoverLetterProvider {
         Long coverLetterCategoryId = temporaryCoverLetter.getCoverLetterCategory().getId();
         String content = temporaryCoverLetter.getContent();
         return new GetWritingTemporaryCoverLetterRes(selectedTemporaryCoverLetterId, coverLetterCategoryId, content);
+    }
+
+    public GetCompletingTemporaryCoverLetterRes retrieveCompletingTemporaryCoverLetter(Long temporaryCoverLetterId) throws BaseException {
+        Long userInfoId = 1L;
+        UserInfo userInfo = userInfoProvider.getUserInfoById(userInfoId);
+        TemporaryCoverLetter temporaryCoverLetter = getTemporaryCoverLetterById(temporaryCoverLetterId);
+        if (!temporaryCoverLetter.getUserInfo().equals(userInfo)) {
+            throw new BaseException(DO_NOT_HAVE_PERMISSION);
+        }
+        if (temporaryCoverLetter.getType().equals(CoverLetterType.WRITING)) {
+            throw new BaseException(FOUND_COVER_LETTER_TYPE_IS_NOT_COMPLETING);
+        }
+        Long originalCoverLetterId = temporaryCoverLetter.getOriginalCoverLetterId();
+        CoverLetter originalCoverLetter = coverLetterProvider.getCoverLetterById(originalCoverLetterId);
+        Comment adoptedComment = commentProvider.getAdoptedCommentByCoverLetter(originalCoverLetter);
+
+        Long originalCoverLetterCategoryId = originalCoverLetter.getCoverLetterCategory().getId();
+        String originalCoverLetterContent = originalCoverLetter.getContent();
+        String adoptedCommentContent = adoptedComment.getContent();
+        String temporaryCoverLetterContent = temporaryCoverLetter.getContent();
+        return new GetCompletingTemporaryCoverLetterRes(temporaryCoverLetterId, originalCoverLetterCategoryId,
+                originalCoverLetterContent, adoptedCommentContent, temporaryCoverLetterContent);
     }
 }
