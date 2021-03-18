@@ -12,6 +12,7 @@ import com.app.edit.provider.CoverLetterDeclarationProvider;
 import com.app.edit.provider.CoverLetterProvider;
 import com.app.edit.provider.UserInfoProvider;
 import com.app.edit.request.coverletter.PostCoverLetterDeclarationReq;
+import com.app.edit.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,19 +25,22 @@ public class CoverLetterDeclarationService {
     private final CoverLetterProvider coverLetterProvider;
     private final UserInfoProvider userInfoProvider;
     private final CoverLetterDeclarationProvider coverLetterDeclarationProvider;
+    private final JwtService jwtService;
 
     @Autowired
     public CoverLetterDeclarationService(CoverLetterDeclarationRepository coverLetterDeclarationRepository,
                                          CoverLetterProvider coverLetterProvider, UserInfoProvider userInfoProvider,
-                                         CoverLetterDeclarationProvider coverLetterDeclarationProvider) {
+                                         CoverLetterDeclarationProvider coverLetterDeclarationProvider,
+                                         JwtService jwtService) {
         this.coverLetterDeclarationRepository = coverLetterDeclarationRepository;
         this.coverLetterProvider = coverLetterProvider;
         this.userInfoProvider = userInfoProvider;
         this.coverLetterDeclarationProvider = coverLetterDeclarationProvider;
+        this.jwtService = jwtService;
     }
 
     public Long createCoverLetterDeclaration(PostCoverLetterDeclarationReq request) throws BaseException {
-        Long userInfoId = 1L;
+        Long userInfoId = jwtService.getUserInfo().getUserId();
         Long coverLetterId = request.getCoverLetterId();
         UserInfo userInfo = userInfoProvider.getUserInfoById(userInfoId);
         CoverLetter coverLetter = coverLetterProvider.getCoverLetterById(coverLetterId);
@@ -50,7 +54,7 @@ public class CoverLetterDeclarationService {
     }
 
     public Long processCoverLetterDeclaration(Long coverLetterDeclarationId) throws BaseException {
-        Long userInfoId = 1L;
+        Long userInfoId = jwtService.getUserInfo().getUserId();
         UserInfo userInfo = userInfoProvider.getUserInfoById(userInfoId);
         CoverLetterDeclaration coverLetterDeclaration = coverLetterDeclarationProvider.getCoverLetterDeclarationById(coverLetterDeclarationId);
         if (!userInfo.getUserRole().equals(UserRole.ADMIN)) {
