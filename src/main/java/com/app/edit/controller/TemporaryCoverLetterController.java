@@ -9,6 +9,7 @@ import com.app.edit.request.temporarycoverletter.PatchCompletingTemporaryCoverLe
 import com.app.edit.request.temporarycoverletter.PatchWritingTemporaryCoverLetterReq;
 import com.app.edit.request.temporarycoverletter.PostCompletingTemporaryCoverLetterReq;
 import com.app.edit.request.temporarycoverletter.PostWritingTemporaryCoverLetterReq;
+import com.app.edit.response.temporarycoverletter.GetCompletingTemporaryCoverLetterRes;
 import com.app.edit.response.temporarycoverletter.GetWritingTemporaryCoverLetterRes;
 import com.app.edit.response.temporarycoverletter.GetTemporaryCoverLettersRes;
 import com.app.edit.service.TemporaryCoverLetterService;
@@ -106,6 +107,19 @@ public class TemporaryCoverLetterController {
     public BaseResponse<GetWritingTemporaryCoverLetterRes> getWritingTemporaryCoverLetter(@PathVariable("temporary-cover-letter-id") Long temporaryCoverLetterId) throws BaseException {
         return new BaseResponse<>(BaseResponseStatus.SUCCESS,
                 temporaryCoverLetterProvider.retrieveWritingTemporaryCoverLetter(temporaryCoverLetterId));
+    }
+
+    /**
+     * 임시 저장한 완성중인 자소서 조회 API
+     * @param temporaryCoverLetterId
+     * @return
+     * @throws BaseException
+     */
+    @ApiOperation(value = "임시 저장한 완성중인 자소서 조회 API")
+    @GetMapping("/completing-temporary-cover-letters/{temporary-cover-letter-id}")
+    public BaseResponse<GetCompletingTemporaryCoverLetterRes> getCompletingTemporaryCoverLetter(@PathVariable("temporary-cover-letter-id") Long temporaryCoverLetterId) throws BaseException {
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS,
+                temporaryCoverLetterProvider.retrieveCompletingTemporaryCoverLetter(temporaryCoverLetterId));
     }
 }
 
