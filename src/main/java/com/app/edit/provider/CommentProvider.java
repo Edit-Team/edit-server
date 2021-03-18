@@ -10,6 +10,7 @@ import com.app.edit.response.comment.CommentInfo;
 import com.app.edit.response.comment.GetCommentsRes;
 import com.app.edit.response.comment.GetNotAdoptedCommentContentsRes;
 import com.app.edit.response.coverletter.GetCoverLettersRes;
+import com.app.edit.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,15 +29,17 @@ public class CommentProvider {
 
     private final CommentRepository commentRepository;
     private final CoverLetterProvider coverLetterProvider;
+    private final JwtService jwtService;
 
     @Autowired
-    public CommentProvider(CommentRepository commentRepository, CoverLetterProvider coverLetterProvider) {
+    public CommentProvider(CommentRepository commentRepository, CoverLetterProvider coverLetterProvider, JwtService jwtService) {
         this.commentRepository = commentRepository;
         this.coverLetterProvider = coverLetterProvider;
+        this.jwtService = jwtService;
     }
 
     public GetCommentsRes retrieveCommentsByCoverLetterId(Pageable pageable, Long coverLetterId) throws BaseException {
-        Long userInfoId = 1L;
+        Long userInfoId = jwtService.getUserInfo().getUserId();
         CoverLetter coverLetter = coverLetterProvider.getCoverLetterById(coverLetterId);
         List<CommentInfo> commentInfos = commentRepository.findCommentsByCoverLetter(pageable, coverLetter, State.ACTIVE).stream()
                 .map(comment -> {
