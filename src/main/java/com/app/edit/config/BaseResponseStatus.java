@@ -79,6 +79,7 @@ public enum BaseResponseStatus {
     NOT_FOUND_USER_INFO(false, 3200, "존재하지 않는 유저입니다."),
     ALREADY_DELETED_USER(false, 3250, "이미 탈퇴한 유저입니다."),
     NOT_FOUND_COMMENT(false, 3300, "존재하지 않는 코멘트입니다."),
+    NOT_FOUND_ADOPTED_COMMENT(false, 3330, "해당 자소서에 채택된 코멘트가 존재하지 않습니다."),
     NOT_FOUND_COMMENT_DECLARATION(false, 3350, "존재하지 않는 코멘트 신고입니다."),
     ALREADY_PROCESSED_COMMENT_DECLARATION(false, 3370, "이미 처리된 코멘트 신고입니다."),
     NOT_FOUND_COVER_LETTER_CATEGORY(false, 3400, "존재하지 않는 자소서 종류입니다."),
