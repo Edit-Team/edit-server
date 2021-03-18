@@ -29,32 +29,32 @@ insert into user_info
 values (1, current_timestamp, current_timestamp, 0, concat('email', 1), 'YES','YES','YES',
         concat('name', 1),
         concat('nickName', 1),'Jjhg67XYWl1rwJ8QpW0VDg==',concat('phone', 1),
-        'ACTIVE', 'MENTOR', 'NONE', 1);
+        'ACTIVE', 'MENTEE', 'NONE', 1);
 insert into user_info
 values (2, current_timestamp, current_timestamp, 0, concat('email', 2), 'YES','YES','YES',
         concat('name', 2),
         concat('nickName', 2),'Jjhg67XYWl1rwJ8QpW0VDg==', concat('phone', 2),
-        'ACTIVE', 'MENTOR', 'NONE', 1);
+        'ACTIVE', 'MENTEE', 'NONE', 1);
 insert into user_info
 values (3, current_timestamp, current_timestamp, 0, concat('email', 3), 'YES','YES','YES',
-        concat('name', 1),
+        concat('name', 3),
         concat('nickName', 1),'Jjhg67XYWl1rwJ8QpW0VDg==', concat('phone', 1),
-        'ACTIVE', 'MENTOR', 'NONE', 1);
+        'ACTIVE', 'MENTEE', 'NONE', 1);
 insert into user_info
 values (4, current_timestamp, current_timestamp, 0, concat('email', 4), 'YES','YES','YES',
-        concat('name', 1),
+        concat('name', 4),
         concat('nickName', 1),'Jjhg67XYWl1rwJ8QpW0VDg==', concat('phone', 1),
-        'ACTIVE', 'MENTOR', 'NONE', 1);
+        'ACTIVE', 'MENTEE', 'NONE', 1);
 insert into user_info
 values (5, current_timestamp, current_timestamp, 0, concat('email', 5), 'YES','YES','YES',
-        concat('name', 1),
+        concat('name', 5),
         concat('nickName', 1),'Jjhg67XYWl1rwJ8QpW0VDg==', concat('phone', 1),
-        'ACTIVE', 'MENTOR', 'NONE', 1);
+        'ACTIVE', 'MENTEE', 'NONE', 1);
 insert into user_info
 values (6, current_timestamp, current_timestamp, 0, concat('email', 6), 'YES','YES','YES',
-        concat('name', 1),
+        concat('name', 6),
         concat('nickName', 1),'Jjhg67XYWl1rwJ8QpW0VDg==', concat('phone', 1),
-        'ACTIVE', 'MENTOR', 'NONE', 1);
+        'ACTIVE', 'MENTEE', 'NONE', 1);
 
 insert into profile_emotion
 values (1,current_timestamp,current_timestamp(),'relief','ACTIVE');
@@ -120,49 +120,49 @@ insert into cover_letter_category
 values (7, current_timestamp, current_timestamp, '기타');
 
 insert into cover_letter
-values (1, current_timestamp, current_timestamp, concat('content', 1), 1, 'ACTIVE', 'WRITING', 1, 1);
+values (1, current_timestamp, current_timestamp, concat('content', 1), 1, 'ACTIVE', 'COMPLETING', 1, 1);
 insert into cover_letter
-values (2, current_timestamp, current_timestamp, concat('content', 2), 1, 'ACTIVE', 'WRITING', 1, 2);
+values (2, current_timestamp, current_timestamp, concat('content', 2), 1, 'ACTIVE', 'COMPLETING', 1, 2);
 insert into cover_letter
-values (3, current_timestamp, current_timestamp, concat('content', 3), 1, 'ACTIVE', 'WRITING', 1, 3);
+values (3, current_timestamp, current_timestamp, concat('content', 3), 1, 'ACTIVE', 'COMPLETING', 1, 3);
 insert into cover_letter
-values (4, current_timestamp, current_timestamp, concat('content', 4), 1, 'ACTIVE', 'WRITING', 1, 4);
+values (4, current_timestamp, current_timestamp, concat('content', 4), 1, 'ACTIVE', 'COMPLETING', 1, 4);
 insert into cover_letter
-values (5, current_timestamp, current_timestamp, concat('content', 5), 1, 'ACTIVE', 'WRITING', 1, 5);
+values (5, current_timestamp, current_timestamp, concat('content', 5), 1, 'ACTIVE', 'COMPLETING', 1, 5);
 insert into cover_letter
-values (6, current_timestamp, current_timestamp, concat('content', 6), 1, 'ACTIVE', 'WRITING', 1, 6);
+values (6, current_timestamp, current_timestamp, concat('content', 6), 1, 'ACTIVE', 'COMPLETING', 1, 6);
 insert into cover_letter
-values (7, current_timestamp, current_timestamp, concat('content', 7), 1, 'ACTIVE', 'WRITING', 1, 1);
+values (7, current_timestamp, current_timestamp, concat('content', 7), 1, 'ACTIVE', 'COMPLETING', 1, 1);
 insert into cover_letter
-values (8, current_timestamp, current_timestamp, concat('content', 8), 1, 'ACTIVE', 'WRITING', 1, 2);
+values (8, current_timestamp, current_timestamp, concat('content', 8), 1, 'ACTIVE', 'COMPLETING', 1, 2);
 insert into cover_letter
-values (9, current_timestamp, current_timestamp, concat('content', 9), 1, 'ACTIVE', 'WRITING', 1, 3);
+values (9, current_timestamp, current_timestamp, concat('content', 9), 1, 'ACTIVE', 'COMPLETING', 1, 3);
 insert into cover_letter
-values (10, current_timestamp, current_timestamp, concat('content', 10), 1, 'ACTIVE', 'WRITING', 1, 4);
+values (10, current_timestamp, current_timestamp, concat('content', 10), 1, 'ACTIVE', 'COMPLETING', 1, 4);
 insert into cover_letter
-values (11, current_timestamp, current_timestamp, concat('content', 11), 1, 'ACTIVE', 'WRITING', 1, 5);
+values (11, current_timestamp, current_timestamp, concat('content', 11), 1, 'ACTIVE', 'COMPLETING', 1, 5);
 insert into cover_letter
-values (12, current_timestamp, current_timestamp, concat('content', 12), 1, 'ACTIVE', 'WRITING', 1, 6);
+values (12, current_timestamp, current_timestamp, concat('content', 12), 1, 'ACTIVE', 'COMPLETING', 1, 6);
 insert into cover_letter
-values (13, current_timestamp, current_timestamp, concat('content', 13), 1, 'ACTIVE', 'WRITING', 1, 1);
+values (13, current_timestamp, current_timestamp, concat('content', 13), 1, 'ACTIVE', 'COMPLETING', 1, 1);
 insert into cover_letter
-values (14, current_timestamp, current_timestamp, concat('content', 14), 1, 'ACTIVE', 'WRITING', 1, 1);
+values (14, current_timestamp, current_timestamp, concat('content', 14), 1, 'ACTIVE', 'COMPLETING', 1, 1);
 insert into cover_letter
-values (15, current_timestamp, current_timestamp, concat('content', 15), 1, 'ACTIVE', 'WRITING', 1, 1);
+values (15, current_timestamp, current_timestamp, concat('content', 15), 1, 'ACTIVE', 'COMPLETING', 1, 1);
 insert into cover_letter
-values (16, current_timestamp, current_timestamp, concat('content', 16), 1, 'ACTIVE', 'WRITING', 1, 1);
+values (16, current_timestamp, current_timestamp, concat('content', 16), 1, 'ACTIVE', 'COMPLETING', 1, 1);
 
 insert into comment
-values (1, current_timestamp, current_timestamp, 'NONE', 'NONE', concat('comment', 1), 'NO', 'NONE', 'NONE', 'ACTIVE',
+values (1, current_timestamp, current_timestamp, 'NONE', 'NONE', concat('comment', 1), 'YES', 'NONE', 'NONE', 'ACTIVE',
         1, 1);
 insert into comment
-values (2, current_timestamp, current_timestamp, 'NONE', 'NONE', concat('comment', 1), 'NO', 'NONE', 'NONE', 'ACTIVE',
+values (2, current_timestamp, current_timestamp, 'NONE', 'NONE', concat('comment', 1), 'YES', 'NONE', 'NONE', 'ACTIVE',
         2, 1);
 insert into comment
-values (3, current_timestamp, current_timestamp, 'NONE', 'NONE', concat('comment', 1), 'NO', 'NONE', 'NONE', 'ACTIVE',
+values (3, current_timestamp, current_timestamp, 'NONE', 'NONE', concat('comment', 1), 'YES', 'NONE', 'NONE', 'ACTIVE',
         3, 1);
 insert into comment
-values (4, current_timestamp, current_timestamp, 'NONE', 'NONE', concat('comment', 1), 'NO', 'NONE', 'NONE', 'ACTIVE',
+values (4, current_timestamp, current_timestamp, 'NONE', 'NONE', concat('comment', 1), 'YES', 'NONE', 'NONE', 'ACTIVE',
         4, 1);
 insert into comment
 values (5, current_timestamp, current_timestamp, 'NONE', 'NONE', concat('comment', 1), 'NO', 'NONE', 'NONE', 'ACTIVE',
@@ -210,7 +210,7 @@ insert into comment
 values (19, current_timestamp, current_timestamp, 'NONE', 'NONE', concat('comment', 1), 'NO', 'NONE', 'NONE', 'ACTIVE',
         1, 5);
 insert into comment
-values (20, current_timestamp, current_timestamp, 'NONE', 'NONE', concat('comment', 1), 'NO', 'NONE', 'NONE', 'ACTIVE',
+values (20, current_timestamp, current_timestamp, 'NONE', 'NONE', concat('comment', 1), 'YES', 'NONE', 'NONE', 'ACTIVE',
         1, 6);
 
 insert into sympathy values (1, 1, current_timestamp, current_timestamp, 'ACTIVE');
