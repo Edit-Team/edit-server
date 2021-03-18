@@ -161,19 +161,9 @@ public class CoverLetterProvider {
         CoverLetter originalCoverLetter = getCoverLetterById(coverLetterId);
         Long originalCoverLetterCategoryId = originalCoverLetter.getCoverLetterCategory().getId();
         String originalCoverLetterContent = originalCoverLetter.getContent();
-        Comment optionalAdoptedComment = getAdoptedComment(originalCoverLetter);
-        String adoptedCommentContent = optionalAdoptedComment.getContent();
+        Comment adoptedComment = originalCoverLetter.getAdoptedComment();
+        String adoptedCommentContent = adoptedComment.getContent();
         return new GetCoverLetterToCompleteRes(coverLetterId, originalCoverLetterCategoryId,
                 originalCoverLetterContent, adoptedCommentContent);
-    }
-
-    private Comment getAdoptedComment(CoverLetter originalCoverLetter) throws BaseException {
-        Optional<Comment> adoptedComment = originalCoverLetter.getComments().stream()
-                .filter(comment -> comment.getIsAdopted().equals(IsAdopted.YES))
-                .findFirst();
-        if (adoptedComment.isEmpty()) {
-            throw new BaseException(BaseResponseStatus.NOT_FOUND_ADOPTED_COMMENT);
-        }
-        return adoptedComment.get();
     }
 }

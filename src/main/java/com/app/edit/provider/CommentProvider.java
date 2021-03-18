@@ -65,14 +65,6 @@ public class CommentProvider {
         return comment.get();
     }
 
-    public Comment getAdoptedCommentByCoverLetter(CoverLetter coverLetter) throws BaseException {
-        Optional<Comment> adoptedComment = commentRepository.findAdoptedCommentByCoverLetter(coverLetter, IsAdopted.YES);
-        if (adoptedComment.isEmpty()) {
-            throw new BaseException(NOT_FOUND_ADOPTED_COMMENT);
-        }
-        return adoptedComment.get();
-    }
-
     public GetNotAdoptedCommentContentsRes getNotAdoptedCommentContentsById(Long coverLetterId, Pageable pageable) throws BaseException {
         CoverLetter coverLetter = coverLetterProvider.getCoverLetterById(coverLetterId);
         Page<Comment> notAdoptedComments = commentRepository

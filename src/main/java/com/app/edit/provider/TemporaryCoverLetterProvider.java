@@ -116,7 +116,7 @@ public class TemporaryCoverLetterProvider {
         }
         Long originalCoverLetterId = temporaryCoverLetter.getOriginalCoverLetterId();
         CoverLetter originalCoverLetter = coverLetterProvider.getCoverLetterById(originalCoverLetterId);
-        Comment adoptedComment = commentProvider.getAdoptedCommentByCoverLetter(originalCoverLetter);
+        Comment adoptedComment = originalCoverLetter.getAdoptedComment();
 
         Long originalCoverLetterCategoryId = originalCoverLetter.getCoverLetterCategory().getId();
         String originalCoverLetterContent = originalCoverLetter.getContent();

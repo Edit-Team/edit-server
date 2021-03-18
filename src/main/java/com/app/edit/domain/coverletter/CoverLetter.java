@@ -1,6 +1,8 @@
 package com.app.edit.domain.coverletter;
 
 import com.app.edit.config.BaseEntity;
+import com.app.edit.config.BaseException;
+import com.app.edit.config.BaseResponseStatus;
 import com.app.edit.domain.comment.Comment;
 import com.app.edit.domain.coverlettercategory.CoverLetterCategory;
 import com.app.edit.domain.coverletterdeclaration.CoverLetterDeclaration;
@@ -20,6 +22,7 @@ import org.hibernate.annotations.DynamicInsert;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static com.app.edit.config.Constant.*;
 
@@ -165,6 +168,19 @@ public class CoverLetter extends BaseEntity {
     public static boolean hasAdoptedComment(CoverLetter coverLetter) {
         return coverLetter.getComments().stream()
                 .anyMatch(comment -> comment.getIsAdopted().equals(IsAdopted.YES));
+    }
+
+    /*
+     * 채택된 코멘트 찾기
+     **/
+    public Comment getAdoptedComment() throws BaseException {
+        Optional<Comment> adoptedComment = this.getComments().stream()
+                .filter(comment -> comment.getIsAdopted().equals(IsAdopted.YES))
+                .findFirst();
+        if (adoptedComment.isEmpty()) {
+            throw new BaseException(BaseResponseStatus.NOT_FOUND_ADOPTED_COMMENT);
+        }
+        return adoptedComment.get();
     }
 
     /*
