@@ -12,6 +12,7 @@ import com.app.edit.enums.State;
 import com.app.edit.response.temporarycoverletter.GetCompletingTemporaryCoverLetterRes;
 import com.app.edit.response.temporarycoverletter.GetWritingTemporaryCoverLetterRes;
 import com.app.edit.response.temporarycoverletter.GetTemporaryCoverLettersRes;
+import com.app.edit.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,15 +33,17 @@ public class TemporaryCoverLetterProvider {
     private final UserInfoProvider userInfoProvider;
     private final CoverLetterProvider coverLetterProvider;
     private final CommentProvider commentProvider;
+    private final JwtService jwtService;
 
     @Autowired
     public TemporaryCoverLetterProvider(TemporaryCoverLetterRepository temporaryCoverLetterRepository,
                                         UserInfoProvider userInfoProvider, CoverLetterProvider coverLetterProvider,
-                                        CommentProvider commentProvider) {
+                                        CommentProvider commentProvider, JwtService jwtService) {
         this.temporaryCoverLetterRepository = temporaryCoverLetterRepository;
         this.userInfoProvider = userInfoProvider;
         this.coverLetterProvider = coverLetterProvider;
         this.commentProvider = commentProvider;
+        this.jwtService = jwtService;
     }
 
     /**
@@ -52,7 +55,7 @@ public class TemporaryCoverLetterProvider {
      * @throws BaseException
      */
     public List<GetTemporaryCoverLettersRes> retrieveTemporaryCoverLetters(Pageable pageable, CoverLetterType coverLetterType) throws BaseException {
-        Long userInfoId = 1L;
+        Long userInfoId = jwtService.getUserInfo().getUserId();
         UserInfo userInfo = userInfoProvider.getUserInfoById(userInfoId);
         Page<TemporaryCoverLetter> temporaryCoverLetters = temporaryCoverLetterRepository
                 .findTemporaryCoverLetters(pageable, userInfoId, State.ACTIVE, coverLetterType);
@@ -86,7 +89,7 @@ public class TemporaryCoverLetterProvider {
     }
 
     public GetWritingTemporaryCoverLetterRes retrieveWritingTemporaryCoverLetter(Long temporaryCoverLetterId) throws BaseException {
-        Long userInfoId = 1L;
+        Long userInfoId = jwtService.getUserInfo().getUserId();
         TemporaryCoverLetter temporaryCoverLetter = getTemporaryCoverLetterById(temporaryCoverLetterId);
         UserInfo userInfo = userInfoProvider.getUserInfoById(userInfoId);
         if (!temporaryCoverLetter.getUserInfo().equals(userInfo)) {
@@ -102,7 +105,7 @@ public class TemporaryCoverLetterProvider {
     }
 
     public GetCompletingTemporaryCoverLetterRes retrieveCompletingTemporaryCoverLetter(Long temporaryCoverLetterId) throws BaseException {
-        Long userInfoId = 1L;
+        Long userInfoId = jwtService.getUserInfo().getUserId();
         UserInfo userInfo = userInfoProvider.getUserInfoById(userInfoId);
         TemporaryCoverLetter temporaryCoverLetter = getTemporaryCoverLetterById(temporaryCoverLetterId);
         if (!temporaryCoverLetter.getUserInfo().equals(userInfo)) {
