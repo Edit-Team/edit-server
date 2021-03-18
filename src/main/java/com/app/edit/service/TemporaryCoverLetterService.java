@@ -9,6 +9,7 @@ import com.app.edit.domain.temporarycoverletter.TemporaryCoverLetterRepository;
 import com.app.edit.domain.user.UserInfo;
 import com.app.edit.enums.CoverLetterType;
 import com.app.edit.enums.State;
+import com.app.edit.enums.UserRole;
 import com.app.edit.provider.CoverLetterCategoryProvider;
 import com.app.edit.provider.CoverLetterProvider;
 import com.app.edit.provider.TemporaryCoverLetterProvider;
@@ -22,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.app.edit.config.BaseResponseStatus.USER_ROLE_IS_NOT_MENTEE;
 import static com.app.edit.config.Constant.DEFAULT_ORIGINAL_COVER_LETTER_ID;
 
 @Transactional
@@ -50,6 +52,7 @@ public class TemporaryCoverLetterService {
         Long coverLetterCategoryId = request.getCoverLetterCategoryId();
         String content = request.getCoverLetterContent();
         UserInfo userInfo = userInfoProvider.getUserInfoById(userInfoId);
+        validateUserIsMentee(userInfo);
         CoverLetterCategory coverLetterCategory = coverLetterCategoryProvider
                 .getCoverLetterCategoryById(coverLetterCategoryId);
         TemporaryCoverLetter requestedWritingTemporaryCoverLetter = TemporaryCoverLetter.builder()
@@ -72,6 +75,7 @@ public class TemporaryCoverLetterService {
         CoverLetter originalCoverLetter = coverLetterProvider.getCoverLetterById(originalCoverLetterId);
         CoverLetterCategory originalCoverLetterCategory = originalCoverLetter.getCoverLetterCategory();
         UserInfo userInfo = userInfoProvider.getUserInfoById(userInfoId);
+        validateUserIsMentee(userInfo);
         TemporaryCoverLetter requestedCompletingTemporaryCoverLetter = TemporaryCoverLetter.builder()
                 .coverLetterCategory(originalCoverLetterCategory)
                 .originalCoverLetterId(originalCoverLetterId)
@@ -87,6 +91,7 @@ public class TemporaryCoverLetterService {
     public Long updateWritingTemporaryCoverLetterById(Long temporaryCoverLetterId, PatchWritingTemporaryCoverLetterReq request) throws BaseException {
         Long userInfoId = jwtService.getUserInfo().getUserId();
         UserInfo userInfo = userInfoProvider.getUserInfoById(userInfoId);
+        validateUserIsMentee(userInfo);
         Long coverLetterCategoryId = request.getCoverLetterCategoryId();
         String coverLetterContent = request.getCoverLetterContent();
         CoverLetterCategory coverLetterCategory = coverLetterCategoryProvider
@@ -103,6 +108,7 @@ public class TemporaryCoverLetterService {
     public Long updateCompletingTemporaryCoverLetterById(Long temporaryCoverLetterId, PatchCompletingTemporaryCoverLetterReq request) throws BaseException {
         Long userInfoId = jwtService.getUserInfo().getUserId();
         UserInfo userInfo = userInfoProvider.getUserInfoById(userInfoId);
+        validateUserIsMentee(userInfo);
         String coverLetterContent = request.getCoverLetterContent();
         TemporaryCoverLetter temporaryCoverLetter = temporaryCoverLetterProvider
                 .getTemporaryCoverLetterById(temporaryCoverLetterId);
@@ -115,6 +121,12 @@ public class TemporaryCoverLetterService {
     private void validateUser(UserInfo userInfo, TemporaryCoverLetter temporaryCoverLetter) throws BaseException {
         if (!temporaryCoverLetter.getUserInfo().equals(userInfo)) {
             throw new BaseException(BaseResponseStatus.DO_NOT_HAVE_PERMISSION);
+        }
+    }
+
+    private void validateUserIsMentee(UserInfo userInfo) throws BaseException {
+        if (!userInfo.getUserRole().equals(UserRole.MENTEE)) {
+            throw new BaseException(USER_ROLE_IS_NOT_MENTEE);
         }
     }
 }
