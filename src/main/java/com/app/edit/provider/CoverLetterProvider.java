@@ -100,9 +100,11 @@ public class CoverLetterProvider {
                 .map(coverLetter -> {
                     GetCoverLettersRes getCoverLettersRes = coverLetter.toGetCoverLetterRes();
                     boolean isSympathy = sympathyProvider.getIsSympathy(coverLetter.getId(), userInfoId);
+                    boolean isMine = coverLetter.getUserInfo().getId().equals(userInfoId);
                     Long sympathiesCount = sympathyProvider.getSympathiesCount(coverLetter);
                     CoverLetter.setSympathiesCountInCoverLettersRes(getCoverLettersRes, sympathiesCount);
                     getCoverLettersRes.setSympathy(isSympathy);
+                    getCoverLettersRes.setMine(isMine);
                     return getCoverLettersRes;
                 })
                 .collect(toList());
