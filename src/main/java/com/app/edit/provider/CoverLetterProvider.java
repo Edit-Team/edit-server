@@ -3,11 +3,13 @@ package com.app.edit.provider;
 import com.app.edit.config.BaseException;
 import com.app.edit.config.BaseResponseStatus;
 import com.app.edit.config.PageRequest;
+import com.app.edit.domain.comment.Comment;
 import com.app.edit.domain.coverletter.CoverLetter;
 import com.app.edit.domain.coverletter.CoverLetterRepository;
 import com.app.edit.enums.CoverLetterType;
 import com.app.edit.enums.IsAdopted;
 import com.app.edit.enums.State;
+import com.app.edit.response.coverletter.GetCoverLetterToCompleteRes;
 import com.app.edit.response.coverletter.GetCoverLettersRes;
 import com.app.edit.response.coverletter.GetMainCoverLettersRes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -144,5 +146,25 @@ public class CoverLetterProvider {
         LocalDateTime startOfTomorrow = startOfToday.plusDays(ONE);
         return coverLetterRepository
                 .getTodayWritingCoverLetterCount(userInfoId, startOfToday, startOfTomorrow, State.ACTIVE);
+    }
+
+    public GetCoverLetterToCompleteRes retrieveCoverLetterToComplete(Long coverLetterId) throws BaseException {
+        CoverLetter originalCoverLetter = getCoverLetterById(coverLetterId);
+        Long originalCoverLetterCategoryId = originalCoverLetter.getCoverLetterCategory().getId();
+        String originalCoverLetterContent = originalCoverLetter.getContent();
+        Comment optionalAdoptedComment = getAdoptedComment(originalCoverLetter);
+        String adoptedCommentContent = optionalAdoptedComment.getContent();
+        return new GetCoverLetterToCompleteRes(coverLetterId, originalCoverLetterCategoryId,
+                originalCoverLetterContent, adoptedCommentContent);
+    }
+
+    private Comment getAdoptedComment(CoverLetter originalCoverLetter) throws BaseException {
+        Optional<Comment> adoptedComment = originalCoverLetter.getComments().stream()
+                .filter(comment -> comment.getIsAdopted().equals(IsAdopted.YES))
+                .findFirst();
+        if (adoptedComment.isEmpty()) {
+            throw new BaseException(BaseResponseStatus.NOT_FOUND_ADOPTED_COMMENT);
+        }
+        return adoptedComment.get();
     }
 }
