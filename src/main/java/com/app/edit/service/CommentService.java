@@ -5,6 +5,7 @@ import com.app.edit.domain.comment.Comment;
 import com.app.edit.domain.comment.CommentRepository;
 import com.app.edit.enums.IsAdopted;
 import com.app.edit.provider.CommentProvider;
+import com.app.edit.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,15 +19,17 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final CommentProvider commentProvider;
+    private final JwtService jwtService;
 
     @Autowired
-    public CommentService(CommentRepository commentRepository, CommentProvider commentProvider) {
+    public CommentService(CommentRepository commentRepository, CommentProvider commentProvider, JwtService jwtService) {
         this.commentRepository = commentRepository;
         this.commentProvider = commentProvider;
+        this.jwtService = jwtService;
     }
 
     public Long updateCommentAdoptedById(Long commentId) throws BaseException {
-        Long userInfoId = 1L;
+        Long userInfoId = jwtService.getUserInfo().getUserId();
         Comment selectedComment = commentProvider.getCommentById(commentId);
         validateUser(userInfoId, selectedComment);
         validateAdoptedComment(selectedComment);
