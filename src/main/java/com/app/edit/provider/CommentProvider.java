@@ -4,6 +4,7 @@ import com.app.edit.config.BaseException;
 import com.app.edit.domain.comment.Comment;
 import com.app.edit.domain.comment.CommentRepository;
 import com.app.edit.domain.coverletter.CoverLetter;
+import com.app.edit.enums.IsAdopted;
 import com.app.edit.enums.State;
 import com.app.edit.response.comment.CommentInfo;
 import com.app.edit.response.comment.GetCommentsRes;
@@ -16,8 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-import static com.app.edit.config.BaseResponseStatus.ALREADY_DELETED_COMMENT;
-import static com.app.edit.config.BaseResponseStatus.NOT_FOUND_COMMENT;
+import static com.app.edit.config.BaseResponseStatus.*;
 import static java.util.stream.Collectors.toList;
 
 @Transactional(readOnly = true)
@@ -58,5 +58,13 @@ public class CommentProvider {
             throw new BaseException(ALREADY_DELETED_COMMENT);
         }
         return comment.get();
+    }
+
+    public Comment getAdoptedCommentByCoverLetter(CoverLetter coverLetter) throws BaseException {
+        Optional<Comment> adoptedComment = commentRepository.findAdoptedCommentByCoverLetter(coverLetter, IsAdopted.YES);
+        if (adoptedComment.isEmpty()) {
+            throw new BaseException(NOT_FOUND_ADOPTED_COMMENT);
+        }
+        return adoptedComment.get();
     }
 }
