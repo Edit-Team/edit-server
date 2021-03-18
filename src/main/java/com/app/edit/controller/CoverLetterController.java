@@ -40,7 +40,7 @@ public class CoverLetterController {
      **/
     @ApiOperation(value = "메인 화면 조회 API")
     @GetMapping("/main")
-    public BaseResponse<GetMainCoverLettersRes> getMainCoverLetters() {
+    public BaseResponse<GetMainCoverLettersRes> getMainCoverLetters() throws BaseException {
         return new BaseResponse<>(BaseResponseStatus.SUCCESS, coverLetterProvider.retrieveMainCoverLetters());
     }
 
@@ -50,7 +50,7 @@ public class CoverLetterController {
      **/
     @ApiOperation(value = "오늘의 문장 조회 API")
     @GetMapping("/today-cover-letters")
-    public BaseResponse<List<GetCoverLettersRes>> getTodayCoverLetters(@RequestParam Integer page) {
+    public BaseResponse<List<GetCoverLettersRes>> getTodayCoverLetters(@RequestParam Integer page) throws BaseException {
         PageRequest pageRequest = com.app.edit.config.PageRequest
                 .of(page, DEFAULT_PAGE_SIZE, Sort.by("createdAt"));
         return new BaseResponse<>(BaseResponseStatus.SUCCESS, coverLetterProvider.retrieveTodayCoverLetters(pageRequest));
@@ -62,7 +62,7 @@ public class CoverLetterController {
      **/
     @ApiOperation(value = "코멘트를 기다리고 있어요 조회 API")
     @GetMapping("/waiting-for-comment-cover-letters")
-    public BaseResponse<List<GetCoverLettersRes>> getWaitingForCommentCoverLetters(@RequestParam Integer page) {
+    public BaseResponse<List<GetCoverLettersRes>> getWaitingForCommentCoverLetters(@RequestParam Integer page) throws BaseException {
         PageRequest pageRequest = com.app.edit.config.PageRequest
                 .of(page, DEFAULT_PAGE_SIZE, Sort.by("createdAt"));
         return new BaseResponse<>(BaseResponseStatus.SUCCESS,
@@ -75,7 +75,7 @@ public class CoverLetterController {
      **/
     @ApiOperation(value = "채택이 완료되었어요 조회 API")
     @GetMapping("/adopted-cover-letters")
-    public BaseResponse<List<GetCoverLettersRes>> getAdoptedCoverLetters(@RequestParam Integer page) {
+    public BaseResponse<List<GetCoverLettersRes>> getAdoptedCoverLetters(@RequestParam Integer page) throws BaseException {
         PageRequest pageRequest = com.app.edit.config.PageRequest
                 .of(page, DEFAULT_PAGE_SIZE);
         return new BaseResponse<>(BaseResponseStatus.SUCCESS,
@@ -89,7 +89,7 @@ public class CoverLetterController {
      **/
     @ApiOperation(value = "많은 분들이 공감하고 있어요 조회 API")
     @GetMapping("/many-sympathies-cover-letters")
-    public BaseResponse<List<GetCoverLettersRes>> getManySympathiesCoverLetters(@RequestParam Integer page) {
+    public BaseResponse<List<GetCoverLettersRes>> getManySympathiesCoverLetters(@RequestParam Integer page) throws BaseException {
         PageRequest pageRequest = com.app.edit.config.PageRequest.of(page, DEFAULT_PAGE_SIZE);
         return new BaseResponse<>(BaseResponseStatus.SUCCESS,
                 coverLetterProvider.retrieveManySympathiesCoverLetters(pageRequest));
@@ -119,7 +119,7 @@ public class CoverLetterController {
      **/
     @ApiOperation(value = "내가 등록한 자소서 조회 API")
     @GetMapping("/my-writing-cover-letters")
-    public BaseResponse<List<GetCoverLettersRes>> getMyCoverLetters(@RequestParam Integer page) {
+    public BaseResponse<List<GetCoverLettersRes>> getMyCoverLetters(@RequestParam Integer page) throws BaseException {
         PageRequest pageRequest = com.app.edit.config.PageRequest.of(page, DEFAULT_PAGE_SIZE);
         return new BaseResponse<>(BaseResponseStatus.SUCCESS, coverLetterProvider.retrieveMyWritingCoverLetters(pageRequest));
     }
@@ -143,7 +143,7 @@ public class CoverLetterController {
      */
     @ApiOperation(value = "완성한 자소서 목록 조회 API")
     @GetMapping("/my-completing-cover-letters")
-    public BaseResponse<List<GetCoverLettersRes>> getCompletingCoverLetters(@RequestParam Integer page) {
+    public BaseResponse<List<GetCoverLettersRes>> getCompletingCoverLetters(@RequestParam Integer page) throws BaseException {
         PageRequest pageRequest = com.app.edit.config.PageRequest.of(page, DEFAULT_PAGE_SIZE);
         return new BaseResponse<>(BaseResponseStatus.SUCCESS,
                 coverLetterProvider.retrieveMyCompletingCoverLetters(pageRequest));
@@ -155,7 +155,7 @@ public class CoverLetterController {
      */
     @ApiOperation(value = "유저가 오늘 작성한 자소서 개수 조회 API")
     @GetMapping("/today-writing-cover-letter-count")
-    public BaseResponse<Long> getTodayWritingCoverLetterCount() {
+    public BaseResponse<Long> getTodayWritingCoverLetterCount() throws BaseException {
         return new BaseResponse<>(BaseResponseStatus.SUCCESS,
                 coverLetterProvider.retrieveTodayWritingCoverLetterCount());
     }
