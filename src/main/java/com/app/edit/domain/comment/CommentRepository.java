@@ -38,7 +38,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
      * @return
      */
     @Query(value = "select c from Comment c where c.coverLetter = :coverLetter and c.isAdopted = :isAdopted and c.state = :state")
-    Page<Comment> findNotAdoptedCommentsByCoverLetter(@Param("coverLetter") CoverLetter coverLetter,
+    Page<Comment> findNotAdoptedCommentsByCoverLetter(Pageable pageable, @Param("coverLetter") CoverLetter coverLetter,
                                                       @Param("isAdopted") IsAdopted isAdopted,
                                                       @Param("state") State state);
 }
