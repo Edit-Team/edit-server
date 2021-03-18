@@ -6,6 +6,7 @@ import com.app.edit.config.BaseResponseStatus;
 import com.app.edit.provider.CoverLetterProvider;
 import com.app.edit.request.coverletter.PostCompletingCoverLetterReq;
 import com.app.edit.request.coverletter.PostWritingCoverLetterReq;
+import com.app.edit.response.coverletter.GetCoverLetterToCompleteRes;
 import com.app.edit.response.coverletter.GetCoverLettersRes;
 import com.app.edit.response.coverletter.GetMainCoverLettersRes;
 import com.app.edit.service.CoverLetterService;
@@ -157,5 +158,18 @@ public class CoverLetterController {
     public BaseResponse<Long> getTodayWritingCoverLetterCount() {
         return new BaseResponse<>(BaseResponseStatus.SUCCESS,
                 coverLetterProvider.retrieveTodayWritingCoverLetterCount());
+    }
+
+    /**
+     * 문장 완성하기 -> 작성한 문장과 채택한 코멘트 조회 API
+     * @param coverLetterId
+     * @return
+     * @throws BaseException
+     */
+    @ApiOperation(value = "문장 완성하기 -> 작성한 문장과 채택한 코멘트 조회 API")
+    @GetMapping("/cover-letters/{cover-letter-id}/to-complete")
+    public BaseResponse<GetCoverLetterToCompleteRes> getCoverLetter(@PathVariable("cover-letter-id") Long coverLetterId) throws BaseException {
+        return new BaseResponse(BaseResponseStatus.SUCCESS,
+                coverLetterProvider.retrieveCoverLetterToComplete(coverLetterId));
     }
 }
