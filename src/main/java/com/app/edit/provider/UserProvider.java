@@ -278,20 +278,13 @@ public class UserProvider {
 
     /**
      * 내 프로필 조회
-     * @param userId
+     * @param
      * @return
      */
-    public GetProfileRes retrieveProfile(Long userId) throws BaseException{
+    public GetProfileRes retrieveProfile(Long userInfoId) throws BaseException{
 
-        UserInfo userInfo = userInfoRepository.findByStateAndId(State.ACTIVE,userId)
-                .orElseThrow(() -> new BaseException(FAILED_TO_GET_USER));
-
-        return GetProfileRes.builder()
-                .name(userInfo.getName())
-                .emotionName(userInfo.getUserProfile().getProfileEmotion().getName())
-                .colorName(userInfo.getUserProfile().getProfileColor().getName())
-                .userRole(userInfo.getUserRole())
-                .build();
+        return userInfoRepository.findProfileByUser(userInfoId,State.ACTIVE)
+                .orElseThrow(() -> new BaseException(NOT_FOUND_USER));
     }
 
     /**
@@ -377,5 +370,15 @@ public class UserProvider {
                 .adoptCount(userInfo.getComments().stream()
                         .filter(comment -> comment.getIsAdopted().equals(IsAdopted.YES)).count())
                 .build();
+    }
+
+    /**
+     * 공감한 자소서 이용자 정보
+     * @param userInfoId
+     * @return
+     */
+    public GetSympathizeUserRes retrieveSympathizeUser(Long userInfoId){
+
+        return userInfoRepository.findProfileBySympathizeUser(userInfoId,State.ACTIVE);
     }
 }

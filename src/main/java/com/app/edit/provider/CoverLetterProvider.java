@@ -5,11 +5,15 @@ import com.app.edit.config.BaseResponseStatus;
 import com.app.edit.config.PageRequest;
 import com.app.edit.domain.coverletter.CoverLetter;
 import com.app.edit.domain.coverletter.CoverLetterRepository;
+import com.app.edit.domain.sympathy.Sympathy;
+import com.app.edit.domain.sympathy.SympathyRepository;
 import com.app.edit.enums.CoverLetterType;
 import com.app.edit.enums.IsAdopted;
 import com.app.edit.enums.State;
 import com.app.edit.response.coverletter.GetCoverLettersRes;
 import com.app.edit.response.coverletter.GetMainCoverLettersRes;
+import com.app.edit.response.sympathize.GetSympathizeCoverLetterRes;
+import com.app.edit.response.sympathize.GetSympathizeCoverLettersRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +24,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 
+import static com.app.edit.config.BaseResponseStatus.NOT_FOUND_COVER_LETTER;
 import static com.app.edit.config.Constant.*;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
@@ -31,11 +37,22 @@ public class CoverLetterProvider {
 
     private final CoverLetterRepository coverLetterRepository;
     private final SympathyProvider sympathyProvider;
+    private final SympathyRepository sympathyRepository;
+    private final UserProvider userProvider;
+
 
     @Autowired
-    public CoverLetterProvider(CoverLetterRepository coverLetterRepository, SympathyProvider sympathyProvider) {
+    public CoverLetterProvider(CoverLetterRepository coverLetterRepository, SympathyProvider sympathyProvider,
+                               SympathyRepository sympathyRepository,
+                               //UserInfoRepository userInfoRepository,
+                               UserProvider userProvider
+                               //CoverLetterProvider coverLetterProvider
+                               ) {
         this.coverLetterRepository = coverLetterRepository;
         this.sympathyProvider = sympathyProvider;
+        this.sympathyRepository = sympathyRepository;
+        this.userProvider = userProvider;
+        //this.coverLetterProvider = coverLetterProvider;
     }
 
     /*
@@ -102,7 +119,7 @@ public class CoverLetterProvider {
     public CoverLetter getCoverLetterById(Long coverLetterId) throws BaseException {
         Optional<CoverLetter> coverLetter = coverLetterRepository.findById(coverLetterId);
         if (coverLetter.isEmpty()) {
-            throw new BaseException(BaseResponseStatus.NOT_FOUND_COVER_LETTER);
+            throw new BaseException(NOT_FOUND_COVER_LETTER);
         }
         return coverLetter.get();
     }
@@ -130,4 +147,40 @@ public class CoverLetterProvider {
                 .findMyCoverLetters(pageable, userInfoId, State.ACTIVE, CoverLetterType.COMPLETING);
         return getCoverLettersResponses(completingCoverLetters);
     }
+
+    /**
+     * 내가 공감한 자소서 목록 조회
+     * @param
+     * @param
+     * @return
+     */
+    public List<GetSympathizeCoverLettersRes> retrieveMySympathizeCoverLetters(Long userInfoId, Integer pageNum) throws BaseException{
+
+        Pageable pageRequest = PageRequest.of(pageNum,10);
+
+        Page<Sympathy> sympathies = sympathyRepository.findCoverLetterByUser(pageRequest,userInfoId, State.ACTIVE);
+
+        AtomicLong id = new AtomicLong(1L);
+
+        List<GetSympathizeCoverLettersRes> getSympathizeCoverLettersResList =
+                sympathies.stream()
+                        .map(sympathy ->
+                                GetSympathizeCoverLettersRes.builder()
+                                        .id(id.getAndIncrement())
+                                        .getSympathizeCoverLetterRes(retrieveSympathizeCoverLetter(sympathy.getCoverLetter().getId()))
+                                        .getSympathizeUserRes(userProvider.retrieveSympathizeUser(sympathy.getUserInfo().getId()))
+                                .build())
+                        .collect(toList());
+
+        if(getSympathizeCoverLettersResList.size() == 0)
+            throw new BaseException(NOT_FOUND_COVER_LETTER);
+
+        return getSympathizeCoverLettersResList;
+    }
+
+    private GetSympathizeCoverLetterRes retrieveSympathizeCoverLetter(Long coverLetterId) {
+
+        return coverLetterRepository.findBySympathizeCoverLetter(coverLetterId,State.ACTIVE);
+    }
+
 }

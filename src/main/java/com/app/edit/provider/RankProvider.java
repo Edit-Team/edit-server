@@ -25,6 +25,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+
 @Transactional(readOnly = true)
 @Service
 @Slf4j
@@ -52,6 +55,7 @@ public class RankProvider {
 
             userInfo = userInfoRepository
                     .findByAdoptAndState(pageRequest, UserRole.MENTOR, State.ACTIVE, IsAdopted.YES);
+
         }else if(requestRole.equals("MENTEE")){
 
             userInfo = userInfoRepository

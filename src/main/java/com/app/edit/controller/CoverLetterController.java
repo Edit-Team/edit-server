@@ -4,11 +4,14 @@ import com.app.edit.config.BaseException;
 import com.app.edit.config.BaseResponse;
 import com.app.edit.config.BaseResponseStatus;
 import com.app.edit.provider.CoverLetterProvider;
+import com.app.edit.provider.SympathyProvider;
 import com.app.edit.request.coverletter.PostCompletingCoverLetterReq;
 import com.app.edit.request.coverletter.PostWritingCoverLetterReq;
 import com.app.edit.response.coverletter.GetCoverLettersRes;
 import com.app.edit.response.coverletter.GetMainCoverLettersRes;
+import com.app.edit.response.sympathize.GetSympathizeCoverLettersRes;
 import com.app.edit.service.CoverLetterService;
+import com.app.edit.utils.JwtService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+import static com.app.edit.config.BaseResponseStatus.EMPTY_USERID;
 import static com.app.edit.config.Constant.DEFAULT_PAGE_SIZE;
 
 
@@ -27,11 +31,18 @@ public class CoverLetterController {
 
     private final CoverLetterProvider coverLetterProvider;
     private final CoverLetterService coverLetterService;
+    private final SympathyProvider sympathyProvider;
+    private final JwtService jwtService;
 
     @Autowired
-    public CoverLetterController(CoverLetterProvider coverLetterProvider, CoverLetterService coverLetterService) {
+    public CoverLetterController(CoverLetterProvider coverLetterProvider,
+                                 CoverLetterService coverLetterService,
+                                 SympathyProvider sympathyProvider,
+                                 JwtService jwtService) {
         this.coverLetterProvider = coverLetterProvider;
         this.coverLetterService = coverLetterService;
+        this.sympathyProvider = sympathyProvider;
+        this.jwtService = jwtService;
     }
 
     /*
@@ -146,5 +157,31 @@ public class CoverLetterController {
         PageRequest pageRequest = com.app.edit.config.PageRequest.of(page, DEFAULT_PAGE_SIZE);
         return new BaseResponse<>(BaseResponseStatus.SUCCESS,
                 coverLetterProvider.retrieveMyCompletingCoverLetters(pageRequest));
+    }
+
+    /**
+     * 내가 공감한 자소서 조회 API
+     * @param
+     * @return
+     */
+    @ApiOperation(value = "내가 공감한 자소서 조회 API")
+    @GetMapping("/sympathize-coverletters")
+    public BaseResponse<List<GetSympathizeCoverLettersRes>> getSympathizeCoverLetters(
+            @RequestHeader(value = "X-ACCESS-TOKEN") String jwt,
+            @RequestParam("page") Integer pageNum) {
+
+        try{
+
+            Long userId = jwtService.getUserInfo().getUserId();
+
+            if (userId == null || userId <= 0) {
+                return new BaseResponse<>(EMPTY_USERID);
+            }
+
+            return new BaseResponse<>(BaseResponseStatus.SUCCESS, coverLetterProvider.retrieveMySympathizeCoverLetters(userId, pageNum));
+        }catch (BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
+
     }
 }

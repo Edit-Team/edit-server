@@ -4,6 +4,7 @@ import com.app.edit.enums.CoverLetterType;
 import com.app.edit.enums.IsAdopted;
 import com.app.edit.enums.State;
 import com.app.edit.response.coverletter.GetCoverLettersRes;
+import com.app.edit.response.sympathize.GetSympathizeCoverLetterRes;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CoverLetterRepository extends JpaRepository<CoverLetter, Long> {
@@ -48,4 +50,10 @@ public interface CoverLetterRepository extends JpaRepository<CoverLetter, Long> 
     @Query(value = "select c from CoverLetter c where c.userInfo.id = :userInfoId and c.state = :state and c.type = :type order by c.createdAt desc ")
     Page<CoverLetter> findMyCoverLetters(Pageable pageable, @Param("userInfoId") Long userInfoId,
                                          @Param("state") State state, @Param("type") CoverLetterType type);
+
+    /*
+     * 내가 공감한 자소서 정보 조회
+     */
+    @Query(value = "select new com.app.edit.response.sympathize.GetSympathizeCoverLetterRes(c.id, c.content, c.coverLetterCategory.name) from CoverLetter c where c.id = :coverLetterId and c.state = :state")
+    GetSympathizeCoverLetterRes findBySympathizeCoverLetter(@Param("coverLetterId") Long coverLetterId, @Param("state") State state);
 }
