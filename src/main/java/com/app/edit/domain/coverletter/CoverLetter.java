@@ -156,22 +156,6 @@ public class CoverLetter extends BaseEntity {
     }
 
     /*
-     * 응답에 공감 수 추가
-     **/
-    public static GetCoverLettersRes setSympathiesCountInCoverLettersRes(GetCoverLettersRes getCoverLettersRes, Long sympathiesCount) {
-        getCoverLettersRes.setSympathiesCount(sympathiesCount);
-        return getCoverLettersRes;
-    }
-
-    /*
-     * 채택된 코멘트 존재 여부 확인
-     **/
-    public static boolean hasAdoptedComment(CoverLetter coverLetter) {
-        return coverLetter.getComments().stream()
-                .anyMatch(comment -> comment.getIsAdopted().equals(IsAdopted.YES));
-    }
-
-    /*
      * 채택된 코멘트 찾기
      **/
     public Comment getAdoptedComment() throws BaseException {
