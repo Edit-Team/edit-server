@@ -10,6 +10,7 @@ import lombok.Setter;
 public class GetCoverLettersRes {
 
     private Long coverLetterId;
+    private String userProfile;
     private String nickName;
     private String jobName;
     private String coverLetterCategoryName;

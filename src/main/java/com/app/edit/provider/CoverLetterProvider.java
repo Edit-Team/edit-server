@@ -116,10 +116,13 @@ public class CoverLetterProvider {
         return coverLetterPage.stream()
                 .map(coverLetter -> {
                     GetCoverLettersRes getCoverLettersRes = coverLetter.toGetCoverLetterRes();
+                    String profileColorName = coverLetter.getUserInfo().getUserProfile().getProfileColor().getName();
+                    String profileEmotionName = coverLetter.getUserInfo().getUserProfile().getProfileEmotion().getName();
                     boolean isSympathy = sympathyProvider.getIsSympathy(coverLetter.getId(), userInfoId);
                     boolean isMine = coverLetter.getUserInfo().getId().equals(userInfoId);
                     Long sympathiesCount = sympathyProvider.getSympathiesCount(coverLetter);
                     CoverLetter.setSympathiesCountInCoverLettersRes(getCoverLettersRes, sympathiesCount);
+                    getCoverLettersRes.setUserProfile(profileColorName+PROFILE_SEPARATOR+profileEmotionName);
                     getCoverLettersRes.setSympathy(isSympathy);
                     getCoverLettersRes.setMine(isMine);
                     return getCoverLettersRes;
