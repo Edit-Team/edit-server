@@ -7,10 +7,7 @@ import com.app.edit.request.coverletter.PostCoverLetterDeclarationReq;
 import com.app.edit.service.CoverLetterDeclarationService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -33,5 +30,12 @@ public class CoverLetterDeclarationController {
     public BaseResponse<Long> postCoverLetterDeclaration(@RequestBody @Valid PostCoverLetterDeclarationReq request) throws BaseException {
         return new BaseResponse<>(BaseResponseStatus.SUCCESS,
                 coverLetterDeclarationService.createCoverLetterDeclaration(request));
+    }
+
+    @ApiOperation(value = "자소서 신고 처리 API")
+    @PatchMapping("/admin/cover-letter-declarations/{cover-letter-declaration-id}")
+    public BaseResponse<Long> patchCoverLetterDeclaration(@PathVariable("cover-letter-declaration-id") Long coverLetterDeclarationId) throws BaseException {
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS,
+                coverLetterDeclarationService.processCoverLetterDeclaration(coverLetterDeclarationId));
     }
 }

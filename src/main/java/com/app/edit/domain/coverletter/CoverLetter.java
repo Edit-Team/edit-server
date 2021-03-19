@@ -1,6 +1,8 @@
 package com.app.edit.domain.coverletter;
 
 import com.app.edit.config.BaseEntity;
+import com.app.edit.config.BaseException;
+import com.app.edit.config.BaseResponseStatus;
 import com.app.edit.domain.comment.Comment;
 import com.app.edit.domain.coverlettercategory.CoverLetterCategory;
 import com.app.edit.domain.coverletterdeclaration.CoverLetterDeclaration;
@@ -20,6 +22,7 @@ import org.hibernate.annotations.DynamicInsert;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static com.app.edit.config.Constant.*;
 
@@ -138,6 +141,10 @@ public class CoverLetter extends BaseEntity {
         Long coverLetterId = this.getId();
         String nickName = this.getUserInfo().getNickName();
         String jobName = this.getUserInfo().getJob().getName();
+        String etcJobName = this.getUserInfo().getEtcJobName();
+        if (!etcJobName.equals("NONE")) {
+            jobName = etcJobName;
+        }
         String coverLetterCategoryName = this.getCoverLetterCategory().getName();
         String coverLetterContent = this.getContent();
         boolean isSympathy = DEFAULT_SYMPATHY;
@@ -164,11 +171,15 @@ public class CoverLetter extends BaseEntity {
     }
 
     /*
-     * 자소서에 달린 코멘트가 채택된 시간 얻어오기
+     * 채택된 코멘트 찾기
      **/
-    public static LocalDateTime getAdoptedTime(CoverLetter coverLetter) {
-        return coverLetter.getComments().stream()
+    public Comment getAdoptedComment() throws BaseException {
+        Optional<Comment> adoptedComment = this.getComments().stream()
                 .filter(comment -> comment.getIsAdopted().equals(IsAdopted.YES))
-                .findFirst().get().getUpdatedAt();
+                .findFirst();
+        if (adoptedComment.isEmpty()) {
+            throw new BaseException(BaseResponseStatus.NOT_FOUND_ADOPTED_COMMENT);
+        }
+        return adoptedComment.get();
     }
 }

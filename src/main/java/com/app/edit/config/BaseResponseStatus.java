@@ -74,18 +74,24 @@ public enum BaseResponseStatus {
 
     // colt
     NOT_FOUND_COVER_LETTER(false, 3100, "존재하지 않는 자소서입니다."),
+    NOT_FOUND_COVER_LETTER_DECLARATION(false, 3150, "존재하지 않는 자소서 신고입니다."),
+    ALREADY_PROCESSED_COVER_LETTER_DECLARATION(false, 3170, "이미 처리된 자소서 신고입니다."),
     NOT_FOUND_USER_INFO(false, 3200, "존재하지 않는 유저입니다."),
+    ALREADY_DELETED_USER(false, 3250, "이미 탈퇴한 유저입니다."),
+    USER_ROLE_IS_NOT_MENTEE(false, 3270, "멘티가 아닙니다."),
     NOT_FOUND_COMMENT(false, 3300, "존재하지 않는 코멘트입니다."),
+    NOT_FOUND_ADOPTED_COMMENT(false, 3330, "해당 자소서에 채택된 코멘트가 존재하지 않습니다."),
+    NOT_FOUND_COMMENT_DECLARATION(false, 3350, "존재하지 않는 코멘트 신고입니다."),
+    ALREADY_PROCESSED_COMMENT_DECLARATION(false, 3370, "이미 처리된 코멘트 신고입니다."),
     NOT_FOUND_COVER_LETTER_CATEGORY(false, 3400, "존재하지 않는 자소서 종류입니다."),
     CAN_NOT_ADOPT_COMMENT_MORE_THAN_ONE(false, 3500, "코멘트는 하나만 채택할 수 있습니다."),
     DO_NOT_HAVE_PERMISSION(false, 3600, "권한이 없습니다."),
     ALREADY_DELETED_COVER_LETTER(false, 3700, "이미 삭제된 자소서입니다."),
     ALREADY_DELETED_COMMENT(false, 3800, "이미 삭제된 코멘트입니다."),
-
-
-    // 4000 : Database 오류
-    SERVER_ERROR(false, 4000, "서버와의 통신에 실패하였습니다."),
-    DATABASE_ERROR(false, 4001, "데이터베이스 연결에 실패하였습니다.");
+    NOT_FOUND_TEMPORARY_COVER_LETTER(false, 3900, "존재하지 않는 임시 자소서입니다."),
+    FOUND_COVER_LETTER_TYPE_IS_NOT_WRITING(false, 3930, "작성중인 임시 자소서가 아닙니다."),
+    FOUND_COVER_LETTER_TYPE_IS_NOT_COMPLETING(false, 3960, "완성중인 임시 자소서가 아닙니다."),
+    ALREADY_DELETED_TEMPORARY_COVER_LETTER(false, 4000, "이미 삭제된 임시 자소서입니다.");
 
     // 5000 : 필요시 만들어서 쓰세요
     // 6000 : 필요시 만들어서 쓰세요

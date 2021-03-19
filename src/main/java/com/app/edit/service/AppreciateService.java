@@ -9,6 +9,7 @@ import com.app.edit.domain.user.UserInfo;
 import com.app.edit.enums.State;
 import com.app.edit.provider.CommentProvider;
 import com.app.edit.provider.UserInfoProvider;
+import com.app.edit.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,16 +23,19 @@ public class AppreciateService {
     private final AppreciateRepository appreciateRepository;
     private final CommentProvider commentProvider;
     private final UserInfoProvider userInfoProvider;
+    private final JwtService jwtService;
 
     @Autowired
-    public AppreciateService(AppreciateRepository appreciateRepository, CommentProvider commentProvider, UserInfoProvider userInfoProvider) {
+    public AppreciateService(AppreciateRepository appreciateRepository, CommentProvider commentProvider,
+                             UserInfoProvider userInfoProvider, JwtService jwtService) {
         this.appreciateRepository = appreciateRepository;
         this.commentProvider = commentProvider;
         this.userInfoProvider = userInfoProvider;
+        this.jwtService = jwtService;
     }
 
     public AppreciateId createOrUpdateAppreciate(Long commentId) throws BaseException {
-        Long userInfoId = 1L;
+        Long userInfoId = jwtService.getUserInfo().getUserId();
         UserInfo userInfo = userInfoProvider.getUserInfoById(userInfoId);
         Comment comment = commentProvider.getCommentById(commentId);
         AppreciateId appreciateId = new AppreciateId(commentId, userInfoId);
