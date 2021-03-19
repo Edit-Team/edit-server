@@ -139,10 +139,11 @@ public class CoverLetter extends BaseEntity {
      **/
     public GetCoverLettersRes toGetCoverLetterRes() {
         Long coverLetterId = this.getId();
+        String userProfile = DEFAULT_USER_PROFILE;
         String nickName = this.getUserInfo().getNickName();
         String jobName = this.getUserInfo().getJob().getName();
         String etcJobName = this.getUserInfo().getEtcJobName();
-        if (!etcJobName.equals("NONE")) {
+        if (!etcJobName.equals(NONE)) {
             jobName = etcJobName;
         }
         String coverLetterCategoryName = this.getCoverLetterCategory().getName();
@@ -150,24 +151,8 @@ public class CoverLetter extends BaseEntity {
         boolean isSympathy = DEFAULT_SYMPATHY;
         Long sympathiesCount = DEFAULT_SYMPATHIES_COUNT;
         boolean isMine = DEFAULT_IS_MINE;
-        return new GetCoverLettersRes(coverLetterId, nickName, jobName,
+        return new GetCoverLettersRes(coverLetterId, userProfile, nickName, jobName,
                 coverLetterCategoryName, coverLetterContent, isSympathy, sympathiesCount, isMine);
-    }
-
-    /*
-     * 응답에 공감 수 추가
-     **/
-    public static GetCoverLettersRes setSympathiesCountInCoverLettersRes(GetCoverLettersRes getCoverLettersRes, Long sympathiesCount) {
-        getCoverLettersRes.setSympathiesCount(sympathiesCount);
-        return getCoverLettersRes;
-    }
-
-    /*
-     * 채택된 코멘트 존재 여부 확인
-     **/
-    public static boolean hasAdoptedComment(CoverLetter coverLetter) {
-        return coverLetter.getComments().stream()
-                .anyMatch(comment -> comment.getIsAdopted().equals(IsAdopted.YES));
     }
 
     /*
