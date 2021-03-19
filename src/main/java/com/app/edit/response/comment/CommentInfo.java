@@ -11,6 +11,7 @@ import lombok.Setter;
 public class CommentInfo {
 
     private Long commentId;
+    private String userProfile;
     private String nickName;
     private String jobName;
     private String sentenceEvaluation;
@@ -19,5 +20,5 @@ public class CommentInfo {
     private String activity;
     private String commentContent;
     private IsAdopted isAdopted;
-    private boolean isMine;
+    private Boolean isMine;
 }
