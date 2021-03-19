@@ -2,8 +2,10 @@ package com.app.edit.controller;
 
 import com.app.edit.config.BaseException;
 import com.app.edit.config.BaseResponse;
+import com.app.edit.provider.UserInfoProvider;
 import com.app.edit.provider.UserProvider;
 import com.app.edit.request.user.PostLoginReq;
+import com.app.edit.response.user.GetJoinedUserInfoRes;
 import com.app.edit.response.user.PostUserRes;
 import com.app.edit.service.UserService;
 import com.app.edit.utils.JwtService;
@@ -20,13 +22,15 @@ import static com.app.edit.config.BaseResponseStatus.*;
 public class LoginController {
 
     private final UserProvider userProvider;
+    private final UserInfoProvider userInfoProvider;
     private final UserService userService;
     private final JwtService jwtService;
 
     @Autowired
-    public LoginController(UserProvider userProvider,
+    public LoginController(UserProvider userProvider, UserInfoProvider userInfoProvider,
                            UserService userService, JwtService jwtService) {
         this.userProvider = userProvider;
+        this.userInfoProvider = userInfoProvider;
         this.userService = userService;
         this.jwtService = jwtService;
     }
@@ -72,4 +76,14 @@ public class LoginController {
 //        }
 //    }
 
+    /**
+     * 스플래시 화면 자동 로그인시 유저 검증 API
+     * @return
+     * @throws BaseException
+     */
+    @ApiOperation(value = "스플래시 화면 자동 로그인시 유저 검증 API")
+    @GetMapping("/auto-login")
+    public BaseResponse<GetJoinedUserInfoRes> validateIsJoinedUser() throws BaseException {
+        return new BaseResponse(SUCCESS, userInfoProvider.getJoinedUserInfo());
+    }
 }
