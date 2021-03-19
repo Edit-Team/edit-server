@@ -30,50 +30,37 @@ values (1, current_timestamp, current_timestamp, 0, concat('email', 1), 'YES', '
         concat('name', 1),
         concat('nickName', 1),'Jjhg67XYWl1rwJ8QpW0VDg==',concat('phone', 1),
         'ACTIVE', 'MENTEE', 'NONE', 1);
+        
 insert into user_info
 values (2, current_timestamp, current_timestamp, 0, concat('email', 2), 'YES', 'YES', 'YES',
         concat('name', 2),
         concat('nickName', 2),'Jjhg67XYWl1rwJ8QpW0VDg==', concat('phone', 2),
         'ACTIVE', 'MENTEE', 'NONE', 1);
+        
 insert into user_info
-<<<<<<< HEAD
+
 values (3, current_timestamp, current_timestamp, 0, concat('email', 3), 'YES','YES','YES',
         concat('name', 3),
-=======
-values (3, current_timestamp, current_timestamp, 0, concat('email', 3), 'YES', 'YES', 'YES',
-        concat('name', 1),
->>>>>>> 394637f42d3940a4bc885eab7584084fbd375326
         concat('nickName', 1),'Jjhg67XYWl1rwJ8QpW0VDg==', concat('phone', 1),
         'ACTIVE', 'MENTEE', 'NONE', 1);
+        
 insert into user_info
-<<<<<<< HEAD
 values (4, current_timestamp, current_timestamp, 0, concat('email', 4), 'YES','YES','YES',
         concat('name', 4),
-=======
-values (4, current_timestamp, current_timestamp, 0, concat('email', 4), 'YES', 'YES', 'YES',
-        concat('name', 1),
->>>>>>> 394637f42d3940a4bc885eab7584084fbd375326
-        concat('nickName', 1),'Jjhg67XYWl1rwJ8QpW0VDg==', concat('phone', 1),
+        concat('nickName', 4),'Jjhg67XYWl1rwJ8QpW0VDg==', concat('phone', 1),
         'ACTIVE', 'MENTEE', 'NONE', 1);
+        
 insert into user_info
-<<<<<<< HEAD
+
 values (5, current_timestamp, current_timestamp, 0, concat('email', 5), 'YES','YES','YES',
         concat('name', 5),
-=======
-values (5, current_timestamp, current_timestamp, 0, concat('email', 5), 'YES', 'YES', 'YES',
-        concat('name', 1),
->>>>>>> 394637f42d3940a4bc885eab7584084fbd375326
-        concat('nickName', 1),'Jjhg67XYWl1rwJ8QpW0VDg==', concat('phone', 1),
+        concat('nickName', 5),'Jjhg67XYWl1rwJ8QpW0VDg==', concat('phone', 1),
         'ACTIVE', 'MENTEE', 'NONE', 1);
+        
 insert into user_info
-<<<<<<< HEAD
 values (6, current_timestamp, current_timestamp, 0, concat('email', 6), 'YES','YES','YES',
         concat('name', 6),
-=======
-values (6, current_timestamp, current_timestamp, 0, concat('email', 6), 'YES', 'YES', 'YES',
-        concat('name', 1),
->>>>>>> 394637f42d3940a4bc885eab7584084fbd375326
-        concat('nickName', 1),'Jjhg67XYWl1rwJ8QpW0VDg==', concat('phone', 1),
+        concat('nickName', 6),'Jjhg67XYWl1rwJ8QpW0VDg==', concat('phone', 1),
         'ACTIVE', 'MENTEE', 'NONE', 1);
 
 insert into profile_emotion
@@ -248,7 +235,6 @@ insert into comment
 values (20, current_timestamp, current_timestamp, 'NONE', 'NONE', concat('comment', 1), 'YES', 'NONE', 'NONE', 'ACTIVE',
         1, 6);
 
-<<<<<<< HEAD
 insert into sympathy values (1, 1, current_timestamp, current_timestamp, 'ACTIVE');
 insert into sympathy values (1, 2, current_timestamp, current_timestamp, 'ACTIVE');
 insert into sympathy values (3, 3, current_timestamp, current_timestamp, 'ACTIVE');
@@ -263,7 +249,7 @@ insert into change_role_category values (2,current_timestamp, current_timestamp,
 insert into change_role_category values (3,current_timestamp, current_timestamp,'멘티 활동에 대한 궁금중');
 insert into change_role_category values (4,current_timestamp, current_timestamp,'멘토 활동에 대한 부담감');
 insert into change_role_category values (5,current_timestamp, current_timestamp,'기타');
-=======
+
 insert into sympathy
 values (1, 1, current_timestamp, current_timestamp, 'ACTIVE');
 insert into sympathy
@@ -280,4 +266,4 @@ insert into sympathy
 values (6, 1, current_timestamp, current_timestamp, 'ACTIVE');
 insert into sympathy
 values (6, 2, current_timestamp, current_timestamp, 'ACTIVE');
->>>>>>> 394637f42d3940a4bc885eab7584084fbd375326
+

@@ -7,6 +7,7 @@ import com.app.edit.provider.CoverLetterProvider;
 import com.app.edit.provider.SympathyProvider;
 import com.app.edit.request.coverletter.PostCompletingCoverLetterReq;
 import com.app.edit.request.coverletter.PostWritingCoverLetterReq;
+import com.app.edit.response.coverletter.GetCoverLetterToCompleteRes;
 import com.app.edit.response.coverletter.GetCoverLettersRes;
 import com.app.edit.response.coverletter.GetMainCoverLettersRes;
 import com.app.edit.response.sympathize.GetSympathizeCoverLettersRes;
@@ -170,7 +171,7 @@ public class CoverLetterController {
             @RequestHeader(value = "X-ACCESS-TOKEN") String jwt,
             @RequestParam("page") Integer pageNum) {
 
-        try{
+        try {
 
             Long userId = jwtService.getUserInfo().getUserId();
 
@@ -179,9 +180,33 @@ public class CoverLetterController {
             }
 
             return new BaseResponse<>(BaseResponseStatus.SUCCESS, coverLetterProvider.retrieveMySympathizeCoverLetters(userId, pageNum));
-        }catch (BaseException exception){
+        } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
+    }
+
+     /**
+     * 유저가 오늘 작성한 자소서 개수 조회 API
+     * @return
+     */
+    @ApiOperation(value = "유저가 오늘 작성한 자소서 개수 조회 API")
+    @GetMapping("/today-writing-cover-letter-count")
+    public BaseResponse<Long> getTodayWritingCoverLetterCount() throws BaseException {
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS,
+                coverLetterProvider.retrieveTodayWritingCoverLetterCount());
+    }
+
+    /**
+     * 문장 완성하기 -> 작성한 문장과 채택한 코멘트 조회 API
+     * @param coverLetterId
+     * @return
+     * @throws BaseException
+     */
+    @ApiOperation(value = "문장 완성하기 -> 작성한 문장과 채택한 코멘트 조회 API")
+    @GetMapping("/cover-letters/{cover-letter-id}/to-complete")
+    public BaseResponse<GetCoverLetterToCompleteRes> getCoverLetter(@PathVariable("cover-letter-id") Long coverLetterId) throws BaseException {
+        return new BaseResponse(BaseResponseStatus.SUCCESS,
+                coverLetterProvider.retrieveCoverLetterToComplete(coverLetterId));
 
     }
 }

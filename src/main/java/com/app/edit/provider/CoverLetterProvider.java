@@ -40,9 +40,9 @@ public class CoverLetterProvider {
 
     private final CoverLetterRepository coverLetterRepository;
     private final SympathyProvider sympathyProvider;
+    private final JwtService jwtService;
     private final SympathyRepository sympathyRepository;
     private final UserProvider userProvider;
-    private final JwtService jwtService;
 
 
     @Autowired
@@ -58,6 +58,7 @@ public class CoverLetterProvider {
         this.sympathyRepository = sympathyRepository;
         this.userProvider = userProvider;
         this.jwtService = jwtService;
+
     }
 
     /*
@@ -162,6 +163,10 @@ public class CoverLetterProvider {
     }
 
     /**
+<<<<<<< HEAD
+=======
+
+>>>>>>> 6ee44b7d7db5350452a8ce09f411c64c9a4cd81e
      * 내가 공감한 자소서 목록 조회
      * @param
      * @param
@@ -195,6 +200,7 @@ public class CoverLetterProvider {
 
         return coverLetterRepository.findBySympathizeCoverLetter(coverLetterId,State.ACTIVE);
     }
+
 
     /**
      * 유저가 오늘 작성한 자소서 개수 조회
