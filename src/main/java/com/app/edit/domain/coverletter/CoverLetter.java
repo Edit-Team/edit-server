@@ -148,11 +148,12 @@ public class CoverLetter extends BaseEntity {
         }
         String coverLetterCategoryName = this.getCoverLetterCategory().getName();
         String coverLetterContent = this.getContent();
+        String completedCoverLetterContent = DEFAULT_COMPLETED_COVER_LETTER_CONTENT;
         boolean isSympathy = DEFAULT_SYMPATHY;
         Long sympathiesCount = DEFAULT_SYMPATHIES_COUNT;
         boolean isMine = DEFAULT_IS_MINE;
         return new GetCoverLettersRes(coverLetterId, userProfile, nickName, jobName,
-                coverLetterCategoryName, coverLetterContent, isSympathy, sympathiesCount, isMine);
+                coverLetterCategoryName, coverLetterContent, completedCoverLetterContent, isSympathy, sympathiesCount, isMine);
     }
 
     /*
