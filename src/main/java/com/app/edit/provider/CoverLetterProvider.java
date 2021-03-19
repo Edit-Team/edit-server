@@ -47,22 +47,16 @@ public class CoverLetterProvider {
 
     @Autowired
     public CoverLetterProvider(CoverLetterRepository coverLetterRepository, SympathyProvider sympathyProvider,
-                               SympathyRepository sympathyRepository,JwtService jwtService
+                               SympathyRepository sympathyRepository,
                                //UserInfoRepository userInfoRepository,
-                               UserProvider userProvider
+                               UserProvider userProvider,
+                               JwtService jwtService
                                //CoverLetterProvider coverLetterProvider
                                ) {
         this.coverLetterRepository = coverLetterRepository;
         this.sympathyProvider = sympathyProvider;
         this.sympathyRepository = sympathyRepository;
         this.userProvider = userProvider;
-        this.jwtService = jwtService;
-
-    @Autowired
-    public CoverLetterProvider(CoverLetterRepository coverLetterRepository, SympathyProvider sympathyProvider,
-                               JwtService jwtService) {
-        this.coverLetterRepository = coverLetterRepository;
-        this.sympathyProvider = sympathyProvider;
         this.jwtService = jwtService;
 
     }
@@ -169,7 +163,10 @@ public class CoverLetterProvider {
     }
 
     /**
+<<<<<<< HEAD
+=======
 
+>>>>>>> 6ee44b7d7db5350452a8ce09f411c64c9a4cd81e
      * 내가 공감한 자소서 목록 조회
      * @param
      * @param
@@ -205,6 +202,7 @@ public class CoverLetterProvider {
     }
 
 
+    /**
      * 유저가 오늘 작성한 자소서 개수 조회
      * @return
      */

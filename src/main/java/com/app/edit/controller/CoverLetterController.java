@@ -142,8 +142,8 @@ public class CoverLetterController {
      * @throws BaseException
      */
     @ApiOperation(value = "등록/완성한 자소서 삭제하기 API")
-    @DeleteMapping("/cover-letters/{cover-letter-id}")
-    public BaseResponse<Long> deleteCoverLetter(@PathVariable("cover-letter-id") Long coverLetterId) throws BaseException {
+    @DeleteMapping("/cover-letters/{cover-letters-id}")
+    public BaseResponse<Long> deleteCoverLetter(@PathVariable("cover-letters-id") Long coverLetterId) throws BaseException {
         return new BaseResponse<>(BaseResponseStatus.SUCCESS, coverLetterService.deleteCoverLetterById(coverLetterId));
     }
 
@@ -161,7 +161,6 @@ public class CoverLetterController {
     }
 
     /**
-
      * 내가 공감한 자소서 조회 API
      * @param
      * @return
@@ -172,7 +171,7 @@ public class CoverLetterController {
             @RequestHeader(value = "X-ACCESS-TOKEN") String jwt,
             @RequestParam("page") Integer pageNum) {
 
-        try{
+        try {
 
             Long userId = jwtService.getUserInfo().getUserId();
 
@@ -181,11 +180,12 @@ public class CoverLetterController {
             }
 
             return new BaseResponse<>(BaseResponseStatus.SUCCESS, coverLetterProvider.retrieveMySympathizeCoverLetters(userId, pageNum));
-        }catch (BaseException exception){
+        } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
+    }
 
-
+     /**
      * 유저가 오늘 작성한 자소서 개수 조회 API
      * @return
      */

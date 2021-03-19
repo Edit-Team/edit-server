@@ -35,7 +35,7 @@ public interface CoverLetterRepository extends JpaRepository<CoverLetter, Long> 
     /*
      * 채택이 완료되었어요 조회 쿼리
      **/
-    @Query(value = "select cl from CoverLetter cl inner join Comment c on cl = c.coverLetter where c.isAdopted = :isAdopted and c.state = :state order by c.updatedAt desc ")
+    @Query(value = "select cl from CoverLetter cl where exists(select c from Comment c where c.isAdopted = :isAdopted and c.coverLetter = cl and c.state = :state)")
     Page<CoverLetter> findCoverLettersHasAdoptedComment(Pageable pageable, @Param("isAdopted") IsAdopted isAdopted, @Param("state") State state);
 
     /*
@@ -50,7 +50,6 @@ public interface CoverLetterRepository extends JpaRepository<CoverLetter, Long> 
     @Query(value = "select c from CoverLetter c where c.userInfo.id = :userInfoId and c.state = :state and c.type = :type order by c.createdAt desc ")
     Page<CoverLetter> findMyCoverLetters(Pageable pageable, @Param("userInfoId") Long userInfoId,
                                          @Param("state") State state, @Param("type") CoverLetterType type);
-
 
     /*
      * 내가 공감한 자소서 정보 조회

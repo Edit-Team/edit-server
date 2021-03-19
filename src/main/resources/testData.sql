@@ -38,6 +38,7 @@ values (2, current_timestamp, current_timestamp, 0, concat('email', 2), 'YES', '
         'ACTIVE', 'MENTEE', 'NONE', 1);
         
 insert into user_info
+
 values (3, current_timestamp, current_timestamp, 0, concat('email', 3), 'YES','YES','YES',
         concat('name', 3),
         concat('nickName', 1),'Jjhg67XYWl1rwJ8QpW0VDg==', concat('phone', 1),
@@ -50,6 +51,7 @@ values (4, current_timestamp, current_timestamp, 0, concat('email', 4), 'YES','Y
         'ACTIVE', 'MENTEE', 'NONE', 1);
         
 insert into user_info
+
 values (5, current_timestamp, current_timestamp, 0, concat('email', 5), 'YES','YES','YES',
         concat('name', 5),
         concat('nickName', 5),'Jjhg67XYWl1rwJ8QpW0VDg==', concat('phone', 1),
@@ -232,7 +234,6 @@ values (19, current_timestamp, current_timestamp, 'NONE', 'NONE', concat('commen
 insert into comment
 values (20, current_timestamp, current_timestamp, 'NONE', 'NONE', concat('comment', 1), 'YES', 'NONE', 'NONE', 'ACTIVE',
         1, 6);
-
 
 insert into sympathy values (1, 1, current_timestamp, current_timestamp, 'ACTIVE');
 insert into sympathy values (1, 2, current_timestamp, current_timestamp, 'ACTIVE');
