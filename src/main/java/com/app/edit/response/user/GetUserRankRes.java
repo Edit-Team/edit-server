@@ -8,10 +8,11 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
-public class GetProfileRes {
+public class GetUserRankRes {
 
+    private final Long rankId;
     private final String name;
     private final String emotionName;
     private final String colorName;
-    private final UserRole userRole;
+    private final String job;
 }

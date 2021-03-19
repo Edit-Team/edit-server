@@ -1,8 +1,18 @@
 package com.app.edit.domain.user;
 
+import com.app.edit.enums.CoverLetterType;
+import com.app.edit.enums.IsAdopted;
 import com.app.edit.enums.State;
+import com.app.edit.enums.UserRole;
+import com.app.edit.response.user.GetProfileRes;
+import com.app.edit.response.user.GetSympathizeUserRes;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -24,4 +34,51 @@ public interface UserInfoRepository extends JpaRepository<UserInfo,Long> {
     Optional<UserInfo> findByStateAndId(State active, Long userId);
 
     List<UserInfo> findByStateAndNickNameIsContaining(State active, String nickName);
+
+    /**
+     * 멘토 랭킹 조회
+     */
+    @Query(value = "select u from UserInfo u join fetch Comment c on u.id = c.userInfo.id" +
+            "     where u.userRole = :role and u.state = :state group by u.id, c.isAdopted having c.isAdopted = :isAdopted" +
+            "     order by count(c.isAdopted) + count(c.id) DESC ")
+    List<UserInfo> findByAdoptAndState(Pageable pageable,
+                                       @Param("role") UserRole role ,
+                                       @Param("state") State state,
+                                       @Param("isAdopted") IsAdopted isAdopted);
+
+    /**
+     * 멘티 랭킹 조회
+     */
+    @Query(value = "select u from UserInfo u join fetch CoverLetter c on u.id = c.userInfo.id"+
+            " where u.userRole = :role and u.state = :state group by u.id, c.type having c.type = :type"+
+            " order by count(c.id) + count(c.type) DESC")
+    List<UserInfo> findByCoverLetterAndState(Pageable pageRequest,
+                                             @Param("role") UserRole role,
+                                             @Param("state") State state,
+                                             @Param("type") CoverLetterType type);
+
+
+    /**
+     * 내 프로필 조회
+     * @param userInfoId
+     * @param state
+     * @return
+     */
+    @Query(value = "select new com.app.edit.response.user.GetProfileRes(u.name,p.profileEmotion.name,p.profileColor.name,u.userRole) " +
+            "from UserInfo u join fetch UserProfile p " +
+            "on u.id = :userInfoId and u.state = :state group by u.id")
+    Optional<GetProfileRes> findProfileByUser(@Param("userInfoId") Long userInfoId,@Param("state") State state);
+
+    /**
+     * 내가 공감한 유저 정보 조회
+     * @param userInfoId
+     * @param state
+     * @return
+     */
+    @Query(value = "select " +
+            "new com.app.edit.response.user.GetSympathizeUserRes" +
+            "(u.name,p.profileEmotion.name,p.profileColor.name,u.userRole, u.job.name) " +
+            "from UserInfo u join fetch UserProfile p " +
+            "on u.id = :userInfoId and u.state = :state group by u.id")
+    GetSympathizeUserRes findProfileBySympathizeUser(@Param("userInfoId") Long userInfoId,@Param("state") State state);
 }
