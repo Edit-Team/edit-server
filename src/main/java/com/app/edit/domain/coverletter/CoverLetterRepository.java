@@ -56,4 +56,17 @@ public interface CoverLetterRepository extends JpaRepository<CoverLetter, Long> 
      */
     @Query(value = "select new com.app.edit.response.sympathize.GetSympathizeCoverLetterRes(c.id, c.content, c.coverLetterCategory.name) from CoverLetter c where c.id = :coverLetterId and c.state = :state")
     GetSympathizeCoverLetterRes findBySympathizeCoverLetter(@Param("coverLetterId") Long coverLetterId, @Param("state") State state);
+
+    /**
+     * 유저가 오늘 작성한 자소서 개수 조회 쿼리
+     * @param userInfoId
+     * @param startOfToday
+     * @param startOfTomorrow
+     * @param state
+     * @return
+     */
+    @Query(value = "select count(cl) from CoverLetter cl where cl.userInfo.id = :userInfoId and cl.createdAt >= :startOfToday and cl.createdAt < :startOfTomorrow and cl.state = :state")
+    Long getTodayWritingCoverLetterCount(@Param("userInfoId") Long userInfoId, @Param("startOfToday") LocalDateTime startOfToday,
+                                         @Param("startOfTomorrow") LocalDateTime startOfTomorrow, @Param("state") State state);
+
 }

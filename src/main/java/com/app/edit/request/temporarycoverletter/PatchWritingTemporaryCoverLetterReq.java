@@ -11,10 +11,10 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @Getter
 @Setter
-public class PostCompletingTemporaryCoverLetterReq {
+public class PatchWritingTemporaryCoverLetterReq {
 
-    @NotNull(message = "원본 자소서를 입력해주세요.")
-    private Long originalCoverLetterId;
+    @NotNull(message = "자소서 종류를 선택해주세요.")
+    private Long coverLetterCategoryId;
 
     @NotBlank(message = "자소서 내용은 공백일 수 없습니다.")
     @Size(max = 90, message = "자소서 내용의 길이는 {max}자를 초과할 수 없습니다.")

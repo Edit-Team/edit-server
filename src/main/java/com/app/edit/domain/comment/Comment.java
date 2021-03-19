@@ -7,7 +7,7 @@ import com.app.edit.domain.coverletter.CoverLetter;
 import com.app.edit.domain.user.UserInfo;
 import com.app.edit.enums.IsAdopted;
 import com.app.edit.enums.State;
-import com.app.edit.response.comment.GetCommentsRes;
+import com.app.edit.response.comment.CommentInfo;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,6 +15,8 @@ import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import java.util.List;
+
+import static com.app.edit.config.Constant.DEFAULT_IS_MINE;
 
 @Accessors(chain = true)
 @NoArgsConstructor
@@ -128,7 +130,7 @@ public class Comment extends BaseEntity {
         this.appreciates = appreciates;
     }
 
-    public GetCommentsRes toGetCommentsRes() {
+    public CommentInfo toCommentInfo() {
         Long commentId = this.id;
         String nickName = this.userInfo.getNickName();
         String jobName = this.userInfo.getJob().getName();
@@ -138,7 +140,8 @@ public class Comment extends BaseEntity {
         String activity = this.activity;
         String commentContent = this.content;
         IsAdopted isAdopted = this.isAdopted;
-        return new GetCommentsRes(commentId, nickName, jobName, sentenceEvaluation, concretenessLogic,
-                sincerity, activity, commentContent, isAdopted);
+        boolean isMine = DEFAULT_IS_MINE;
+        return new CommentInfo(commentId, nickName, jobName, sentenceEvaluation, concretenessLogic,
+                sincerity, activity, commentContent, isAdopted, isMine);
     }
 }

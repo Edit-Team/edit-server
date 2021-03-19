@@ -26,83 +26,103 @@ insert into job
 values (13, current_timestamp, current_timestamp, '기타');
 
 insert into user_info
-values (1, current_timestamp, current_timestamp, 0, concat('email', 1), 'YES','YES','YES',
+values (1, current_timestamp, current_timestamp, 0, concat('email', 1), 'YES', 'YES', 'YES',
         concat('name', 1),
         concat('nickName', 1),'Jjhg67XYWl1rwJ8QpW0VDg==',concat('phone', 1),
         'ACTIVE', 'MENTEE', 'NONE', 1);
 insert into user_info
-values (2, current_timestamp, current_timestamp, 0, concat('email', 2), 'YES','YES','YES',
+values (2, current_timestamp, current_timestamp, 0, concat('email', 2), 'YES', 'YES', 'YES',
         concat('name', 2),
         concat('nickName', 2),'Jjhg67XYWl1rwJ8QpW0VDg==', concat('phone', 2),
         'ACTIVE', 'MENTEE', 'NONE', 1);
 insert into user_info
+<<<<<<< HEAD
 values (3, current_timestamp, current_timestamp, 0, concat('email', 3), 'YES','YES','YES',
         concat('name', 3),
+=======
+values (3, current_timestamp, current_timestamp, 0, concat('email', 3), 'YES', 'YES', 'YES',
+        concat('name', 1),
+>>>>>>> 394637f42d3940a4bc885eab7584084fbd375326
         concat('nickName', 1),'Jjhg67XYWl1rwJ8QpW0VDg==', concat('phone', 1),
         'ACTIVE', 'MENTEE', 'NONE', 1);
 insert into user_info
+<<<<<<< HEAD
 values (4, current_timestamp, current_timestamp, 0, concat('email', 4), 'YES','YES','YES',
         concat('name', 4),
+=======
+values (4, current_timestamp, current_timestamp, 0, concat('email', 4), 'YES', 'YES', 'YES',
+        concat('name', 1),
+>>>>>>> 394637f42d3940a4bc885eab7584084fbd375326
         concat('nickName', 1),'Jjhg67XYWl1rwJ8QpW0VDg==', concat('phone', 1),
         'ACTIVE', 'MENTEE', 'NONE', 1);
 insert into user_info
+<<<<<<< HEAD
 values (5, current_timestamp, current_timestamp, 0, concat('email', 5), 'YES','YES','YES',
         concat('name', 5),
+=======
+values (5, current_timestamp, current_timestamp, 0, concat('email', 5), 'YES', 'YES', 'YES',
+        concat('name', 1),
+>>>>>>> 394637f42d3940a4bc885eab7584084fbd375326
         concat('nickName', 1),'Jjhg67XYWl1rwJ8QpW0VDg==', concat('phone', 1),
         'ACTIVE', 'MENTEE', 'NONE', 1);
 insert into user_info
+<<<<<<< HEAD
 values (6, current_timestamp, current_timestamp, 0, concat('email', 6), 'YES','YES','YES',
         concat('name', 6),
+=======
+values (6, current_timestamp, current_timestamp, 0, concat('email', 6), 'YES', 'YES', 'YES',
+        concat('name', 1),
+>>>>>>> 394637f42d3940a4bc885eab7584084fbd375326
         concat('nickName', 1),'Jjhg67XYWl1rwJ8QpW0VDg==', concat('phone', 1),
         'ACTIVE', 'MENTEE', 'NONE', 1);
 
 insert into profile_emotion
-values (1,current_timestamp,current_timestamp(),'relief','ACTIVE');
+values (1, current_timestamp, current_timestamp(), 'relief', 'ACTIVE');
 
 insert into profile_emotion
-values (2,current_timestamp,current_timestamp(),'bigSmile','ACTIVE');
+values (2, current_timestamp, current_timestamp(), 'bigSmile', 'ACTIVE');
 
 insert into profile_emotion
-values (3,current_timestamp,current_timestamp(),'surprise','ACTIVE');
+values (3, current_timestamp, current_timestamp(), 'surprise', 'ACTIVE');
 
 insert into profile_emotion
-values (4,current_timestamp,current_timestamp(),'happy','ACTIVE');
+values (4, current_timestamp, current_timestamp(), 'happy', 'ACTIVE');
 
 insert into profile_emotion
-values (5,current_timestamp,current_timestamp(),'smallSmile','ACTIVE');
+values (5, current_timestamp, current_timestamp(), 'smallSmile', 'ACTIVE');
 
 insert into profile_emotion
-values (6,current_timestamp,current_timestamp(),'wink','ACTIVE');
+values (6, current_timestamp, current_timestamp(), 'wink', 'ACTIVE');
 
 insert into profile_color
-values (1, current_timestamp, current_timestamp,'purple','ACTIVE');
+values (1, current_timestamp, current_timestamp, 'purple', 'ACTIVE');
 
 insert into profile_color
-values (2, current_timestamp, current_timestamp,'lightPurple','ACTIVE');
+values (2, current_timestamp, current_timestamp, 'lightPurple', 'ACTIVE');
 
 insert into profile_color
-values (3, current_timestamp, current_timestamp,'lightBlue','ACTIVE');
+values (3, current_timestamp, current_timestamp, 'lightBlue', 'ACTIVE');
 
 insert into profile_color
-values (4, current_timestamp, current_timestamp,'blue','ACTIVE');
+values (4, current_timestamp, current_timestamp, 'blue', 'ACTIVE');
 
 insert into user_profile
-values (1,current_timestamp, current_timestamp,'ACTIVE',1,1);
+values (1, current_timestamp, current_timestamp, 'ACTIVE', 1, 1);
 
 insert into user_profile
-values (2,current_timestamp, current_timestamp,'ACTIVE',1,1);
+values (2, current_timestamp, current_timestamp, 'ACTIVE', 1, 1);
 
 insert into user_profile
-values (3,current_timestamp, current_timestamp,'ACTIVE',1,1);
+values (3, current_timestamp, current_timestamp, 'ACTIVE', 1, 1);
 
 insert into user_profile
-values (4,current_timestamp, current_timestamp,'ACTIVE',1,1);
+values (4, current_timestamp, current_timestamp, 'ACTIVE', 1, 1);
 
 insert into user_profile
-values (5,current_timestamp, current_timestamp,'ACTIVE',1,1);
+values (5, current_timestamp, current_timestamp, 'ACTIVE', 1, 1);
 
 insert into user_profile
-values (6,current_timestamp, current_timestamp,'ACTIVE',1,1);
+values (6, current_timestamp, current_timestamp, 'ACTIVE', 1, 1);
 
 insert into cover_letter_category
 values (1, current_timestamp, current_timestamp, '지원동기');
@@ -151,6 +171,21 @@ insert into cover_letter
 values (15, current_timestamp, current_timestamp, concat('content', 15), 1, 'ACTIVE', 'COMPLETING', 1, 1);
 insert into cover_letter
 values (16, current_timestamp, current_timestamp, concat('content', 16), 1, 'ACTIVE', 'COMPLETING', 1, 1);
+
+insert into temporary_cover_letter
+values (1, current_timestamp, current_timestamp, concat('content', 16), 1, 'ACTIVE', 'COMPLETING', 1, 1);
+insert into temporary_cover_letter
+values (2, current_timestamp, current_timestamp, concat('content', 16), 1, 'ACTIVE', 'WRITING', 1, 1);
+insert into temporary_cover_letter
+values (3, current_timestamp, current_timestamp, concat('content', 16), 1, 'ACTIVE', 'COMPLETING', 1, 1);
+insert into temporary_cover_letter
+values (4, current_timestamp, current_timestamp, concat('content', 16), 1, 'ACTIVE', 'WRITING', 1, 1);
+insert into temporary_cover_letter
+values (5, current_timestamp, current_timestamp, concat('content', 16), 1, 'ACTIVE', 'COMPLETING', 1, 1);
+insert into temporary_cover_letter
+values (6, current_timestamp, current_timestamp, concat('content', 16), 1, 'ACTIVE', 'WRITING', 1, 1);
+insert into temporary_cover_letter
+values (7, current_timestamp, current_timestamp, concat('content', 16), 1, 'ACTIVE', 'COMPLETING', 1, 1);
 
 insert into comment
 values (1, current_timestamp, current_timestamp, 'NONE', 'NONE', concat('comment', 1), 'YES', 'NONE', 'NONE', 'ACTIVE',
@@ -213,6 +248,7 @@ insert into comment
 values (20, current_timestamp, current_timestamp, 'NONE', 'NONE', concat('comment', 1), 'YES', 'NONE', 'NONE', 'ACTIVE',
         1, 6);
 
+<<<<<<< HEAD
 insert into sympathy values (1, 1, current_timestamp, current_timestamp, 'ACTIVE');
 insert into sympathy values (1, 2, current_timestamp, current_timestamp, 'ACTIVE');
 insert into sympathy values (3, 3, current_timestamp, current_timestamp, 'ACTIVE');
@@ -227,3 +263,21 @@ insert into change_role_category values (2,current_timestamp, current_timestamp,
 insert into change_role_category values (3,current_timestamp, current_timestamp,'멘티 활동에 대한 궁금중');
 insert into change_role_category values (4,current_timestamp, current_timestamp,'멘토 활동에 대한 부담감');
 insert into change_role_category values (5,current_timestamp, current_timestamp,'기타');
+=======
+insert into sympathy
+values (1, 1, current_timestamp, current_timestamp, 'ACTIVE');
+insert into sympathy
+values (1, 2, current_timestamp, current_timestamp, 'ACTIVE');
+insert into sympathy
+values (3, 3, current_timestamp, current_timestamp, 'ACTIVE');
+insert into sympathy
+values (3, 4, current_timestamp, current_timestamp, 'ACTIVE');
+insert into sympathy
+values (3, 5, current_timestamp, current_timestamp, 'INACTIVE');
+insert into sympathy
+values (6, 6, current_timestamp, current_timestamp, 'ACTIVE');
+insert into sympathy
+values (6, 1, current_timestamp, current_timestamp, 'ACTIVE');
+insert into sympathy
+values (6, 2, current_timestamp, current_timestamp, 'ACTIVE');
+>>>>>>> 394637f42d3940a4bc885eab7584084fbd375326
