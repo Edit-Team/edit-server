@@ -35,7 +35,7 @@ public interface CoverLetterRepository extends JpaRepository<CoverLetter, Long> 
     /*
      * 채택이 완료되었어요 조회 쿼리
      **/
-    @Query(value = "select cl from CoverLetter cl where exists(select c from Comment c where c.isAdopted = :isAdopted and c.coverLetter = cl and c.state = :state)")
+    @Query(value = "select cl from CoverLetter cl inner join Comment c on cl = c.coverLetter where c.isAdopted = :isAdopted and c.state = :state order by c.updatedAt desc ")
     Page<CoverLetter> findCoverLettersHasAdoptedComment(Pageable pageable, @Param("isAdopted") IsAdopted isAdopted, @Param("state") State state);
 
     /*
@@ -51,9 +51,23 @@ public interface CoverLetterRepository extends JpaRepository<CoverLetter, Long> 
     Page<CoverLetter> findMyCoverLetters(Pageable pageable, @Param("userInfoId") Long userInfoId,
                                          @Param("state") State state, @Param("type") CoverLetterType type);
 
+
     /*
      * 내가 공감한 자소서 정보 조회
      */
     @Query(value = "select new com.app.edit.response.sympathize.GetSympathizeCoverLetterRes(c.id, c.content, c.coverLetterCategory.name) from CoverLetter c where c.id = :coverLetterId and c.state = :state")
     GetSympathizeCoverLetterRes findBySympathizeCoverLetter(@Param("coverLetterId") Long coverLetterId, @Param("state") State state);
+
+    /**
+     * 유저가 오늘 작성한 자소서 개수 조회 쿼리
+     * @param userInfoId
+     * @param startOfToday
+     * @param startOfTomorrow
+     * @param state
+     * @return
+     */
+    @Query(value = "select count(cl) from CoverLetter cl where cl.userInfo.id = :userInfoId and cl.createdAt >= :startOfToday and cl.createdAt < :startOfTomorrow and cl.state = :state")
+    Long getTodayWritingCoverLetterCount(@Param("userInfoId") Long userInfoId, @Param("startOfToday") LocalDateTime startOfToday,
+                                         @Param("startOfTomorrow") LocalDateTime startOfTomorrow, @Param("state") State state);
+
 }
