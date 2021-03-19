@@ -445,10 +445,14 @@ public class UserController {
      * [GET] /users/authentication
      * @return BaseResponse<Void>
      */
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-ACCESS-TOKEN", value = "jwt"),
+    })
     @GetMapping(value = "/users/authentication")
     @ApiOperation(value = "멘토 인증 상태 조회", notes = "멘토 인증")
     public BaseResponse<GetAuthenticationRes> userAuthentication(
-            @RequestHeader("X-ACCESS-TOKEN") String jwt){
+            //@RequestHeader("X-ACCESS-TOKEN") String jwt
+    ){
 
         try {
 

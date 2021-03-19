@@ -6,10 +6,9 @@ import com.app.edit.domain.comment.CommentRepository;
 import com.app.edit.domain.coverletter.CoverLetter;
 import com.app.edit.enums.IsAdopted;
 import com.app.edit.enums.State;
-import com.app.edit.response.comment.CommentInfo;
-import com.app.edit.response.comment.GetCommentsRes;
-import com.app.edit.response.comment.GetNotAdoptedCommentContentsRes;
+import com.app.edit.response.comment.*;
 import com.app.edit.response.coverletter.GetCoverLettersRes;
+import com.app.edit.response.user.GetUserInfosRes;
 import com.app.edit.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,12 +28,15 @@ public class CommentProvider {
 
     private final CommentRepository commentRepository;
     private final CoverLetterProvider coverLetterProvider;
+    private final UserProvider userProvider;
     private final JwtService jwtService;
 
     @Autowired
-    public CommentProvider(CommentRepository commentRepository, CoverLetterProvider coverLetterProvider, JwtService jwtService) {
+    public CommentProvider(CommentRepository commentRepository, CoverLetterProvider coverLetterProvider,
+                           UserProvider userProvider, JwtService jwtService) {
         this.commentRepository = commentRepository;
         this.coverLetterProvider = coverLetterProvider;
+        this.userProvider = userProvider;
         this.jwtService = jwtService;
     }
 
@@ -73,5 +75,36 @@ public class CommentProvider {
                 .map(Comment::getContent)
                 .collect(toList());
         return new GetNotAdoptedCommentContentsRes(notAdoptedCommentContents);
+    }
+
+    /**
+     * 내가 작성한 코멘트 조회
+     * @param pageable
+     * @param userInfoId
+     * @return
+     */
+    public List<GetMyCommentsRes> retrieveMyComments(Pageable pageable, Long userInfoId) throws BaseException{
+
+        // 내가 작성한 코멘트 조회
+        Page<Comment> commentList = commentRepository.findByUser(pageable, userInfoId, State.ACTIVE);
+
+        if(commentList.getSize() == 0)
+            throw new BaseException(NOT_FOUND_COMMENT);
+
+        GetUserInfosRes getUserInfosRes = userProvider.retrieveSympathizeUser(userInfoId);
+
+        return commentList.stream()
+                .map(comment -> GetMyCommentsRes.builder()
+                        .userInfo(getUserInfosRes)
+                        .commentInfo(GetMyCommentRes.builder()
+                                .commentId(comment.getId())
+                                .activity(comment.getActivity())
+                                .commentContent(comment.getContent())
+                                .concretenessLogic(comment.getConcretenessLogic())
+                                .sentenceEvaluation(comment.getSentenceEvaluation())
+                                .sincerity(comment.getSincerity())
+                                .build())
+                        .build())
+                .collect(toList());
     }
 }

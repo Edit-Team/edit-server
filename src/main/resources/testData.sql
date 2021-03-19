@@ -235,14 +235,14 @@ insert into comment
 values (20, current_timestamp, current_timestamp, 'NONE', 'NONE', concat('comment', 1), 'YES', 'NONE', 'NONE', 'ACTIVE',
         1, 6);
 
-insert into sympathy values (1, 1, current_timestamp, current_timestamp, 'ACTIVE');
-insert into sympathy values (1, 2, current_timestamp, current_timestamp, 'ACTIVE');
-insert into sympathy values (3, 3, current_timestamp, current_timestamp, 'ACTIVE');
-insert into sympathy values (3, 4, current_timestamp, current_timestamp, 'ACTIVE');
-insert into sympathy values (3, 5, current_timestamp, current_timestamp, 'INACTIVE');
-insert into sympathy values (6, 6, current_timestamp, current_timestamp, 'ACTIVE');
-insert into sympathy values (6, 1, current_timestamp, current_timestamp, 'ACTIVE');
-insert into sympathy values (6, 2, current_timestamp, current_timestamp, 'ACTIVE');
+-- insert into sympathy values (1, 1, current_timestamp, current_timestamp, 'ACTIVE');
+-- insert into sympathy values (1, 2, current_timestamp, current_timestamp, 'ACTIVE');
+-- insert into sympathy values (3, 3, current_timestamp, current_timestamp, 'ACTIVE');
+-- insert into sympathy values (3, 4, current_timestamp, current_timestamp, 'ACTIVE');
+-- insert into sympathy values (3, 5, current_timestamp, current_timestamp, 'INACTIVE');
+-- insert into sympathy values (6, 6, current_timestamp, current_timestamp, 'ACTIVE');
+-- insert into sympathy values (6, 1, current_timestamp, current_timestamp, 'ACTIVE');
+-- insert into sympathy values (6, 2, current_timestamp, current_timestamp, 'ACTIVE');
 
 insert into change_role_category values (1,current_timestamp, current_timestamp,'퇴사 및 자소서 준비');
 insert into change_role_category values (2,current_timestamp, current_timestamp,'멘티로 다시 활동하기 위해');
@@ -253,17 +253,17 @@ insert into change_role_category values (5,current_timestamp, current_timestamp,
 insert into sympathy
 values (1, 1, current_timestamp, current_timestamp, 'ACTIVE');
 insert into sympathy
-values (1, 2, current_timestamp, current_timestamp, 'ACTIVE');
+values (2, 2, current_timestamp, current_timestamp, 'ACTIVE');
 insert into sympathy
 values (3, 3, current_timestamp, current_timestamp, 'ACTIVE');
 insert into sympathy
-values (3, 4, current_timestamp, current_timestamp, 'ACTIVE');
+values (4, 4, current_timestamp, current_timestamp, 'ACTIVE');
 insert into sympathy
-values (3, 5, current_timestamp, current_timestamp, 'INACTIVE');
+values (5, 5, current_timestamp, current_timestamp, 'INACTIVE');
 insert into sympathy
 values (6, 6, current_timestamp, current_timestamp, 'ACTIVE');
 insert into sympathy
-values (6, 1, current_timestamp, current_timestamp, 'ACTIVE');
+values (7, 1, current_timestamp, current_timestamp, 'ACTIVE');
 insert into sympathy
-values (6, 2, current_timestamp, current_timestamp, 'ACTIVE');
+values (8, 2, current_timestamp, current_timestamp, 'ACTIVE');
 

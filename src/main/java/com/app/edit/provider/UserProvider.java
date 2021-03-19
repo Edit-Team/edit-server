@@ -377,7 +377,7 @@ public class UserProvider {
      * @param userInfoId
      * @return
      */
-    public GetSympathizeUserRes retrieveSympathizeUser(Long userInfoId){
+    public GetUserInfosRes retrieveSympathizeUser(Long userInfoId){
 
         return userInfoRepository.findProfileBySympathizeUser(userInfoId,State.ACTIVE);
     }

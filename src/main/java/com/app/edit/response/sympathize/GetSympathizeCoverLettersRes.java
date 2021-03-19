@@ -1,6 +1,7 @@
 package com.app.edit.response.sympathize;
 
 import com.app.edit.response.user.GetSympathizeUserRes;
+import com.app.edit.response.user.GetUserInfosRes;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,7 +12,7 @@ import lombok.Getter;
 public class GetSympathizeCoverLettersRes {
 
     private final Long id;
-    private final GetSympathizeUserRes getSympathizeUserRes;
+    private final GetUserInfosRes getSympathizeUserRes;
     private final GetSympathizeCoverLetterRes getSympathizeCoverLetterRes;
 
 

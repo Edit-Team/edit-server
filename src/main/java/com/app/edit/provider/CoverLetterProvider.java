@@ -163,10 +163,6 @@ public class CoverLetterProvider {
     }
 
     /**
-<<<<<<< HEAD
-=======
-
->>>>>>> 6ee44b7d7db5350452a8ce09f411c64c9a4cd81e
      * 내가 공감한 자소서 목록 조회
      * @param
      * @param
