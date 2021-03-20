@@ -7,6 +7,7 @@ import com.app.edit.domain.coverletter.CoverLetter;
 import com.app.edit.enums.IsAdopted;
 import com.app.edit.enums.State;
 import com.app.edit.response.comment.*;
+import com.app.edit.response.coverletter.GetCoverLettersByCommentRes;
 import com.app.edit.response.coverletter.GetCoverLettersRes;
 import com.app.edit.response.user.GetUserInfosRes;
 import com.app.edit.utils.JwtService;
@@ -107,4 +108,44 @@ public class CommentProvider {
                         .build())
                 .collect(toList());
     }
+
+    /**
+     * 내가 작성한 코멘트 문장 조회
+     * @return
+     */
+    public GetMyCommentWithCoverLetterRes getMyCommentWithCoverLetter(Long commentId, Long userInfoId) throws BaseException {
+
+        Comment comment = commentRepository.findByIdAndState(commentId,State.ACTIVE)
+                .orElseThrow(() -> new BaseException(NOT_FOUND_COMMENT));
+
+        CoverLetter coverLetter = coverLetterProvider.getCoverLetterById(comment.getCoverLetter().getId());
+
+        return GetMyCommentWithCoverLetterRes.builder()
+                .commentRes(GetMyCommentsRes.builder()
+                        .commentInfo(commentToGetMyCommentRes(comment))
+                        .userInfo(userProvider.retrieveSympathizeUser(userInfoId))
+                        .build())
+                .coverLetterRes(GetCoverLettersByCommentRes.builder()
+                        .userInfo(userProvider.retrieveSympathizeUser(coverLetter.getUserInfo().getId()))
+                        .coverLetterId(coverLetter.getId())
+                        .coverLetterContent(coverLetter.getContent())
+                        .coverLetterCategoryName(coverLetter.getContent())
+                        .build())
+                .build();
+    }
+
+
+    public GetMyCommentRes commentToGetMyCommentRes(Comment comment){
+        return GetMyCommentRes.builder()
+                .commentId(comment.getId())
+                .activity(comment.getActivity())
+                .commentContent(comment.getContent())
+                .concretenessLogic(comment.getConcretenessLogic())
+                .sentenceEvaluation(comment.getSentenceEvaluation())
+                .sincerity(comment.getSincerity())
+                .build();
+    }
+
+
+
 }

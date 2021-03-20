@@ -51,4 +51,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
      */
     @Query(value = "select c from Comment c where c.userInfo.id = :userInfoId and c.state = :state order by c.createdAt desc")
     Page<Comment> findByUser(Pageable pageable,@Param("userInfoId") Long userInfoId, @Param("state") State state);
+
+    Optional<Comment> findByIdAndState(Long commentId,State state);
 }

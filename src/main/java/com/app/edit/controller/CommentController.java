@@ -8,6 +8,7 @@ import com.app.edit.enums.UserRole;
 import com.app.edit.provider.CommentProvider;
 import com.app.edit.request.comment.PostCommentReq;
 import com.app.edit.response.comment.GetCommentsRes;
+import com.app.edit.response.comment.GetMyCommentWithCoverLetterRes;
 import com.app.edit.response.comment.GetMyCommentsRes;
 import com.app.edit.response.comment.GetNotAdoptedCommentContentsRes;
 import com.app.edit.response.user.GetUserInfo;
@@ -121,5 +122,24 @@ public class CommentController {
                 Sort.by(Sort.Order.desc("createdAt")));
         return new BaseResponse<>(SUCCESS,
                 commentProvider.getNotAdoptedCommentContentsById(coverLetterId, pageRequest));
+    }
+
+    /**
+     * 내가 작성한 코멘트의 문장 보기 API
+     * @param commentId
+     * @return
+     * @throws BaseException
+     */
+    @ApiOperation(value = "내가 작성한 코멘트의 문장 보기 API")
+    @GetMapping("/comments/{comment-id}/cover-letters")
+    public BaseResponse<GetMyCommentWithCoverLetterRes> getMyCommentWithCoverLetter(
+            @PathVariable("comment-id") Long commentId) throws BaseException {
+
+        Long userId = jwtService.getUserInfo().getUserId();
+
+        if(userId == null || userId <=0)
+            throw new BaseException(EMPTY_USERID);
+
+        return new BaseResponse<>(SUCCESS, commentProvider.getMyCommentWithCoverLetter(commentId,userId));
     }
 }

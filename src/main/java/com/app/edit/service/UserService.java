@@ -150,6 +150,7 @@ public class UserService {
 
         return PostUserRes.builder()
                 .jwt(jwt)
+                .userRole(newUser.getUserRole())
                 .build();
     }
 

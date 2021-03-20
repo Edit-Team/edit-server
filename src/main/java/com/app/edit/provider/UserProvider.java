@@ -218,6 +218,7 @@ public class UserProvider {
 
         return PostUserRes.builder()
                 .jwt(jwtService.createJwt(user.getId(),user.getUserRole()))
+                .userRole(user.getUserRole())
                 .build();
 
     }
