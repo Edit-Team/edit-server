@@ -47,12 +47,8 @@ public class CoverLetterProvider {
 
     @Autowired
     public CoverLetterProvider(CoverLetterRepository coverLetterRepository, SympathyProvider sympathyProvider,
-                               SympathyRepository sympathyRepository,
-                               //UserInfoRepository userInfoRepository,
-                               UserProvider userProvider,
-                               JwtService jwtService
-                               //CoverLetterProvider coverLetterProvider
-    ) {
+                               SympathyRepository sympathyRepository, UserProvider userProvider,
+                               JwtService jwtService) {
         this.coverLetterRepository = coverLetterRepository;
         this.sympathyProvider = sympathyProvider;
         this.sympathyRepository = sympathyRepository;
@@ -189,9 +185,20 @@ public class CoverLetterProvider {
                     getCoverLettersRes.setIsSympathy(null);
                     getCoverLettersRes.setIsMine(null);
                     getCoverLettersRes.setSympathiesCount(null);
+                    setCompletedCoverLetterContent(coverLetter, getCoverLettersRes);
                     return getCoverLettersRes;
                 })
                 .collect(toList());
+    }
+
+    private void setCompletedCoverLetterContent(CoverLetter coverLetter, GetCoverLettersRes getCoverLettersRes) {
+        if (coverLetter.getType().equals(CoverLetterType.COMPLETING)) {
+            Long originalCoverLetterId = coverLetter.getOriginalCoverLetterId();
+            Optional<CoverLetter> optionalCoverLetter = coverLetterRepository.findById(originalCoverLetterId);
+            optionalCoverLetter.ifPresent(originalCoverLetter ->
+                    getCoverLettersRes.setCoverLetterContent(originalCoverLetter.getContent()));
+            getCoverLettersRes.setCompletedCoverLetterContent(coverLetter.getContent());
+        }
     }
 
     /**

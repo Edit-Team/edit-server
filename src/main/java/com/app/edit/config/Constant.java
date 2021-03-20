@@ -19,4 +19,5 @@ public class Constant {
     public static String DEFAULT_USER_PROFILE = "purple/relief";
     public static String PROFILE_SEPARATOR = "/";
     public static String NONE = "NONE";
+    public static String DEFAULT_COMPLETED_COVER_LETTER_CONTENT = null;
 }

@@ -17,6 +17,7 @@ public class GetCoverLettersRes {
     private String jobName;
     private String coverLetterCategoryName;
     private String coverLetterContent;
+    private String completedCoverLetterContent;
     private Boolean isSympathy;
     private Long sympathiesCount;
     private Boolean isMine;
