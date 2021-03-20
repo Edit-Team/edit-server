@@ -267,8 +267,8 @@ public class UserController {
      */
     @PatchMapping(value = "/users/password")
     @ApiOperation(value = "비밀번호 수정", notes = "비밀번호 수정")
-    public BaseResponse<GetNameRes> UpdatePassword(
-            @RequestHeader(value = "X-ACCESS-TOKEN") String jwt,
+    public BaseResponse<GetNickNameRes> UpdatePassword(
+            //@RequestHeader(value = "X-ACCESS-TOKEN") String jwt,
             @RequestBody UpdatePasswordReq parameters) {
 
         try {
@@ -291,8 +291,8 @@ public class UserController {
             if (userId == null || userId <= 0) {
                 return new BaseResponse<>(EMPTY_USERID);
             }
-            GetNameRes getNameRes = userService.updatePassword(userId,password);
-            return new BaseResponse<>(SUCCESS, getNameRes);
+            GetNickNameRes getNickNameRes = userService.updatePassword(userId,password);
+            return new BaseResponse<>(SUCCESS, getNickNameRes);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
@@ -323,12 +323,13 @@ public class UserController {
 
     /**
      * 내 이름 조회
-     * [GET] /api/users/profile
+     * [GET] /api/users/nick
      */
-    @GetMapping(value = "/users/name")
-    @ApiOperation(value = "이름 조회", notes = "이름 조회")
-    public BaseResponse<GetNameRes> getName(
-            @RequestHeader(value = "X-ACCESS-TOKEN") String jwt){
+    @GetMapping(value = "/users/nickname")
+    @ApiOperation(value = "닉네임 조회", notes = "닉네임 조회")
+    public BaseResponse<GetNickNameRes> getNickName(
+            //@RequestHeader(value = "X-ACCESS-TOKEN") String jwt
+            ){
 
         try {
             Long userId = jwtService.getUserInfo().getUserId();
@@ -336,8 +337,8 @@ public class UserController {
             if (userId == null || userId <= 0) {
                 return new BaseResponse<>(EMPTY_USERID);
             }
-            GetNameRes getNameRes = userProvider.retrieveName(userId);
-            return new BaseResponse<>(SUCCESS, getNameRes);
+            GetNickNameRes getNickNameRes = userProvider.retrieveNickName(userId);
+            return new BaseResponse<>(SUCCESS, getNickNameRes);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
@@ -422,8 +423,8 @@ public class UserController {
      */
     @DeleteMapping(value = "/users")
     @ApiOperation(value = "회원 탈퇴", notes = "회원 탈퇴")
-    public BaseResponse<Void> UpdateProfile(
-            @RequestHeader(value = "X-ACCESS-TOKEN") String jwt,
+    public BaseResponse<GetNickNameRes> UpdateProfile(
+            //@RequestHeader(value = "X-ACCESS-TOKEN") String jwt,
             @Valid
             @RequestBody DeleteUserReq parameters){
 
@@ -433,8 +434,8 @@ public class UserController {
             if (userId == null || userId <= 0) {
                 return new BaseResponse<>(EMPTY_USERID);
             }
-            userService.deleteUser(userId,parameters);
-            return new BaseResponse<>(SUCCESS);
+            GetNickNameRes getNickNameRes = userService.deleteUser(userId,parameters);
+            return new BaseResponse<>(SUCCESS , getNickNameRes);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }

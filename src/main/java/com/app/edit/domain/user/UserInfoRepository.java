@@ -65,7 +65,7 @@ public interface UserInfoRepository extends JpaRepository<UserInfo,Long> {
      * @param state
      * @return
      */
-    @Query(value = "select new com.app.edit.response.user.GetProfileRes(u.name,p.profileEmotion.name,p.profileColor.name,u.userRole) " +
+    @Query(value = "select new com.app.edit.response.user.GetProfileRes(u.nickName,p.profileEmotion.name,p.profileColor.name,u.userRole) " +
             "from UserInfo u join fetch UserProfile p " +
             "on u.id = :userInfoId and u.state = :state group by u.id")
     Optional<GetProfileRes> findProfileByUser(@Param("userInfoId") Long userInfoId,@Param("state") State state);

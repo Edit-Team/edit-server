@@ -10,7 +10,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class GetProfileRes {
 
-    private final String name;
+    private final String nickName;
     private final String emotionName;
     private final String colorName;
     private final UserRole userRole;

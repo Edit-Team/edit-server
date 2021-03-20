@@ -11,6 +11,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class GetRoleRes {
 
-    private final String name;
+    private final String nickName;
     private final UserRole userRole;
 }

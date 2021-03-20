@@ -326,14 +326,14 @@ public class UserProvider {
     }
 
     /**
-     * 이름 조회
+     * 닉네임 조회
      * @param userId
      * @return
      */
-    public GetNameRes retrieveName(Long userId) throws BaseException{
+    public GetNickNameRes retrieveNickName(Long userId) throws BaseException{
 
-        return  GetNameRes.builder()
-                .name(userInfoRepository.findByStateAndId(State.ACTIVE, userId)
+        return  GetNickNameRes.builder()
+                .nickName(userInfoRepository.findByStateAndId(State.ACTIVE, userId)
                         .orElseThrow(() -> new BaseException(FAILED_TO_GET_USER)).getName())
                 .build();
 
@@ -350,7 +350,7 @@ public class UserProvider {
                 .orElseThrow(() -> new BaseException(FAILED_TO_GET_USER));
 
         return GetRoleRes.builder()
-                .name(userInfo.getName())
+                .nickName(userInfo.getNickName())
                 .userRole(userInfo.getUserRole())
                 .build();
     }

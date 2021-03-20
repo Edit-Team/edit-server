@@ -25,7 +25,7 @@ import com.app.edit.provider.UserProvider;
 import com.app.edit.request.user.DeleteUserReq;
 import com.app.edit.request.user.PatchRoleReq;
 import com.app.edit.request.user.PostUserReq;
-import com.app.edit.response.user.GetNameRes;
+import com.app.edit.response.user.GetNickNameRes;
 import com.app.edit.response.user.PatchRoleRes;
 import com.app.edit.response.user.PostUserRes;
 import com.app.edit.utils.AES128;
@@ -216,7 +216,7 @@ public class UserService {
      * @throws BaseException
      */
     @Transactional
-    public GetNameRes updatePassword(Long userId, String password) throws BaseException {
+    public GetNickNameRes updatePassword(Long userId, String password) throws BaseException {
 
         UserInfo userInfo = userInfoRepository.findByStateAndId(State.ACTIVE,userId)
                 .orElseThrow(() -> new BaseException(FAILED_TO_GET_USER));
@@ -229,8 +229,8 @@ public class UserService {
         }
 
         userInfo.setPassword(encodingPassword);
-        return GetNameRes.builder()
-                .name(userInfo.getName())
+        return GetNickNameRes.builder()
+                .nickName(userInfo.getNickName())
                 .build();
     }
 
@@ -265,7 +265,7 @@ public class UserService {
      * @throws BaseException
      */
     @Transactional
-    public void deleteUser(Long userId, DeleteUserReq parameters) throws BaseException {
+    public GetNickNameRes deleteUser(Long userId, DeleteUserReq parameters) throws BaseException {
 
         UserInfo userInfo = userInfoRepository.findByStateAndId(State.ACTIVE,userId)
                 .orElseThrow(() -> new BaseException(FAILED_TO_GET_USER));
@@ -275,6 +275,10 @@ public class UserService {
 
         userInfo.setWithdrawalContent(parameters.getWithdrawalContent());
         userInfo.setState(State.INACTIVE);
+
+        return GetNickNameRes.builder()
+                .nickName(userInfo.getNickName())
+                .build();
     }
 
     /**
