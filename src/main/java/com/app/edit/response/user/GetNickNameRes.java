@@ -8,5 +8,5 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class GetNameRes {
-    private final String name;
+    private final String nickName;
 }
