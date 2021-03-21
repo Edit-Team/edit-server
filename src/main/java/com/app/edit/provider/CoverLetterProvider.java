@@ -178,6 +178,7 @@ public class CoverLetterProvider {
         return getMyCoverLettersResponses(completingCoverLetters);
     }
 
+
     private List<GetCoverLettersRes> getMyCoverLettersResponses(Page<CoverLetter> coverLetterPage) {
         return coverLetterPage.stream()
                 .map(coverLetter -> {
@@ -232,9 +233,7 @@ public class CoverLetterProvider {
                                 return null;
                             }
                         })
-
-                                        .build())
-                        .collect(toList());
+        .collect(toList());
 
         if (getSympathizeCoverLettersResList.size() == 0)
             throw new BaseException(NOT_FOUND_COVER_LETTER);
