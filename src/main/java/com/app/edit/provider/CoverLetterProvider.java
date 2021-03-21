@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
+import static com.app.edit.config.BaseResponseStatus.FAILED_TO_GET_SYMPATHIES_COVERLETTER;
 import static com.app.edit.config.BaseResponseStatus.NOT_FOUND_COVER_LETTER;
 import static com.app.edit.config.Constant.*;
 import static java.util.Comparator.comparing;
@@ -215,13 +216,23 @@ public class CoverLetterProvider {
 
         AtomicLong id = new AtomicLong(1L);
 
+
         List<GetSympathizeCoverLettersRes> getSympathizeCoverLettersResList =
                 sympathies.stream()
                         .map(sympathy ->
-                                GetSympathizeCoverLettersRes.builder()
+                        {
+                            try {
+                                return GetSympathizeCoverLettersRes.builder()
                                         .id(id.getAndIncrement())
                                         .getSympathizeCoverLetterRes(retrieveSympathizeCoverLetter(sympathy.getCoverLetter().getId()))
                                         .getSympathizeUserRes(userProvider.retrieveSympathizeUser(sympathy.getUserInfo().getId()))
+
+                                .build();
+                            } catch (BaseException baseException) {
+                                return null;
+                            }
+                        })
+
                                         .build())
                         .collect(toList());
 

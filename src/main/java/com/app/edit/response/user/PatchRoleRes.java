@@ -9,5 +9,5 @@ import lombok.Getter;
 @AllArgsConstructor
 public class PatchRoleRes {
 
-    private String name;
+    private final String nickName;
 }

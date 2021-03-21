@@ -7,6 +7,6 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
-public class GetNameRes {
-    private final String name;
+public class GetNickNameRes {
+    private final String nickName;
 }

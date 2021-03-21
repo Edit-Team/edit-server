@@ -6,6 +6,7 @@ import com.app.edit.enums.State;
 import com.app.edit.enums.UserRole;
 import com.app.edit.response.user.GetProfileRes;
 import com.app.edit.response.user.GetSympathizeUserRes;
+import com.app.edit.response.user.GetUserInfosRes;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -64,7 +65,7 @@ public interface UserInfoRepository extends JpaRepository<UserInfo,Long> {
      * @param state
      * @return
      */
-    @Query(value = "select new com.app.edit.response.user.GetProfileRes(u.name,p.profileEmotion.name,p.profileColor.name,u.userRole) " +
+    @Query(value = "select new com.app.edit.response.user.GetProfileRes(u.nickName,p.profileEmotion.name,p.profileColor.name,u.userRole) " +
             "from UserInfo u join fetch UserProfile p " +
             "on u.id = :userInfoId and u.state = :state group by u.id")
     Optional<GetProfileRes> findProfileByUser(@Param("userInfoId") Long userInfoId,@Param("state") State state);
@@ -76,9 +77,9 @@ public interface UserInfoRepository extends JpaRepository<UserInfo,Long> {
      * @return
      */
     @Query(value = "select " +
-            "new com.app.edit.response.user.GetSympathizeUserRes" +
-            "(u.name,p.profileEmotion.name,p.profileColor.name,u.userRole, u.job.name) " +
+            "new com.app.edit.response.user.GetUserInfosRes" +
+            "(u.nickName,p.profileEmotion.name,p.profileColor.name,u.userRole, u.job.name) " +
             "from UserInfo u join fetch UserProfile p " +
             "on u.id = :userInfoId and u.state = :state group by u.id")
-    GetSympathizeUserRes findProfileBySympathizeUser(@Param("userInfoId") Long userInfoId,@Param("state") State state);
+    Optional<GetUserInfosRes> findProfileBySympathizeUser(@Param("userInfoId") Long userInfoId, @Param("state") State state);
 }

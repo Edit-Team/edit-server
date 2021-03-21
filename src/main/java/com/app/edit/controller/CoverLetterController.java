@@ -13,6 +13,8 @@ import com.app.edit.response.coverletter.GetMainCoverLettersRes;
 import com.app.edit.response.sympathize.GetSympathizeCoverLettersRes;
 import com.app.edit.service.CoverLetterService;
 import com.app.edit.utils.JwtService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -168,8 +170,8 @@ public class CoverLetterController {
     @ApiOperation(value = "내가 공감한 자소서 조회 API")
     @GetMapping("/sympathize-coverletters")
     public BaseResponse<List<GetSympathizeCoverLettersRes>> getSympathizeCoverLetters(
-            @RequestHeader(value = "X-ACCESS-TOKEN") String jwt,
-            @RequestParam("page") Integer pageNum) {
+            //@RequestHeader(value = "X-ACCESS-TOKEN") String jwt,
+            @RequestParam(value = "pageNum") Integer pageNum) {
 
         try {
 

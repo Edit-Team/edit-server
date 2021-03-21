@@ -11,4 +11,5 @@ public class GetSympathizeCoverLetterRes {
     private final Long coverLetterId;
     private final String content;
     private final String coverLetterCategory;
+    private final boolean Sympathy;
 }

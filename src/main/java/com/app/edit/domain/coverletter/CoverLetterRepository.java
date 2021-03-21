@@ -54,7 +54,7 @@ public interface CoverLetterRepository extends JpaRepository<CoverLetter, Long> 
     /*
      * 내가 공감한 자소서 정보 조회
      */
-    @Query(value = "select new com.app.edit.response.sympathize.GetSympathizeCoverLetterRes(c.id, c.content, c.coverLetterCategory.name) from CoverLetter c where c.id = :coverLetterId and c.state = :state")
+    @Query(value = "select new com.app.edit.response.sympathize.GetSympathizeCoverLetterRes(c.id, c.content, c.coverLetterCategory.name, true) from CoverLetter c where c.id = :coverLetterId and c.state = :state")
     GetSympathizeCoverLetterRes findBySympathizeCoverLetter(@Param("coverLetterId") Long coverLetterId, @Param("state") State state);
 
     /**

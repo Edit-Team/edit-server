@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -41,4 +42,15 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     Page<Comment> findNotAdoptedCommentsByCoverLetter(Pageable pageable, @Param("coverLetter") CoverLetter coverLetter,
                                                       @Param("isAdopted") IsAdopted isAdopted,
                                                       @Param("state") State state);
+
+    /**
+     * 내 코멘트 조회
+     * @param pageable
+     * @param userInfoId
+     * @return
+     */
+    @Query(value = "select c from Comment c where c.userInfo.id = :userInfoId and c.state = :state order by c.createdAt desc")
+    Page<Comment> findByUser(Pageable pageable,@Param("userInfoId") Long userInfoId, @Param("state") State state);
+
+    Optional<Comment> findByIdAndState(Long commentId,State state);
 }
