@@ -556,7 +556,7 @@ public class UserController {
     @PatchMapping(value = "/change-roles/to-mentee")
     @ApiOperation(value = "멘토 -> 멘티 역할 변경", notes = "멘토 -> 멘티 역할 변경 API")
     public BaseResponse<PatchRoleRes> changeRoleToMentee(
-            @RequestHeader("X-ACCESS-TOKEN") String jwt,
+            //@RequestHeader("X-ACCESS-TOKEN") String jwt,
             @RequestBody PatchRoleReq patchRoleReq) throws BaseException{
 
         try {
@@ -584,7 +584,8 @@ public class UserController {
     @GetMapping(value = "/users/mypage")
     @ApiOperation(value = "나의 에딧 화면 조회", notes = "나의 에딧 화면 조회")
     public BaseResponse<GetProfileRes> getMyPage(
-            @RequestHeader(value = "X-ACCESS-TOKEN") String jwt){
+            //@RequestHeader(value = "X-ACCESS-TOKEN") String jwt
+    ){
 
         try {
             Long userId = jwtService.getUserInfo().getUserId();

@@ -11,6 +11,7 @@ import com.app.edit.response.comment.GetCommentsRes;
 import com.app.edit.response.comment.GetMyCommentWithCoverLetterRes;
 import com.app.edit.response.comment.GetMyCommentsRes;
 import com.app.edit.response.comment.GetNotAdoptedCommentContentsRes;
+import com.app.edit.response.coverletter.GetCoverLettersByCommentRes;
 import com.app.edit.response.user.GetUserInfo;
 import com.app.edit.service.CommentService;
 import com.app.edit.utils.JwtService;
@@ -42,8 +43,14 @@ public class CommentController {
     }
 
 
+    /**
+     * 코멘트 등록하기
+     * @param parameters
+     * @return
+     * @throws BaseException
+     */
     @ApiOperation(value = "코멘트 등록하기")
-    @PostMapping("/api/comments")
+    @PostMapping("/comments")
     public BaseResponse<Void> createComment(
             @RequestBody PostCommentReq parameters) throws BaseException{
 
@@ -83,6 +90,22 @@ public class CommentController {
                 commentProvider.retrieveMyComments(pageRequest, userId));
     }
 
+    /**
+     * 코멘트 등록할때 자소서 조회
+     * [GET] /api/comments/cover-letters/:cover-letter-id
+     */
+    @ApiOperation(value = "코멘트 등록할때 자소서 조회")
+    @GetMapping("/comments/cover-letters/{cover-letter-id}")
+    public BaseResponse<GetCoverLettersByCommentRes> getCommentWithCoverLetter(
+            @PathVariable("cover-letter-id") Long coverLetterId) throws BaseException {
+
+        Long userId = jwtService.getUserInfo().getUserId();
+
+        if(userId == null || userId <= 0)
+            throw new BaseException(EMPTY_USERID);
+
+        return new BaseResponse<>(SUCCESS, commentProvider.retrieveCommentWithCoverLetter(userId, coverLetterId));
+    }
 
 
     /**

@@ -340,6 +340,10 @@ public class UserService {
         UserInfo userInfo = userInfoRepository.findByStateAndId(State.ACTIVE, userId)
                 .orElseThrow(() -> new BaseException(FAILED_TO_GET_USER));
 
+        //이미 멘티일 경우
+        if(userInfo.getUserRole().equals(UserRole.MENTEE))
+            throw new BaseException(ALREADY_ROLE_MENTEE);
+
         String changeContent = patchRoleReq.getChangeContent();
         String etcChangeContent = patchRoleReq.getEtcChangeContent();
 
@@ -367,7 +371,7 @@ public class UserService {
         userInfo.setUserRole(UserRole.MENTEE);
 
         return PatchRoleRes.builder()
-                .name(userInfo.getName())
+                .nickName(userInfo.getNickName())
                 .build();
     }
 }

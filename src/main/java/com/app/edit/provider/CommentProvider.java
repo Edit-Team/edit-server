@@ -4,6 +4,7 @@ import com.app.edit.config.BaseException;
 import com.app.edit.domain.comment.Comment;
 import com.app.edit.domain.comment.CommentRepository;
 import com.app.edit.domain.coverletter.CoverLetter;
+import com.app.edit.domain.user.UserInfo;
 import com.app.edit.enums.IsAdopted;
 import com.app.edit.enums.State;
 import com.app.edit.response.comment.*;
@@ -147,5 +148,22 @@ public class CommentProvider {
     }
 
 
+    /**
+     * 코멘트 등록할때 자소서 조회
+     * @param userInfoId
+     * @param coverLetterId
+     * @return
+     */
+    public GetCoverLettersByCommentRes retrieveCommentWithCoverLetter(Long userInfoId, Long coverLetterId) throws BaseException {
 
+        CoverLetter coverLetter = coverLetterProvider.getCoverLetterById(coverLetterId);
+
+
+        return GetCoverLettersByCommentRes.builder()
+                .userInfo(userProvider.retrieveSympathizeUser(userInfoId))
+                .coverLetterId(coverLetterId)
+                .coverLetterContent(coverLetter.getContent())
+                .coverLetterCategoryName(null)
+                .build();
+    }
 }

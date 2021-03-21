@@ -378,8 +378,9 @@ public class UserProvider {
      * @param userInfoId
      * @return
      */
-    public GetUserInfosRes retrieveSympathizeUser(Long userInfoId){
+    public GetUserInfosRes retrieveSympathizeUser(Long userInfoId) throws BaseException {
 
-        return userInfoRepository.findProfileBySympathizeUser(userInfoId,State.ACTIVE);
+        return userInfoRepository.findProfileBySympathizeUser(userInfoId,State.ACTIVE)
+                .orElseThrow(() -> new BaseException(NOT_FOUND_USER));
     }
 }
