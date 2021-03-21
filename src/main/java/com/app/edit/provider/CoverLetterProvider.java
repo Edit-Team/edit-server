@@ -48,12 +48,8 @@ public class CoverLetterProvider {
 
     @Autowired
     public CoverLetterProvider(CoverLetterRepository coverLetterRepository, SympathyProvider sympathyProvider,
-                               SympathyRepository sympathyRepository,
-                               //UserInfoRepository userInfoRepository,
-                               UserProvider userProvider,
-                               JwtService jwtService
-                               //CoverLetterProvider coverLetterProvider
-                               ) {
+                               SympathyRepository sympathyRepository, UserProvider userProvider,
+                               JwtService jwtService) {
         this.coverLetterRepository = coverLetterRepository;
         this.sympathyProvider = sympathyProvider;
         this.sympathyRepository = sympathyRepository;
@@ -117,15 +113,34 @@ public class CoverLetterProvider {
         return coverLetterPage.stream()
                 .map(coverLetter -> {
                     GetCoverLettersRes getCoverLettersRes = coverLetter.toGetCoverLetterRes();
-                    boolean isSympathy = sympathyProvider.getIsSympathy(coverLetter.getId(), userInfoId);
-                    boolean isMine = coverLetter.getUserInfo().getId().equals(userInfoId);
-                    Long sympathiesCount = sympathyProvider.getSympathiesCount(coverLetter);
-                    CoverLetter.setSympathiesCountInCoverLettersRes(getCoverLettersRes, sympathiesCount);
-                    getCoverLettersRes.setSympathy(isSympathy);
-                    getCoverLettersRes.setMine(isMine);
+                    setUserProfileToRes(coverLetter, getCoverLettersRes);
+                    setIsSympathyToRes(userInfoId, coverLetter, getCoverLettersRes);
+                    setIsMineToRes(userInfoId, coverLetter, getCoverLettersRes);
+                    setSympathiesCountToRes(coverLetter, getCoverLettersRes);
                     return getCoverLettersRes;
                 })
                 .collect(toList());
+    }
+
+    private void setSympathiesCountToRes(CoverLetter coverLetter, GetCoverLettersRes getCoverLettersRes) {
+        Long sympathiesCount = sympathyProvider.getSympathiesCount(coverLetter);
+        getCoverLettersRes.setSympathiesCount(sympathiesCount);
+    }
+
+    private void setIsMineToRes(Long userInfoId, CoverLetter coverLetter, GetCoverLettersRes getCoverLettersRes) {
+        boolean isMine = coverLetter.getUserInfo().getId().equals(userInfoId);
+        getCoverLettersRes.setIsMine(isMine);
+    }
+
+    private void setIsSympathyToRes(Long userInfoId, CoverLetter coverLetter, GetCoverLettersRes getCoverLettersRes) {
+        boolean isSympathy = sympathyProvider.getIsSympathy(coverLetter.getId(), userInfoId);
+        getCoverLettersRes.setIsSympathy(isSympathy);
+    }
+
+    private void setUserProfileToRes(CoverLetter coverLetter, GetCoverLettersRes getCoverLettersRes) {
+        String profileColorName = coverLetter.getUserInfo().getUserProfile().getProfileColor().getName();
+        String profileEmotionName = coverLetter.getUserInfo().getUserProfile().getProfileEmotion().getName();
+        getCoverLettersRes.setUserProfile(profileColorName + PROFILE_SEPARATOR + profileEmotionName);
     }
 
     public CoverLetter getCoverLetterById(Long coverLetterId) throws BaseException {
@@ -148,7 +163,7 @@ public class CoverLetterProvider {
         Long userInfoId = jwtService.getUserInfo().getUserId();
         Page<CoverLetter> myCoverLetters = coverLetterRepository
                 .findMyCoverLetters(pageable, userInfoId, State.ACTIVE, CoverLetterType.WRITING);
-        return getCoverLettersResponses(myCoverLetters);
+        return getMyCoverLettersResponses(myCoverLetters);
     }
 
     /**
@@ -160,7 +175,31 @@ public class CoverLetterProvider {
         Long userInfoId = jwtService.getUserInfo().getUserId();
         Page<CoverLetter> completingCoverLetters = coverLetterRepository
                 .findMyCoverLetters(pageable, userInfoId, State.ACTIVE, CoverLetterType.COMPLETING);
-        return getCoverLettersResponses(completingCoverLetters);
+        return getMyCoverLettersResponses(completingCoverLetters);
+    }
+
+    private List<GetCoverLettersRes> getMyCoverLettersResponses(Page<CoverLetter> coverLetterPage) {
+        return coverLetterPage.stream()
+                .map(coverLetter -> {
+                    GetCoverLettersRes getCoverLettersRes = coverLetter.toGetCoverLetterRes();
+                    setUserProfileToRes(coverLetter, getCoverLettersRes);
+                    getCoverLettersRes.setIsSympathy(null);
+                    getCoverLettersRes.setIsMine(null);
+                    getCoverLettersRes.setSympathiesCount(null);
+                    setCompletedCoverLetterContent(coverLetter, getCoverLettersRes);
+                    return getCoverLettersRes;
+                })
+                .collect(toList());
+    }
+
+    private void setCompletedCoverLetterContent(CoverLetter coverLetter, GetCoverLettersRes getCoverLettersRes) {
+        if (coverLetter.getType().equals(CoverLetterType.COMPLETING)) {
+            Long originalCoverLetterId = coverLetter.getOriginalCoverLetterId();
+            Optional<CoverLetter> optionalCoverLetter = coverLetterRepository.findById(originalCoverLetterId);
+            optionalCoverLetter.ifPresent(originalCoverLetter ->
+                    getCoverLettersRes.setCoverLetterContent(originalCoverLetter.getContent()));
+            getCoverLettersRes.setCompletedCoverLetterContent(coverLetter.getContent());
+        }
     }
 
     /**
@@ -169,11 +208,11 @@ public class CoverLetterProvider {
      * @param
      * @return
      */
-    public List<GetSympathizeCoverLettersRes> retrieveMySympathizeCoverLetters(Long userInfoId, Integer pageNum) throws BaseException{
+    public List<GetSympathizeCoverLettersRes> retrieveMySympathizeCoverLetters(Long userInfoId, Integer pageNum) throws BaseException {
 
-        Pageable pageRequest = PageRequest.of(pageNum,10);
+        Pageable pageRequest = PageRequest.of(pageNum, 10);
 
-        Page<Sympathy> sympathies = sympathyRepository.findCoverLetterByUser(pageRequest,userInfoId, State.ACTIVE);
+        Page<Sympathy> sympathies = sympathyRepository.findCoverLetterByUser(pageRequest, userInfoId, State.ACTIVE);
 
         AtomicLong id = new AtomicLong(1L);
 
@@ -187,14 +226,17 @@ public class CoverLetterProvider {
                                         .id(id.getAndIncrement())
                                         .getSympathizeCoverLetterRes(retrieveSympathizeCoverLetter(sympathy.getCoverLetter().getId()))
                                         .getSympathizeUserRes(userProvider.retrieveSympathizeUser(sympathy.getUserInfo().getId()))
+
                                 .build();
                             } catch (BaseException baseException) {
                                 return null;
                             }
                         })
+
+                                        .build())
                         .collect(toList());
 
-        if(getSympathizeCoverLettersResList.size() == 0)
+        if (getSympathizeCoverLettersResList.size() == 0)
             throw new BaseException(NOT_FOUND_COVER_LETTER);
 
         return getSympathizeCoverLettersResList;
@@ -202,7 +244,7 @@ public class CoverLetterProvider {
 
     private GetSympathizeCoverLetterRes retrieveSympathizeCoverLetter(Long coverLetterId) {
 
-        return coverLetterRepository.findBySympathizeCoverLetter(coverLetterId,State.ACTIVE);
+        return coverLetterRepository.findBySympathizeCoverLetter(coverLetterId, State.ACTIVE);
     }
 
 
