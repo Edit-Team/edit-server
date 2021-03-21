@@ -233,8 +233,7 @@ public class CoverLetterProvider {
                                 return null;
                             }
                         })
-
-                        .collect(toList());
+        .collect(toList());
 
         if (getSympathizeCoverLettersResList.size() == 0)
             throw new BaseException(NOT_FOUND_COVER_LETTER);
