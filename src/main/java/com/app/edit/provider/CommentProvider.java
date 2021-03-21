@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.app.edit.config.BaseResponseStatus.*;
+import static com.app.edit.config.Constant.PROFILE_SEPARATOR;
 import static java.util.stream.Collectors.toList;
 
 @Transactional(readOnly = true)
@@ -48,14 +49,30 @@ public class CommentProvider {
         List<CommentInfo> commentInfos = commentRepository.findCommentsByCoverLetter(pageable, coverLetter, State.ACTIVE).stream()
                 .map(comment -> {
                     CommentInfo commentInfo = comment.toCommentInfo();
-                    if (comment.getUserInfo().getId().equals(userInfoId)) {
-                        commentInfo.setMine(true);
-                    }
+                    setIsMineToCommentInfo(userInfoId, comment, commentInfo);
+                    setUserProfileToCommentInfo(comment, commentInfo);
                     return commentInfo;
                 })
                 .collect(toList());
         GetCoverLettersRes coverLetterInfo = coverLetter.toGetCoverLetterRes();
+        if (coverLetter.getUserInfo().getId().equals(userInfoId)) {
+            coverLetterInfo.setIsMine(true);
+        }
+        coverLetterInfo.setIsSympathy(null);
+        coverLetterInfo.setSympathiesCount(null);
         return new GetCommentsRes(coverLetterInfo, commentInfos);
+    }
+
+    private void setIsMineToCommentInfo(Long userInfoId, Comment comment, CommentInfo commentInfo) {
+        if (comment.getUserInfo().getId().equals(userInfoId)) {
+            commentInfo.setIsMine(true);
+        }
+    }
+
+    private void setUserProfileToCommentInfo(Comment comment, CommentInfo commentInfo) {
+        String profileColorName = comment.getUserInfo().getUserProfile().getProfileColor().getName();
+        String profileEmotionName = comment.getUserInfo().getUserProfile().getProfileEmotion().getName();
+        commentInfo.setUserProfile(profileColorName + PROFILE_SEPARATOR + profileEmotionName);
     }
 
     public Comment getCommentById(Long commentId) throws BaseException {

@@ -17,6 +17,7 @@ import javax.persistence.*;
 import java.util.List;
 
 import static com.app.edit.config.Constant.DEFAULT_IS_MINE;
+import static com.app.edit.config.Constant.DEFAULT_USER_PROFILE;
 
 @Accessors(chain = true)
 @NoArgsConstructor
@@ -132,6 +133,7 @@ public class Comment extends BaseEntity {
 
     public CommentInfo toCommentInfo() {
         Long commentId = this.id;
+        String userProfile = DEFAULT_USER_PROFILE;
         String nickName = this.userInfo.getNickName();
         String jobName = this.userInfo.getJob().getName();
         String sentenceEvaluation = this.sentenceEvaluation;
@@ -141,7 +143,7 @@ public class Comment extends BaseEntity {
         String commentContent = this.content;
         IsAdopted isAdopted = this.isAdopted;
         boolean isMine = DEFAULT_IS_MINE;
-        return new CommentInfo(commentId, nickName, jobName, sentenceEvaluation, concretenessLogic,
+        return new CommentInfo(commentId, userProfile, nickName, jobName, sentenceEvaluation, concretenessLogic,
                 sincerity, activity, commentContent, isAdopted, isMine);
     }
 }

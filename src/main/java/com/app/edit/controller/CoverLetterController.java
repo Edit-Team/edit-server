@@ -130,9 +130,9 @@ public class CoverLetterController {
      * 내가 등록한 자소서 조회 API
      * 먼저 등록한 순서대로 정렬
      **/
-    @ApiOperation(value = "내가 등록한 자소서 조회 API")
+    @ApiOperation(value = "내가 등록한 자소서 목록 조회 API")
     @GetMapping("/my-writing-cover-letters")
-    public BaseResponse<List<GetCoverLettersRes>> getMyCoverLetters(@RequestParam Integer page) throws BaseException {
+    public BaseResponse<List<GetCoverLettersRes>> getMyWritingCoverLetters(@RequestParam Integer page) throws BaseException {
         PageRequest pageRequest = com.app.edit.config.PageRequest.of(page, DEFAULT_PAGE_SIZE);
         return new BaseResponse<>(BaseResponseStatus.SUCCESS, coverLetterProvider.retrieveMyWritingCoverLetters(pageRequest));
     }
@@ -154,9 +154,9 @@ public class CoverLetterController {
      * @param page
      * @return
      */
-    @ApiOperation(value = "완성한 자소서 목록 조회 API")
+    @ApiOperation(value = "내가 완성한 자소서 목록 조회 API")
     @GetMapping("/my-completing-cover-letters")
-    public BaseResponse<List<GetCoverLettersRes>> getCompletingCoverLetters(@RequestParam Integer page) throws BaseException {
+    public BaseResponse<List<GetCoverLettersRes>> getMyCompletingCoverLetters(@RequestParam Integer page) throws BaseException {
         PageRequest pageRequest = com.app.edit.config.PageRequest.of(page, DEFAULT_PAGE_SIZE);
         return new BaseResponse<>(BaseResponseStatus.SUCCESS,
                 coverLetterProvider.retrieveMyCompletingCoverLetters(pageRequest));
