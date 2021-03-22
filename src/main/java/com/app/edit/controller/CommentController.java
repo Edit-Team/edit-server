@@ -16,6 +16,7 @@ import com.app.edit.response.user.GetUserInfo;
 import com.app.edit.service.CommentService;
 import com.app.edit.utils.JwtService;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -28,6 +29,7 @@ import static com.app.edit.config.Constant.DEFAULT_PAGE_SIZE;
 
 @RequestMapping("/api")
 @RestController
+@Slf4j
 public class CommentController {
 
     private final CommentProvider commentProvider;
@@ -56,7 +58,7 @@ public class CommentController {
 
             GetUserInfo userInfo = jwtService.getUserInfo();
 
-            if(userInfo.getRole().equals(UserRole.MENTOR.name()))
+            if(userInfo.getRole().equals(UserRole.MENTEE.name()))
                 throw new BaseException(UNAUTHORIZED_AUTHORITY);
 
             Long userId = userInfo.getUserId();

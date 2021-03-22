@@ -12,6 +12,8 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static com.app.edit.config.BaseResponseStatus.EMPTY_USERID;
 import static com.app.edit.config.BaseResponseStatus.SUCCESS;
 
@@ -36,7 +38,7 @@ public class TemporaryCommentController {
 
     @ApiOperation(value = "내 임시저장한 코멘트 조회")
     @GetMapping("/temporary-comments")
-    public BaseResponse<GetMyCommentsRes> getTemporaryComments() throws BaseException {
+    public BaseResponse<List<GetMyCommentsRes>> getTemporaryComments() throws BaseException {
 
         try {
             Long userId = jwtService.getUserInfo().getUserId();
@@ -44,9 +46,9 @@ public class TemporaryCommentController {
             if (userId == null || userId <= 0) {
                 return new BaseResponse<>(EMPTY_USERID);
             }
-            GetMyCommentsRes getMyCommentsRes = temporaryCommentProvider.getMyTemporaryComments(userId);
+            List<GetMyCommentsRes> getMyCommentsResList = temporaryCommentProvider.getMyTemporaryComments(userId);
 
-            return new BaseResponse<>(SUCCESS, getMyCommentsRes);
+            return new BaseResponse<>(SUCCESS, getMyCommentsResList);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
@@ -101,12 +103,24 @@ public class TemporaryCommentController {
             @RequestBody PostTemporaryCommentReq parameters) throws BaseException {
 
         try {
-            Long userId = jwtService.getUserInfo().getUserId();
 
-            if (userId == null || userId <= 0) {
-                return new BaseResponse<>(EMPTY_USERID);
-            }
-            temporaryCommentService.updateTemporaryComment(userId, temporaryCommentId,parameters);
+            temporaryCommentService.updateTemporaryComment(temporaryCommentId,parameters);
+
+            return new BaseResponse<>(SUCCESS);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    @ApiOperation(value = "임시 코멘트 삭제하기")
+    @DeleteMapping("/temporary-comments/{temporary-comment-id}")
+    public BaseResponse<Void> deleteTemporaryComment(
+
+            @PathVariable("temporary-comment-id") Long temporaryCommentId) throws BaseException {
+
+        try {
+
+            temporaryCommentService.deleteTemporaryComment(temporaryCommentId);
 
             return new BaseResponse<>(SUCCESS);
         } catch (BaseException exception) {

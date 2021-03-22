@@ -3,17 +3,21 @@ package com.app.edit.service;
 import com.app.edit.config.BaseException;
 import com.app.edit.domain.comment.Comment;
 import com.app.edit.domain.comment.CommentRepository;
+import com.app.edit.domain.temporarycomment.TemporaryComment;
 import com.app.edit.domain.user.UserInfo;
 import com.app.edit.domain.user.UserInfoRepository;
 import com.app.edit.enums.IsAdopted;
 import com.app.edit.enums.State;
 import com.app.edit.provider.CommentProvider;
 import com.app.edit.provider.CoverLetterProvider;
+import com.app.edit.provider.TemporaryCommentProvider;
 import com.app.edit.request.comment.PostCommentReq;
 import com.app.edit.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static com.app.edit.config.BaseResponseStatus.*;
 
@@ -25,17 +29,19 @@ public class CommentService {
     private final CommentProvider commentProvider;
     private final UserInfoRepository userInfoRepository;
     private final CoverLetterProvider coverLetterProvider;
+    private final TemporaryCommentProvider temporaryCommentProvider;
     private final JwtService jwtService;
 
     @Autowired
     public CommentService(CommentRepository commentRepository,
                           CommentProvider commentProvider,
                           UserInfoRepository userInfoRepository,
-                          CoverLetterProvider coverLetterProvider, JwtService jwtService) {
+                          CoverLetterProvider coverLetterProvider, TemporaryCommentProvider temporaryCommentProvider, JwtService jwtService) {
         this.commentRepository = commentRepository;
         this.commentProvider = commentProvider;
         this.userInfoRepository = userInfoRepository;
         this.coverLetterProvider = coverLetterProvider;
+        this.temporaryCommentProvider = temporaryCommentProvider;
         this.jwtService = jwtService;
     }
 
@@ -90,6 +96,14 @@ public class CommentService {
             commentRepository.save(comment);
         }catch (Exception exception){
             throw new BaseException(FAILED_TO_POST_COMMENT);
+        }
+
+        List<TemporaryComment> temporaryCommentList =
+                temporaryCommentProvider.getTemporaryCommentByUserInfoIdAndStatus(userId,parameters.getCoverLetterId());
+
+        if(temporaryCommentList.size() > 0){
+            temporaryCommentList.forEach(temporaryComment
+                    -> temporaryComment.setState(State.INACTIVE));
         }
 
     }

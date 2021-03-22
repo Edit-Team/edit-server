@@ -12,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static com.app.edit.config.BaseResponseStatus.NOT_FOUND_TEMPORARY_COMMENT;
 
 @Service
@@ -35,16 +38,26 @@ public class TemporaryCommentProvider {
      * @param userInfoId
      * @return
      */
-    public GetMyCommentsRes getMyTemporaryComments(Long userInfoId) throws BaseException {
+    public List<GetMyCommentsRes> getMyTemporaryComments(Long userInfoId) throws BaseException {
 
-        GetMyCommentRes getMyCommentRes =
-                temporaryCommentRepository.findMyTemporaryComment(userInfoId, State.ACTIVE)
-                .orElseThrow(() -> new BaseException(NOT_FOUND_TEMPORARY_COMMENT));
+        List<GetMyCommentRes> getMyCommentResList =
+                temporaryCommentRepository.findMyTemporaryComments(userInfoId, State.ACTIVE);
 
-        return GetMyCommentsRes.builder()
-                .commentInfo(getMyCommentRes)
-                .userInfo(userProvider.retrieveSympathizeUser(userInfoId))
-                .build();
+        if(getMyCommentResList.size() == 0)
+            throw new BaseException(NOT_FOUND_TEMPORARY_COMMENT);
+
+        return getMyCommentResList.stream()
+                .map(getMyCommentRes -> {
+                    try {
+                        return GetMyCommentsRes.builder()
+                                .commentInfo(getMyCommentRes)
+                                .userInfo(userProvider.retrieveSympathizeUser(userInfoId))
+                                .build();
+                    } catch (BaseException baseException) {
+                       return null;
+                    }
+                })
+                .collect(Collectors.toList());
     }
 
     /**
@@ -56,8 +69,7 @@ public class TemporaryCommentProvider {
     public GetTemporaryCommentRes getMyTemporaryComment(Long temporaryCommentId, Long userInfoId) throws BaseException {
 
         GetMyCommentRes getMyCommentRes =
-                temporaryCommentRepository.findMyTemporaryComment(userInfoId, State.ACTIVE)
-                        .orElseThrow(() -> new BaseException(NOT_FOUND_TEMPORARY_COMMENT));
+                temporaryCommentRepository.findMyTemporaryComment(temporaryCommentId,State.ACTIVE);
 
         TemporaryComment temporaryComment = getTemporaryCommentById(temporaryCommentId);
 
@@ -82,4 +94,7 @@ public class TemporaryCommentProvider {
                 .build();
     }
 
+    public List<TemporaryComment> getTemporaryCommentByUserInfoIdAndStatus(Long userId, Long coverLetterId) {
+        return temporaryCommentRepository.findByUserAndCoverLetterAndStatus(userId,coverLetterId,State.ACTIVE);
+    }
 }

@@ -76,7 +76,7 @@ public enum BaseResponseStatus {
     FAILED_TO_POST_COMMENT(false, 3030, "코멘트 등록에 실패 했습니다."),
     ALREADY_ROLE_MENTEE(false, 3031, "이미 멘티 입니다."),
     FAILED_TO_GET_SYMPATHIES_COVERLETTER(false, 3032, "공감한 자소서 조회에 실패 했습니다."),
-    NOT_FOUND_TEMPORARY_COMMENT(false, 3033, "내 임시 코멘트 조회에 실패 했습니다."),
+    NOT_FOUND_TEMPORARY_COMMENT(false, 3033, "임시 코멘트가 비었습니다."),
     FAILED_TO_POST_TEMPORARY_COMMENT(false, 3034, "코멘트 임시저장에 실패 했습니다."),
 
     // colt

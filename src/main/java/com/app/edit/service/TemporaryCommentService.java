@@ -70,10 +70,9 @@ public class TemporaryCommentService {
 
     /**
      * 임시 코멘트 다시 임시 저장하기
-     * @param userId
      * @param parameters
      */
-    public void updateTemporaryComment(Long userId, Long temporaryCommentId,PostTemporaryCommentReq parameters) throws BaseException {
+    public void updateTemporaryComment(Long temporaryCommentId,PostTemporaryCommentReq parameters) throws BaseException {
 
         TemporaryComment temporaryComment = temporaryCommentProvider.getTemporaryCommentById(temporaryCommentId);
 
@@ -83,5 +82,15 @@ public class TemporaryCommentService {
         temporaryComment.setConcretenessLogic(parameters.getConcretenessLogic());
         temporaryComment.setContent(parameters.getContent());
 
+    }
+
+    /**
+     * 임시 코멘트 삭제하기
+     * @param temporaryCommentId
+     */
+    public void deleteTemporaryComment(Long temporaryCommentId) throws BaseException {
+        TemporaryComment temporaryComment = temporaryCommentProvider.getTemporaryCommentById(temporaryCommentId);
+
+        temporaryComment.setState(State.INACTIVE);
     }
 }
