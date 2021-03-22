@@ -366,7 +366,7 @@ public class UserService {
         }
         ChangeRoleRequest changeRoleRequest = ChangeRoleRequest.builder()
                 .content(changeContent)
-                .isProcessing(IsProcessing.YES)
+                .isProcessing(IsProcessing.NO)
                 .changeRoleCategory(changeRoleCategory)
                 .previousRole(userInfo.getUserRole())
                 .build();
