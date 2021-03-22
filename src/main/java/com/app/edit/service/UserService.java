@@ -385,9 +385,7 @@ public class UserService {
                 .previousRole(userInfo.getUserRole())
                 .build();
         userInfo.addChangeRoleRequest(changeRoleRequest);
-        userInfo.setUserRole(UserRole.MENTOR);
         changeRoleRequestRepository.save(changeRoleRequest);
-        userInfoRepository.save(userInfo);
 
         return userInfoId;
     }
