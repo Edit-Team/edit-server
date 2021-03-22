@@ -50,6 +50,8 @@ public enum BaseResponseStatus {
     REQUEST_PARAMETER_MISSING(false, 2050, "요청에 필수 파라미터가 누락되어 있습니다."),
     REQUEST_PARAMETER_MISMATCH(false, 2051, "요청 파라미터 타입이 맞지 않습니다."),
     COVER_LETTER_CONTENT_LENGTH_CAN_NOT_BE_GREATER_THAN_LENGTH_LIMIT(false, 2100, "자소서의 내용 길이는 90자를 초과할 수 없습니다."),
+    ETC_CHANGE_ROLE_CONTENT_CAN_NOT_BE_EMPTY(false, 2110, "역할 변경 '기타' 사유의 '기타 의견'을 입력해주세요."),
+    ETC_CHANGE_ROLE_CONTENT_LENGTH_MUST_GREATER_THAN_MINIMUM_LENGTH(false, 2120, "역할 변경 '기타' 사유의 '기타 의견'의 길이는 10자 이상이어야 합니다."),
 
     // 3000 : Response 오류
     RESPONSE_ERROR(false, 3000, "값을 불러오는데 실패하였습니다."),
