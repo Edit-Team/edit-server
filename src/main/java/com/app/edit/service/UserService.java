@@ -21,6 +21,7 @@ import com.app.edit.domain.userprofile.UserProfileRepository;
 import com.app.edit.enums.IsProcessing;
 import com.app.edit.enums.State;
 import com.app.edit.enums.UserRole;
+import com.app.edit.provider.ChangeRoleRequestProvider;
 import com.app.edit.provider.UserInfoProvider;
 import com.app.edit.provider.UserProvider;
 import com.app.edit.request.user.DeleteUserReq;
@@ -32,6 +33,8 @@ import com.app.edit.response.user.PostUserRes;
 import com.app.edit.utils.AES128;
 import com.app.edit.utils.JwtService;
 import com.app.edit.utils.S3Service;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,10 +42,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import static com.app.edit.config.BaseResponseStatus.*;
 import static com.app.edit.config.Constant.*;
 
+@RequiredArgsConstructor
+@Transactional
 @Service
 public class UserService {
 
@@ -59,29 +65,8 @@ public class UserService {
     private final CertificationRequestRepository certificationRequestRepository;
     private final ChangeRoleCategoryRepository changeRoleCategoryRepository;
     private final ChangeRoleRequestRepository changeRoleRequestRepository;
+    private final ChangeRoleRequestProvider changeRoleRequestProvider;
 
-    @Autowired
-    public UserService(UserInfoRepository userInfoRepository, EmailSenderService emailSenderService,
-                       JobRepository jobRepository, UserProvider userProvider, UserInfoProvider userInfoProvider,
-                       UserProfileRepository userProfileRepository, ProfileEmotionRepository profileEmotionRepository,
-                       ProfileColorRepository profileColorRepository, JwtService jwtService, S3Service s3Service,
-                       CertificationRequestRepository certificationRequestRepository,
-                       ChangeRoleCategoryRepository changeRoleCategoryRepository,
-                       ChangeRoleRequestRepository changeRoleRequestRepository) {
-        this.userInfoRepository = userInfoRepository;
-        this.emailSenderService = emailSenderService;
-        this.jobRepository = jobRepository;
-        this.userProvider = userProvider;
-        this.userInfoProvider = userInfoProvider;
-        this.userProfileRepository = userProfileRepository;
-        this.profileEmotionRepository = profileEmotionRepository;
-        this.profileColorRepository = profileColorRepository;
-        this.jwtService = jwtService;
-        this.s3Service = s3Service;
-        this.certificationRequestRepository = certificationRequestRepository;
-        this.changeRoleCategoryRepository = changeRoleCategoryRepository;
-        this.changeRoleRequestRepository = changeRoleRequestRepository;
-    }
 
     @Transactional
     public PostUserRes createUserInfo(PostUserReq parameters) throws BaseException {
@@ -369,6 +354,7 @@ public class UserService {
     public Long changeRoleToMentor(PatchRoleReq request) throws BaseException {
         Long userInfoId = jwtService.getUserInfo().getUserId();
         UserInfo userInfo = userInfoProvider.getUserInfoById(userInfoId);
+        validateChangeRoleRequestIsExist(userInfo);
         String changeContent = request.getChangeContent();
         String etcChangeContent = request.getEtcChangeContent();
 
@@ -388,6 +374,13 @@ public class UserService {
         changeRoleRequestRepository.save(changeRoleRequest);
 
         return userInfoId;
+    }
+
+    private void validateChangeRoleRequestIsExist(UserInfo userInfo) throws BaseException {
+        Optional<ChangeRoleRequest> changeRoleRequest = changeRoleRequestProvider.getChangeRoleRequestByUserInfo(userInfo);
+        if (changeRoleRequest.isPresent()) {
+            throw new BaseException(ALREADY_EXIST_CHANGE_ROLE_REQUEST);
+        }
     }
 
     private void validateEtcChangeContent(String etcChangeContent) throws BaseException {
