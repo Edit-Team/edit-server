@@ -34,7 +34,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "user_info")
-public class UserInfo extends BaseEntity{
+public class UserInfo extends BaseEntity {
 
     /**
      * 유저 ID
@@ -78,7 +78,7 @@ public class UserInfo extends BaseEntity{
      * 유저 역할
      */
     @Enumerated(EnumType.STRING)
-    @Column(name = "role",length = 6)
+    @Column(name = "role", length = 6)
     private UserRole userRole;
 
     /**
@@ -142,22 +142,22 @@ public class UserInfo extends BaseEntity{
     }
 
 
-    @OneToOne(mappedBy = "userInfo",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "userInfo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private UserProfile userProfile;
 
-    @OneToOne(mappedBy = "userInfo",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "userInfo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private MentorInfo mentorInfo;
 
     @ManyToOne
-    @JoinColumn(name = "jobId",nullable = false)
+    @JoinColumn(name = "jobId", nullable = false)
     private Job job;
 
-    @OneToMany(mappedBy = "userInfo",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "userInfo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<CertificationRequest> certificationRequestList;
 
-    @OneToMany(mappedBy = "userInfo",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "userInfo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ChangeRoleRequest> changeRoleRequestList;
-  
+
     @OneToMany(mappedBy = "userInfo", cascade = CascadeType.ALL)
     private List<CoverLetter> coverLetters;
 
@@ -227,4 +227,11 @@ public class UserInfo extends BaseEntity{
         changeRoleRequest.setUserInfo(this);
     }
 
+    public void changeUserRole() {
+        if (UserRole.MENTEE.equals(userRole)) {
+            userRole = UserRole.MENTOR;
+            return;
+        }
+        userRole = UserRole.MENTEE;
+    }
 }
