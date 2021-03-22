@@ -12,6 +12,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class GetTemporaryCommentRes {
 
-    private final GetCoverLettersByCommentRes getCoverLettersByCommentRes;
-    private final GetMyCommentRes getMyCommentRes;
+    private final GetCoverLettersByCommentRes getCoverLettersByTemporaryCommentRes;
+    private final GetMyCommentRes getMyTemporaryCommentRes;
 }

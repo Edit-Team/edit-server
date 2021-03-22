@@ -345,7 +345,11 @@ public class UserService {
             throw new BaseException(ALREADY_ROLE_MENTEE);
 
         String changeContent = patchRoleReq.getChangeContent();
+
         String etcChangeContent = patchRoleReq.getEtcChangeContent();
+
+        if(etcChangeContent == null)
+            etcChangeContent = "NONE";
 
         //카테고리 조회
         ChangeRoleCategory changeRoleCategory = changeRoleCategoryRepository.findByName(changeContent)

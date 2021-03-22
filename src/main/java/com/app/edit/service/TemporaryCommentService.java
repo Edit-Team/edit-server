@@ -14,8 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.app.edit.config.BaseResponseStatus.FAILED_TO_POST_TEMPORARY_COMMENT;
-import static com.app.edit.config.BaseResponseStatus.NOT_FOUND_USER;
+import static com.app.edit.config.BaseResponseStatus.*;
 
 @Transactional
 @Service
@@ -88,8 +87,11 @@ public class TemporaryCommentService {
      * 임시 코멘트 삭제하기
      * @param temporaryCommentId
      */
-    public void deleteTemporaryComment(Long temporaryCommentId) throws BaseException {
+    public void deleteTemporaryComment(Long temporaryCommentId, Long userInfoId) throws BaseException {
         TemporaryComment temporaryComment = temporaryCommentProvider.getTemporaryCommentById(temporaryCommentId);
+
+        if(!temporaryComment.getUserInfo().getId().equals(userInfoId))
+            throw new BaseException(UNAUTHORIZED_AUTHORITY);
 
         temporaryComment.setState(State.INACTIVE);
     }

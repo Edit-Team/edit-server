@@ -120,7 +120,13 @@ public class TemporaryCommentController {
 
         try {
 
-            temporaryCommentService.deleteTemporaryComment(temporaryCommentId);
+            Long userId = jwtService.getUserInfo().getUserId();
+
+            if (userId == null || userId <= 0) {
+                return new BaseResponse<>(EMPTY_USERID);
+            }
+
+            temporaryCommentService.deleteTemporaryComment(temporaryCommentId, userId);
 
             return new BaseResponse<>(SUCCESS);
         } catch (BaseException exception) {

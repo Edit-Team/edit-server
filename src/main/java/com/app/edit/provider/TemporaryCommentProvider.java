@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.app.edit.config.BaseResponseStatus.NOT_FOUND_TEMPORARY_COMMENT;
+import static com.app.edit.config.BaseResponseStatus.UNAUTHORIZED_AUTHORITY;
 
 @Service
 @Transactional(readOnly = true)
@@ -73,9 +74,12 @@ public class TemporaryCommentProvider {
 
         TemporaryComment temporaryComment = getTemporaryCommentById(temporaryCommentId);
 
+        if(!temporaryComment.getUserInfo().getId().equals(userInfoId))
+            throw new BaseException(UNAUTHORIZED_AUTHORITY);
+
         return GetTemporaryCommentRes.builder()
-                .getCoverLettersByCommentRes(temporaryCommentToGetCoverLettersByCommentRes(temporaryComment,userInfoId))
-                .getMyCommentRes(getMyCommentRes)
+                .getCoverLettersByTemporaryCommentRes(temporaryCommentToGetCoverLettersByCommentRes(temporaryComment,userInfoId))
+                .getMyTemporaryCommentRes(getMyCommentRes)
                 .build();
     }
 
