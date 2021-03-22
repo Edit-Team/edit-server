@@ -122,9 +122,9 @@ public class TemporaryCommentController {
 
             Long userId = jwtService.getUserInfo().getUserId();
 
-            if (userId == null || userId <= 0) {
+            if (userId == null || userId <= 0)
                 return new BaseResponse<>(EMPTY_USERID);
-            }
+
 
             temporaryCommentService.deleteTemporaryComment(temporaryCommentId, userId);
 
