@@ -570,6 +570,18 @@ public class UserController {
         }
     }
 
+    /**
+     * 멘티 -> 멘토 역할 변경 신청 API
+     * @param request
+     * @return
+     * @throws BaseException
+     */
+    @ApiOperation(value = "멘티 -> 멘토 역할 변경")
+    @PatchMapping("/change-roles/to-mentor")
+    public BaseResponse<Long> changeRoleToMentor(@RequestBody @Valid PatchRoleReq request) throws BaseException {
+        return new BaseResponse(SUCCESS, userService.changeRoleToMentor(request));
+    }
+
 
 
     /**
