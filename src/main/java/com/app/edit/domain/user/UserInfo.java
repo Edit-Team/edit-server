@@ -222,5 +222,9 @@ public class UserInfo extends BaseEntity{
         commentDeclaration.setUserInfo(this);
     }
 
+    public void addChangeRoleRequest(ChangeRoleRequest changeRoleRequest) {
+        this.changeRoleRequestList.add(changeRoleRequest);
+        changeRoleRequest.setUserInfo(this);
+    }
 
 }
