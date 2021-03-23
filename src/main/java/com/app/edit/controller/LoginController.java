@@ -59,22 +59,21 @@ public class LoginController {
     }
 
     //TODO 로그아웃 구현하기
-//    /**
-//     * 로그아웃
-//     * [GET] /api/login
-//     */
-//    @GetMapping(value = "/logout")
-//    @ApiOperation(value = "로그아웃(미완성)", notes = "로그아웃(미완성)")
-//    public BaseResponse<PostUserRes> logout(
-//            @RequestHeader(value = "X-ACCESS-TOKEN") String jwt){
-//
-//        try {
-//            PostUserRes postUserRes = userProvider.logout();
-//            return new BaseResponse<>(SUCCESS, postUserRes);
-//        } catch (BaseException exception) {
-//            return new BaseResponse<>(exception.getStatus());
-//        }
-//    }
+    /**
+     * 로그아웃
+     * [Post] /api/login
+     */
+    @PostMapping(value = "/logout")
+    @ApiOperation(value = "로그아웃(미완성)", notes = "로그아웃(미완성)")
+    public BaseResponse<Void> logout(){
+
+        try {
+            userProvider.logout();
+            return new BaseResponse<>(SUCCESS);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
 
     /**
      * 스플래시 화면 자동 로그인시 유저 검증 API

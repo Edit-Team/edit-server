@@ -13,18 +13,22 @@ import com.app.edit.service.EmailSenderService;
 import com.app.edit.utils.AES128;
 import com.app.edit.utils.GetDateTime;
 import com.app.edit.utils.JwtService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static com.app.edit.config.BaseResponseStatus.*;
 
 @Service
+@Slf4j
 @Transactional(readOnly = true)
 public class UserProvider {
 
@@ -34,18 +38,20 @@ public class UserProvider {
     private final HashMap<String,String> authenticationCodeRepository;
     private final CertificationRequestRepository certificationRequestRepository;
     private final JwtService jwtService;
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Autowired
     public UserProvider(UserInfoRepository userRepository,
                         EmailSenderService sesEmailEmailSender,
                         GetDateTime getDateTime, HashMap<String, String> authenticationCodeRepository,
-                        CertificationRequestRepository certificationRequestRepository, JwtService jwtService) {
+                        CertificationRequestRepository certificationRequestRepository, JwtService jwtService, RedisTemplate<String, String> redisTemplate) {
         this.userInfoRepository = userRepository;
         this.sesEmailEmailSender = sesEmailEmailSender;
         this.getDateTime = getDateTime;
         this.authenticationCodeRepository = authenticationCodeRepository;
         this.certificationRequestRepository = certificationRequestRepository;
         this.jwtService = jwtService;
+        this.redisTemplate = redisTemplate;
     }
 
     /**
@@ -227,8 +233,14 @@ public class UserProvider {
      * 로그아웃
      * @return
      */
-    public PostUserRes logout() {
-        return null;
+    public void logout() throws BaseException {
+        String accessToken = jwtService.getJwt();
+        Date expirationDate = jwtService.getExpireDate(accessToken);
+        redisTemplate.opsForValue().set(
+                accessToken, "true",
+                expirationDate.getTime() - System.currentTimeMillis(),
+                TimeUnit.MILLISECONDS
+        );
     }
 
     /**

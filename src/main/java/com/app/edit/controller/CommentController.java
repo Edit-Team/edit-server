@@ -82,10 +82,14 @@ public class CommentController {
     @GetMapping("/comments")
     public BaseResponse<List<GetMyCommentsRes>> getMyComments(@RequestParam Integer page) throws BaseException {
 
-        Long userId = jwtService.getUserInfo().getUserId();
+        GetUserInfo userInfo = jwtService.getUserInfo();
+        Long userId = userInfo.getUserId();
 
         if(userId == null || userId <= 0)
             throw new BaseException(EMPTY_USERID);
+
+        if(userInfo.getRole().equals(UserRole.MENTEE.name()))
+            throw new BaseException(UNAUTHORIZED_AUTHORITY);
 
         PageRequest pageRequest = com.app.edit.config.PageRequest.of(page, DEFAULT_PAGE_SIZE);
         return new BaseResponse<>(SUCCESS,
@@ -101,10 +105,14 @@ public class CommentController {
     public BaseResponse<GetCoverLettersByCommentRes> getCommentWithCoverLetter(
             @PathVariable("cover-letter-id") Long coverLetterId) throws BaseException {
 
-        Long userId = jwtService.getUserInfo().getUserId();
+        GetUserInfo userInfo = jwtService.getUserInfo();
+        Long userId = userInfo.getUserId();
 
         if(userId == null || userId <= 0)
             throw new BaseException(EMPTY_USERID);
+
+        if(userInfo.getRole().equals(UserRole.MENTEE.name()))
+            throw new BaseException(UNAUTHORIZED_AUTHORITY);
 
         return new BaseResponse<>(SUCCESS, commentProvider.retrieveCommentWithCoverLetter(userId, coverLetterId));
     }
@@ -175,14 +183,18 @@ public class CommentController {
      * @throws BaseException
      */
     @ApiOperation(value = "코멘트 삭제하기")
-    @GetMapping("/comments/{comment-id}")
+    @DeleteMapping("/comments/{comment-id}")
     public BaseResponse<Void> deleteComment(
             @PathVariable("comment-id") Long commentId) throws Exception {
 
-        Long userId = jwtService.getUserInfo().getUserId();
+        GetUserInfo userInfo = jwtService.getUserInfo();
+        Long userId = userInfo.getUserId();
 
-        if(userId == null || userId <=0)
+        if(userId == null || userId <= 0)
             throw new BaseException(EMPTY_USERID);
+
+        if(userInfo.getRole().equals(UserRole.MENTEE.name()))
+            throw new BaseException(UNAUTHORIZED_AUTHORITY);
 
         commentService.deleteComment(userId, commentId);
         return new BaseResponse<>(SUCCESS);

@@ -61,7 +61,7 @@ insert into user_info
 values (6, current_timestamp, current_timestamp, 0, concat('email', 6), 'YES','YES','YES',
         concat('name', 6),
         concat('nickName', 6),'Jjhg67XYWl1rwJ8QpW0VDg==', concat('phone', 1),
-        'ACTIVE', 'MENTOR', 'NONE', 1);
+        'ACTIVE', 'MENTEE', 'NONE', 1);
 
 insert into profile_emotion
 values (1, current_timestamp, current_timestamp(), 'relief', 'ACTIVE');

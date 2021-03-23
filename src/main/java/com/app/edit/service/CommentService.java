@@ -118,8 +118,12 @@ public class CommentService {
         Comment comment = commentRepository.findByIdAndState(commentId,State.ACTIVE)
                 .orElseThrow(() -> new BaseException(NOT_FOUND_COMMENT));
 
-        if(!userInfoId.equals(comment.getId()))
+
+        if(!userInfoId.equals(comment.getUserInfo().getId()))
             throw new BaseException(UNAUTHORIZED_AUTHORITY);
+
+        if(comment.getIsAdopted().equals(IsAdopted.YES))
+            throw new BaseException(FAILED_TO_DELETE_COMMENT);
 
         comment.setState(State.INACTIVE);
     }

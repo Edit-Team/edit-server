@@ -43,6 +43,7 @@ public enum BaseResponseStatus {
     EMPTY_PHONENUMBER(false, 2500, "핸드폰 번호가 비었습니다."),
     EMPTY_COLORNAME(false, 2501, "색상 이름이 비었습니다."),
     EMPTY_EMOTIONNAME(false, 2502, "감정표현 이름이 비었습니다."),
+    ALREADY_LOGOUT(false, 2503, "로그아웃 처리된 JWT 입니다."),
 
 
 
@@ -78,6 +79,7 @@ public enum BaseResponseStatus {
     FAILED_TO_GET_SYMPATHIES_COVERLETTER(false, 3032, "공감한 자소서 조회에 실패 했습니다."),
     NOT_FOUND_TEMPORARY_COMMENT(false, 3033, "임시 코멘트가 비었습니다."),
     FAILED_TO_POST_TEMPORARY_COMMENT(false, 3034, "코멘트 임시저장에 실패 했습니다."),
+    FAILED_TO_DELETE_COMMENT(false, 3035, "채택된 코멘트는 삭제할 수 없습니다."),
 
     // colt
     NOT_FOUND_COVER_LETTER(false, 3100, "존재하지 않는 자소서입니다."),
