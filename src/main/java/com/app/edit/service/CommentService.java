@@ -107,4 +107,20 @@ public class CommentService {
         }
 
     }
+
+    /**
+     * 코멘트 삭제하기
+     * @param userInfoId
+     * @param commentId
+     */
+    public void deleteComment(Long userInfoId, Long commentId) throws Exception{
+
+        Comment comment = commentRepository.findByIdAndState(commentId,State.ACTIVE)
+                .orElseThrow(() -> new BaseException(NOT_FOUND_COMMENT));
+
+        if(!userInfoId.equals(comment.getId()))
+            throw new BaseException(UNAUTHORIZED_AUTHORITY);
+
+        comment.setState(State.INACTIVE);
+    }
 }

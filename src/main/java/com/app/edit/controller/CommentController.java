@@ -167,4 +167,24 @@ public class CommentController {
 
         return new BaseResponse<>(SUCCESS, commentProvider.getMyCommentWithCoverLetter(commentId,userId));
     }
+
+    /**
+     * 코멘트 삭제하기
+     * @param commentId
+     * @return
+     * @throws BaseException
+     */
+    @ApiOperation(value = "코멘트 삭제하기")
+    @GetMapping("/comments/{comment-id}")
+    public BaseResponse<Void> deleteComment(
+            @PathVariable("comment-id") Long commentId) throws Exception {
+
+        Long userId = jwtService.getUserInfo().getUserId();
+
+        if(userId == null || userId <=0)
+            throw new BaseException(EMPTY_USERID);
+
+        commentService.deleteComment(userId, commentId);
+        return new BaseResponse<>(SUCCESS);
+    }
 }
