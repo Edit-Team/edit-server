@@ -372,6 +372,7 @@ public class UserService {
                 .build();
         userInfo.addChangeRoleRequest(changeRoleRequest);
         changeRoleRequestRepository.save(changeRoleRequest);
+        userInfo.changeUserRole();
 
         return userInfoId;
     }

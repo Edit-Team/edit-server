@@ -6,6 +6,7 @@ import com.app.edit.domain.user.UserInfo;
 import com.app.edit.domain.user.UserInfoRepository;
 import com.app.edit.enums.State;
 import com.app.edit.response.user.GetJoinedUserInfoRes;
+import com.app.edit.response.user.GetUserInfo;
 import com.app.edit.service.ChangeRoleRequestService;
 import com.app.edit.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-import static com.app.edit.config.BaseResponseStatus.ALREADY_DELETED_USER;
-import static com.app.edit.config.BaseResponseStatus.NOT_FOUND_USER_INFO;
+import static com.app.edit.config.BaseResponseStatus.*;
 
 @Transactional
 @Service
@@ -47,15 +47,15 @@ public class UserInfoProvider {
     }
 
     public GetJoinedUserInfoRes getJoinedUserInfo() throws BaseException {
-        Long userInfoId = jwtService.getUserInfo().getUserId();
+        GetUserInfo userInfoInToken = jwtService.getUserInfo();
+        Long userInfoId = userInfoInToken.getUserId();
+        String userRole = userInfoInToken.getRole();
         UserInfo userInfo = getUserInfoById(userInfoId);
+        if (!userInfo.getUserRole().name().equals(userRole)) {
+            throw new BaseException(TOKEN_INFORMATION_IS_NOT_EQUALS_IN_SERVER);
+        }
         Optional<ChangeRoleRequest> changeRoleRequest = changeRoleRequestProvider.getChangeRoleRequestByUserInfo(userInfo);
-        changeRoleRequest.ifPresent(request -> {
-            request.process();
-            changeRoleRequestService.updateChangeRoleRequest(request);
-            userInfo.changeUserRole();
-            userInfoRepository.save(userInfo);
-        });
+        changeRoleRequest.ifPresent(request -> request.process());
         return new GetJoinedUserInfoRes(userInfo.getUserRole());
     }
 }
