@@ -14,6 +14,7 @@ import com.app.edit.provider.CoverLetterCategoryProvider;
 import com.app.edit.provider.CoverLetterProvider;
 import com.app.edit.provider.TemporaryCoverLetterProvider;
 import com.app.edit.provider.UserInfoProvider;
+import com.app.edit.request.PostWritingCoverLetterFromTemporaryReq;
 import com.app.edit.request.temporarycoverletter.PatchCompletingTemporaryCoverLetterReq;
 import com.app.edit.request.temporarycoverletter.PatchWritingTemporaryCoverLetterReq;
 import com.app.edit.request.temporarycoverletter.PostCompletingTemporaryCoverLetterReq;
@@ -34,15 +35,21 @@ public class TemporaryCoverLetterService {
     private final TemporaryCoverLetterProvider temporaryCoverLetterProvider;
     private final CoverLetterCategoryProvider coverLetterCategoryProvider;
     private final CoverLetterProvider coverLetterProvider;
+    private final CoverLetterService coverLetterService;
     private final UserInfoProvider userInfoProvider;
     private final JwtService jwtService;
 
     @Autowired
-    public TemporaryCoverLetterService(TemporaryCoverLetterRepository temporaryCoverLetterRepository, TemporaryCoverLetterProvider temporaryCoverLetterProvider, CoverLetterCategoryProvider coverLetterCategoryProvider, CoverLetterProvider coverLetterProvider, UserInfoProvider userInfoProvider, JwtService jwtService) {
+    public TemporaryCoverLetterService(TemporaryCoverLetterRepository temporaryCoverLetterRepository,
+                                       TemporaryCoverLetterProvider temporaryCoverLetterProvider,
+                                       CoverLetterCategoryProvider coverLetterCategoryProvider,
+                                       CoverLetterProvider coverLetterProvider, CoverLetterService coverLetterService,
+                                       UserInfoProvider userInfoProvider, JwtService jwtService) {
         this.temporaryCoverLetterRepository = temporaryCoverLetterRepository;
         this.temporaryCoverLetterProvider = temporaryCoverLetterProvider;
         this.coverLetterCategoryProvider = coverLetterCategoryProvider;
         this.coverLetterProvider = coverLetterProvider;
+        this.coverLetterService = coverLetterService;
         this.userInfoProvider = userInfoProvider;
         this.jwtService = jwtService;
     }
@@ -128,5 +135,21 @@ public class TemporaryCoverLetterService {
         if (!userInfo.getUserRole().equals(UserRole.MENTEE)) {
             throw new BaseException(USER_ROLE_IS_NOT_MENTEE);
         }
+    }
+
+    public Long createWritingCoverLetterFromTemporary(PostWritingCoverLetterFromTemporaryReq request) throws BaseException {
+        Long userId = jwtService.getUserInfo().getUserId();
+        UserInfo userInfo = userInfoProvider.getUserInfoById(userId);
+        validateUserIsMentee(userInfo);
+        Long temporaryCoverLetterId = request.getTemporaryCoverLetterId();
+        Long coverLetterCategoryId = request.getCoverLetterCategoryId();
+        String coverLetterContent = request.getCoverLetterContent();
+        TemporaryCoverLetter temporaryCoverLetter = temporaryCoverLetterProvider.getTemporaryCoverLetterById(temporaryCoverLetterId);
+        validateUser(userInfo, temporaryCoverLetter);
+        CoverLetterCategory coverLetterCategory = coverLetterCategoryProvider.getCoverLetterCategoryById(coverLetterCategoryId);
+        CoverLetter coverLetter = CoverLetter.buildWritingCoverLetter(coverLetterCategory, coverLetterContent);
+        userInfo.addCoverLetter(coverLetter);
+        temporaryCoverLetter.deactivate();
+        return coverLetterService.saveCoverLetter(coverLetter).getId();
     }
 }
