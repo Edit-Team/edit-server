@@ -5,11 +5,7 @@ import com.app.edit.config.BaseResponse;
 import com.app.edit.config.BaseResponseStatus;
 import com.app.edit.enums.CoverLetterType;
 import com.app.edit.provider.TemporaryCoverLetterProvider;
-import com.app.edit.request.PostWritingCoverLetterFromTemporaryReq;
-import com.app.edit.request.temporarycoverletter.PatchCompletingTemporaryCoverLetterReq;
-import com.app.edit.request.temporarycoverletter.PatchWritingTemporaryCoverLetterReq;
-import com.app.edit.request.temporarycoverletter.PostCompletingTemporaryCoverLetterReq;
-import com.app.edit.request.temporarycoverletter.PostWritingTemporaryCoverLetterReq;
+import com.app.edit.request.temporarycoverletter.*;
 import com.app.edit.response.temporarycoverletter.GetCompletingTemporaryCoverLetterRes;
 import com.app.edit.response.temporarycoverletter.GetTemporaryCoverLettersRes;
 import com.app.edit.response.temporarycoverletter.GetWritingTemporaryCoverLetterRes;
@@ -128,5 +124,12 @@ public class TemporaryCoverLetterController {
     public BaseResponse<Long> postWritingCoverLetterFromTemporary(@RequestBody @Valid PostWritingCoverLetterFromTemporaryReq request) throws BaseException {
         return new BaseResponse<>(BaseResponseStatus.SUCCESS, temporaryCoverLetterService.createWritingCoverLetterFromTemporary(request));
     }
+
+    @ApiOperation(value = "임시 저장한 완성중인 자소서 완성한 자소서로 등록 API")
+    @PostMapping("/converted-completing-cover-letter")
+    public BaseResponse<Long> postCompletingCoverLetterFromTemporary(@RequestBody @Valid PostCompletingCoverLetterFromTemporaryReq request) throws BaseException {
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS, temporaryCoverLetterService.createCompletingCoverLetterFromTemporary(request));
+    }
 }
+
 
