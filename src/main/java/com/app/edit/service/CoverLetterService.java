@@ -54,7 +54,7 @@ public class CoverLetterService {
         validateUserIsMentee(userInfo);
         CoverLetter requestedCoverLetter = CoverLetter.buildWritingCoverLetter(coverLetterCategory, coverLetterContent);
         userInfo.addCoverLetter(requestedCoverLetter);
-        CoverLetter savedCoverLetter = coverLetterRepository.save(requestedCoverLetter);
+        CoverLetter savedCoverLetter = saveCoverLetter(requestedCoverLetter);
         return savedCoverLetter.getId();
     }
 
@@ -74,7 +74,7 @@ public class CoverLetterService {
                 .type(CoverLetterType.COMPLETING)
                 .build();
         userInfo.addCoverLetter(requestedCompletingCoverLetter);
-        CoverLetter savedTemporaryCoverLetter = coverLetterRepository.save(requestedCompletingCoverLetter);
+        CoverLetter savedTemporaryCoverLetter = saveCoverLetter(requestedCompletingCoverLetter);
         return savedTemporaryCoverLetter.getId();
     }
 
@@ -83,8 +83,12 @@ public class CoverLetterService {
         CoverLetter selectedCoverLetter = coverLetterProvider.getCoverLetterById(coverLetterId);
         validateUser(userInfoId, selectedCoverLetter);
         selectedCoverLetter.setState(State.INACTIVE);
-        coverLetterRepository.save(selectedCoverLetter);
+        saveCoverLetter(selectedCoverLetter);
         return selectedCoverLetter.getId();
+    }
+
+    public CoverLetter saveCoverLetter(CoverLetter coverLetter) {
+        return coverLetterRepository.save(coverLetter);
     }
 
     private void validateUser(Long userInfoId, CoverLetter selectedCoverLetter) throws BaseException {
