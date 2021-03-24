@@ -79,4 +79,8 @@ public class TemporaryCoverLetter extends BaseEntity {
         this.state = state;
         this.coverLetterCategory = coverLetterCategory;
     }
+
+    public void deactivate() {
+        state = State.INACTIVE;
+    }
 }
