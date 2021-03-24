@@ -168,4 +168,14 @@ public class CoverLetter extends BaseEntity {
         }
         return adoptedComment.get();
     }
+
+    public static CoverLetter buildWritingCoverLetter(CoverLetterCategory coverLetterCategory, String content) {
+        return CoverLetter.builder()
+                .coverLetterCategory(coverLetterCategory)
+                .originalCoverLetterId(DEFAULT_ORIGINAL_COVER_LETTER_ID)
+                .content(content)
+                .state(State.ACTIVE)
+                .type(CoverLetterType.WRITING)
+                .build();
+    }
 }
