@@ -66,15 +66,9 @@ public class CoverLetterService {
         CoverLetterCategory originalCoverLetterCategory = originalCoverLetter.getCoverLetterCategory();
         UserInfo userInfo = userInfoProvider.getUserInfoById(userInfoId);
         validateUserIsMentee(userInfo);
-        CoverLetter requestedCompletingCoverLetter = CoverLetter.builder()
-                .coverLetterCategory(originalCoverLetterCategory)
-                .originalCoverLetterId(originalCoverLetterId)
-                .content(content)
-                .state(State.ACTIVE)
-                .type(CoverLetterType.COMPLETING)
-                .build();
-        userInfo.addCoverLetter(requestedCompletingCoverLetter);
-        CoverLetter savedTemporaryCoverLetter = saveCoverLetter(requestedCompletingCoverLetter);
+        CoverLetter completingCoverLetter = CoverLetter.buildCompletingCoverLetter(originalCoverLetterCategory, originalCoverLetterId, content);
+        userInfo.addCoverLetter(completingCoverLetter);
+        CoverLetter savedTemporaryCoverLetter = saveCoverLetter(completingCoverLetter);
         return savedTemporaryCoverLetter.getId();
     }
 
