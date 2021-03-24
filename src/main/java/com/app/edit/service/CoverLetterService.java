@@ -47,17 +47,12 @@ public class CoverLetterService {
     public Long createWritingCoverLetter(PostWritingCoverLetterReq request) throws BaseException {
         Long userId = jwtService.getUserInfo().getUserId();
         Long coverLetterCategoryId = request.getCoverLetterCategoryId();
+        String coverLetterContent = request.getCoverLetterContent();
         CoverLetterCategory coverLetterCategory = coverLetterCategoryProvider
                 .getCoverLetterCategoryById(coverLetterCategoryId);
         UserInfo userInfo = userInfoProvider.getUserInfoById(userId);
         validateUserIsMentee(userInfo);
-        CoverLetter requestedCoverLetter = CoverLetter.builder()
-                .coverLetterCategory(coverLetterCategory)
-                .originalCoverLetterId(DEFAULT_ORIGINAL_COVER_LETTER_ID)
-                .content(request.getCoverLetterContent())
-                .state(State.ACTIVE)
-                .type(CoverLetterType.WRITING)
-                .build();
+        CoverLetter requestedCoverLetter = CoverLetter.buildWritingCoverLetter(coverLetterCategory, coverLetterContent);
         userInfo.addCoverLetter(requestedCoverLetter);
         CoverLetter savedCoverLetter = coverLetterRepository.save(requestedCoverLetter);
         return savedCoverLetter.getId();
