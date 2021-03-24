@@ -1,4 +1,4 @@
-package com.app.edit.request;
+package com.app.edit.request.temporarycoverletter;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
