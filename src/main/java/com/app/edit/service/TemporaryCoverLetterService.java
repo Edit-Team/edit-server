@@ -14,16 +14,13 @@ import com.app.edit.provider.CoverLetterCategoryProvider;
 import com.app.edit.provider.CoverLetterProvider;
 import com.app.edit.provider.TemporaryCoverLetterProvider;
 import com.app.edit.provider.UserInfoProvider;
-import com.app.edit.request.PostWritingCoverLetterFromTemporaryReq;
-import com.app.edit.request.temporarycoverletter.PatchCompletingTemporaryCoverLetterReq;
-import com.app.edit.request.temporarycoverletter.PatchWritingTemporaryCoverLetterReq;
-import com.app.edit.request.temporarycoverletter.PostCompletingTemporaryCoverLetterReq;
-import com.app.edit.request.temporarycoverletter.PostWritingTemporaryCoverLetterReq;
+import com.app.edit.request.temporarycoverletter.*;
 import com.app.edit.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.app.edit.config.BaseResponseStatus.FOUND_COVER_LETTER_TYPE_IS_NOT_COMPLETING;
 import static com.app.edit.config.BaseResponseStatus.USER_ROLE_IS_NOT_MENTEE;
 import static com.app.edit.config.Constant.DEFAULT_ORIGINAL_COVER_LETTER_ID;
 
@@ -148,6 +145,22 @@ public class TemporaryCoverLetterService {
         validateUser(userInfo, temporaryCoverLetter);
         CoverLetterCategory coverLetterCategory = coverLetterCategoryProvider.getCoverLetterCategoryById(coverLetterCategoryId);
         CoverLetter coverLetter = CoverLetter.buildWritingCoverLetter(coverLetterCategory, coverLetterContent);
+        userInfo.addCoverLetter(coverLetter);
+        temporaryCoverLetter.deactivate();
+        return coverLetterService.saveCoverLetter(coverLetter).getId();
+    }
+
+    public Long createCompletingCoverLetterFromTemporary(PostCompletingCoverLetterFromTemporaryReq request) throws BaseException {
+        Long userId = jwtService.getUserInfo().getUserId();
+        UserInfo userInfo = userInfoProvider.getUserInfoById(userId);
+        validateUserIsMentee(userInfo);
+        Long temporaryCoverLetterId = request.getTemporaryCoverLetterId();
+        String coverLetterContent = request.getCoverLetterContent();
+        TemporaryCoverLetter temporaryCoverLetter = temporaryCoverLetterProvider.getTemporaryCoverLetterById(temporaryCoverLetterId);
+        CoverLetterCategory originalCoverLetterCategory = temporaryCoverLetter.getCoverLetterCategory();
+        Long originalCoverLetterId = temporaryCoverLetter.getOriginalCoverLetterId();
+        validateUser(userInfo, temporaryCoverLetter);
+        CoverLetter coverLetter = CoverLetter.buildCompletingCoverLetter(originalCoverLetterCategory, originalCoverLetterId, coverLetterContent);
         userInfo.addCoverLetter(coverLetter);
         temporaryCoverLetter.deactivate();
         return coverLetterService.saveCoverLetter(coverLetter).getId();
