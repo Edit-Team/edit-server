@@ -56,4 +56,8 @@ public class ChangeRoleRequest extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "roleCategoryId")
     private ChangeRoleCategory changeRoleCategory;
+
+    public void process() {
+        isProcessing = IsProcessing.YES;
+    }
 }

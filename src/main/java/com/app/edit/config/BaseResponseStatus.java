@@ -50,6 +50,8 @@ public enum BaseResponseStatus {
     REQUEST_PARAMETER_MISSING(false, 2050, "요청에 필수 파라미터가 누락되어 있습니다."),
     REQUEST_PARAMETER_MISMATCH(false, 2051, "요청 파라미터 타입이 맞지 않습니다."),
     COVER_LETTER_CONTENT_LENGTH_CAN_NOT_BE_GREATER_THAN_LENGTH_LIMIT(false, 2100, "자소서의 내용 길이는 90자를 초과할 수 없습니다."),
+    ETC_CHANGE_ROLE_CONTENT_CAN_NOT_BE_EMPTY(false, 2110, "역할 변경 '기타' 사유의 '기타 의견'을 입력해주세요."),
+    ETC_CHANGE_ROLE_CONTENT_LENGTH_MUST_GREATER_THAN_MINIMUM_LENGTH(false, 2120, "역할 변경 '기타' 사유의 '기타 의견'의 길이는 10자 이상이어야 합니다."),
 
     // 3000 : Response 오류
     RESPONSE_ERROR(false, 3000, "값을 불러오는데 실패하였습니다."),
@@ -78,6 +80,7 @@ public enum BaseResponseStatus {
     FAILED_TO_GET_SYMPATHIES_COVERLETTER(false, 3032, "공감한 자소서 조회에 실패 했습니다."),
 
     // colt
+    TOKEN_INFORMATION_IS_NOT_EQUALS_IN_SERVER(false, 3050, "토큰의 정보가 서버의 정보와 다릅니다. 로그인을 통해 갱신해주세요."),
     NOT_FOUND_COVER_LETTER(false, 3100, "존재하지 않는 자소서입니다."),
     NOT_FOUND_COVER_LETTER_DECLARATION(false, 3150, "존재하지 않는 자소서 신고입니다."),
     ALREADY_PROCESSED_COVER_LETTER_DECLARATION(false, 3170, "이미 처리된 자소서 신고입니다."),
@@ -96,6 +99,7 @@ public enum BaseResponseStatus {
     NOT_FOUND_TEMPORARY_COVER_LETTER(false, 3900, "존재하지 않는 임시 자소서입니다."),
     FOUND_COVER_LETTER_TYPE_IS_NOT_WRITING(false, 3930, "작성중인 임시 자소서가 아닙니다."),
     FOUND_COVER_LETTER_TYPE_IS_NOT_COMPLETING(false, 3960, "완성중인 임시 자소서가 아닙니다."),
+    ALREADY_EXIST_CHANGE_ROLE_REQUEST(false, 3970, "아직 처리되지 않은 역할 변경 신청이 존재합니다."),
     ALREADY_DELETED_TEMPORARY_COVER_LETTER(false, 4000, "이미 삭제된 임시 자소서입니다.");
 
     // 5000 : 필요시 만들어서 쓰세요

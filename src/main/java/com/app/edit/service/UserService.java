@@ -21,6 +21,8 @@ import com.app.edit.domain.userprofile.UserProfileRepository;
 import com.app.edit.enums.IsProcessing;
 import com.app.edit.enums.State;
 import com.app.edit.enums.UserRole;
+import com.app.edit.provider.ChangeRoleRequestProvider;
+import com.app.edit.provider.UserInfoProvider;
 import com.app.edit.provider.UserProvider;
 import com.app.edit.request.user.DeleteUserReq;
 import com.app.edit.request.user.PatchRoleReq;
@@ -31,6 +33,8 @@ import com.app.edit.response.user.PostUserRes;
 import com.app.edit.utils.AES128;
 import com.app.edit.utils.JwtService;
 import com.app.edit.utils.S3Service;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,9 +42,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import static com.app.edit.config.BaseResponseStatus.*;
+import static com.app.edit.config.Constant.*;
 
+@RequiredArgsConstructor
+@Transactional
 @Service
 public class UserService {
 
@@ -48,6 +56,7 @@ public class UserService {
     private final EmailSenderService emailSenderService;
     private final JobRepository jobRepository;
     private final UserProvider userProvider;
+    private final UserInfoProvider userInfoProvider;
     private final UserProfileRepository userProfileRepository;
     private final ProfileEmotionRepository profileEmotionRepository;
     private final ProfileColorRepository profileColorRepository;
@@ -56,33 +65,8 @@ public class UserService {
     private final CertificationRequestRepository certificationRequestRepository;
     private final ChangeRoleCategoryRepository changeRoleCategoryRepository;
     private final ChangeRoleRequestRepository changeRoleRequestRepository;
+    private final ChangeRoleRequestProvider changeRoleRequestProvider;
 
-    @Autowired
-    public UserService(UserInfoRepository userRepository,
-                       EmailSenderService emailSenderService,
-                       JobRepository jobRepository,
-                       UserProvider userProvider,
-                       UserProfileRepository userProfileRepository,
-                       ProfileEmotionRepository profileEmotionRepository,
-                       ProfileColorRepository profileColorRepository,
-                       JwtService jwtService,
-                       S3Service s3Service,
-                       CertificationRequestRepository certificationRequestRepository,
-                       ChangeRoleCategoryRepository changeRoleCategoryRepository,
-                       ChangeRoleRequestRepository changeRoleRequestRepository) {
-        this.userInfoRepository = userRepository;
-        this.emailSenderService = emailSenderService;
-        this.jobRepository = jobRepository;
-        this.userProvider = userProvider;
-        this.userProfileRepository = userProfileRepository;
-        this.profileEmotionRepository = profileEmotionRepository;
-        this.profileColorRepository = profileColorRepository;
-        this.jwtService = jwtService;
-        this.s3Service = s3Service;
-        this.certificationRequestRepository = certificationRequestRepository;
-        this.changeRoleCategoryRepository = changeRoleCategoryRepository;
-        this.changeRoleRequestRepository = changeRoleRequestRepository;
-    }
 
     @Transactional
     public PostUserRes createUserInfo(PostUserReq parameters) throws BaseException {
@@ -373,5 +357,48 @@ public class UserService {
         return PatchRoleRes.builder()
                 .nickName(userInfo.getNickName())
                 .build();
+    }
+
+    @Transactional
+    public Long changeRoleToMentor(PatchRoleReq request) throws BaseException {
+        Long userInfoId = jwtService.getUserInfo().getUserId();
+        UserInfo userInfo = userInfoProvider.getUserInfoById(userInfoId);
+        validateChangeRoleRequestIsExist(userInfo);
+        String changeContent = request.getChangeContent();
+        String etcChangeContent = request.getEtcChangeContent();
+
+        ChangeRoleCategory changeRoleCategory = changeRoleCategoryRepository.findByName(changeContent)
+                .orElseThrow(() -> new BaseException(FAILED_TO_GET_CAHNGE_ROLE_CATEGORY));
+        if (changeContent.equals(ETC_CHANGE_ROLE_CATEGORY_NAME)) {
+            validateEtcChangeContent(etcChangeContent);
+            changeContent = etcChangeContent;
+        }
+        ChangeRoleRequest changeRoleRequest = ChangeRoleRequest.builder()
+                .content(changeContent)
+                .isProcessing(IsProcessing.NO)
+                .changeRoleCategory(changeRoleCategory)
+                .previousRole(userInfo.getUserRole())
+                .build();
+        userInfo.addChangeRoleRequest(changeRoleRequest);
+        changeRoleRequestRepository.save(changeRoleRequest);
+        userInfo.changeUserRole();
+
+        return userInfoId;
+    }
+
+    private void validateChangeRoleRequestIsExist(UserInfo userInfo) throws BaseException {
+        Optional<ChangeRoleRequest> changeRoleRequest = changeRoleRequestProvider.getChangeRoleRequestByUserInfo(userInfo);
+        if (changeRoleRequest.isPresent()) {
+            throw new BaseException(ALREADY_EXIST_CHANGE_ROLE_REQUEST);
+        }
+    }
+
+    private void validateEtcChangeContent(String etcChangeContent) throws BaseException {
+        if (NONE.equals(etcChangeContent) || etcChangeContent.isBlank()) {
+            throw new BaseException(ETC_CHANGE_ROLE_CONTENT_CAN_NOT_BE_EMPTY);
+        }
+        if (etcChangeContent.length() < ETC_CHANGE_ROLE_CONTENT_MINIMUM_LENGTH) {
+            throw new BaseException(ETC_CHANGE_ROLE_CONTENT_LENGTH_MUST_GREATER_THAN_MINIMUM_LENGTH);
+        }
     }
 }

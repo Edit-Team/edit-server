@@ -20,4 +20,6 @@ public class Constant {
     public static String PROFILE_SEPARATOR = "/";
     public static String NONE = "NONE";
     public static String DEFAULT_COMPLETED_COVER_LETTER_CONTENT = null;
+    public static String ETC_CHANGE_ROLE_CATEGORY_NAME = "기타";
+    public static Integer ETC_CHANGE_ROLE_CONTENT_MINIMUM_LENGTH = 10;
 }

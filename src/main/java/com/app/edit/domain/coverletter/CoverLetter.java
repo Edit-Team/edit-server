@@ -20,7 +20,6 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -167,5 +166,26 @@ public class CoverLetter extends BaseEntity {
             throw new BaseException(BaseResponseStatus.NOT_FOUND_ADOPTED_COMMENT);
         }
         return adoptedComment.get();
+    }
+
+    public static CoverLetter buildWritingCoverLetter(CoverLetterCategory coverLetterCategory, String content) {
+        return CoverLetter.builder()
+                .coverLetterCategory(coverLetterCategory)
+                .originalCoverLetterId(DEFAULT_ORIGINAL_COVER_LETTER_ID)
+                .content(content)
+                .state(State.ACTIVE)
+                .type(CoverLetterType.WRITING)
+                .build();
+    }
+
+    public static CoverLetter buildCompletingCoverLetter(CoverLetterCategory originalCoverLetterCategory,
+                                                         Long originalCoverLetterId, String content) {
+        return CoverLetter.builder()
+                .coverLetterCategory(originalCoverLetterCategory)
+                .originalCoverLetterId(originalCoverLetterId)
+                .content(content)
+                .state(State.ACTIVE)
+                .type(CoverLetterType.COMPLETING)
+                .build();
     }
 }
