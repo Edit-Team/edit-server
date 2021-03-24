@@ -20,8 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.app.edit.config.BaseResponseStatus.FOUND_COVER_LETTER_TYPE_IS_NOT_COMPLETING;
-import static com.app.edit.config.BaseResponseStatus.USER_ROLE_IS_NOT_MENTEE;
+import static com.app.edit.config.BaseResponseStatus.*;
 import static com.app.edit.config.Constant.DEFAULT_ORIGINAL_COVER_LETTER_ID;
 
 @Transactional
@@ -142,6 +141,9 @@ public class TemporaryCoverLetterService {
         Long coverLetterCategoryId = request.getCoverLetterCategoryId();
         String coverLetterContent = request.getCoverLetterContent();
         TemporaryCoverLetter temporaryCoverLetter = temporaryCoverLetterProvider.getTemporaryCoverLetterById(temporaryCoverLetterId);
+        if (!temporaryCoverLetter.getType().equals(CoverLetterType.WRITING)) {
+            throw new BaseException(FOUND_COVER_LETTER_TYPE_IS_NOT_WRITING);
+        }
         validateUser(userInfo, temporaryCoverLetter);
         CoverLetterCategory coverLetterCategory = coverLetterCategoryProvider.getCoverLetterCategoryById(coverLetterCategoryId);
         CoverLetter coverLetter = CoverLetter.buildWritingCoverLetter(coverLetterCategory, coverLetterContent);
@@ -157,9 +159,12 @@ public class TemporaryCoverLetterService {
         Long temporaryCoverLetterId = request.getTemporaryCoverLetterId();
         String coverLetterContent = request.getCoverLetterContent();
         TemporaryCoverLetter temporaryCoverLetter = temporaryCoverLetterProvider.getTemporaryCoverLetterById(temporaryCoverLetterId);
+        if (!temporaryCoverLetter.getType().equals(CoverLetterType.COMPLETING)) {
+            throw new BaseException(FOUND_COVER_LETTER_TYPE_IS_NOT_COMPLETING);
+        }
+        validateUser(userInfo, temporaryCoverLetter);
         CoverLetterCategory originalCoverLetterCategory = temporaryCoverLetter.getCoverLetterCategory();
         Long originalCoverLetterId = temporaryCoverLetter.getOriginalCoverLetterId();
-        validateUser(userInfo, temporaryCoverLetter);
         CoverLetter coverLetter = CoverLetter.buildCompletingCoverLetter(originalCoverLetterCategory, originalCoverLetterId, coverLetterContent);
         userInfo.addCoverLetter(coverLetter);
         temporaryCoverLetter.deactivate();
