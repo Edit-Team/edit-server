@@ -23,8 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.app.edit.config.BaseResponseStatus.*;
-import static com.app.edit.utils.ValidationRegex.isRegexEmail;
-import static com.app.edit.utils.ValidationRegex.isRegexPhoneNumber;
+import static com.app.edit.utils.ValidationRegex.*;
 
 @Slf4j
 @RequestMapping("/api")
@@ -70,34 +69,57 @@ public class UserController {
     public BaseResponse<PostUserRes> createUsers(
             @RequestBody PostUserReq parameters) {
 
-        // 1. Body Parameter Validation
+        //이메일 정규식
         if (parameters.getEmail() == null || parameters.getEmail().length() == 0) {
             return new BaseResponse<>(EMPTY_EMAIL);
         }
         if (!isRegexEmail(parameters.getEmail())){
             return new BaseResponse<>(INVALID_EMAIL);
         }
+
+        //닉네임 정규식
         if (parameters.getNickname() == null || parameters.getNickname().length() == 0) {
             return new BaseResponse<>(EMPTY_NICKNAME);
         }
+        if (!isRegexNickName(parameters.getNickname())){
+            return new BaseResponse<>(INVALID_NICKNAME);
+        }
 
-        // 1. Body Parameter Validation
+        //이름 정규식
+        if (parameters.getName() == null || parameters.getName().length() == 0) {
+            return new BaseResponse<>(EMPTY_NAME);
+        }
+        if (!isRegexName(parameters.getName())){
+            return new BaseResponse<>(INVALID_NAME);
+        }
+
+
+        //패스워드 정규식
         if (parameters.getPassword() == null || parameters.getPassword().length() == 0) {
             return new BaseResponse<>(EMPTY_PASSWORD);
+        }
+        if (!isRegexPassword(parameters.getPassword())){
+            return new BaseResponse<>(INVALID_PASSWORD);
         }
 
         if (parameters.getAuthenticationPassword() == null || parameters.getAuthenticationPassword().length() == 0) {
             return new BaseResponse<>(EMPTY_CONFIRM_PASSWORD);
         }
 
+        if (!isRegexPassword(parameters.getAuthenticationPassword())){
+            return new BaseResponse<>(INVALID_CONFIRM_PASSWORD);
+        }
+
         if (!parameters.getPassword().equals(parameters.getAuthenticationPassword())) {
             return new BaseResponse<>(DO_NOT_MATCH_PASSWORD);
         }
 
-        if(parameters.getPhoneNumber() != null) {
-            if(!isRegexPhoneNumber(parameters.getPhoneNumber())) {
-                return new BaseResponse<>(INVALID_PHONENUMBER);
-            }
+        //핸드폰 정규식
+        if(parameters.getPhoneNumber() == null || parameters.getPhoneNumber().length() == 0) {
+            return new BaseResponse<>(EMPTY_PHONENUMBER);
+        }
+        if(!isRegexPhoneNumber(parameters.getPhoneNumber())) {
+            return new BaseResponse<>(INVALID_PHONENUMBER);
         }
 
         try {
@@ -128,9 +150,14 @@ public class UserController {
         if(nickName == null && email == null)
             throw new BaseException(EMPTY_CONTENT);
 
-
         if(nickName != null && email != null)
             throw new BaseException(INVAILD_CONTENT);
+
+        if(nickName != null && !isRegexNickName(parameters.getNickName()))
+            throw new BaseException(INVALID_NICKNAME);
+
+        if(email != null && !isRegexEmail(parameters.getEmail()))
+            throw new BaseException(INVALID_EMAIL);
 
         try {
             DuplicationCheck duplicationCheck = userProvider.checkDuplication(email,nickName);
@@ -149,8 +176,12 @@ public class UserController {
     public BaseResponse<Void> AuthenticationEmail(
             @RequestBody PostEmailReq parameters) throws BaseException {
 
-        if(parameters.getEmail() == null)
-            throw new BaseException(EMPTY_EMAIL);
+        if (parameters.getEmail() == null || parameters.getEmail().length() == 0) {
+            return new BaseResponse<>(EMPTY_EMAIL);
+        }
+        if (!isRegexEmail(parameters.getEmail())){
+            return new BaseResponse<>(INVALID_EMAIL);
+        }
 
         try {
             userProvider.authenticationEmail(parameters.getEmail());
@@ -189,11 +220,19 @@ public class UserController {
         String name = parameters.getName();
         String phoneNumber = parameters.getPhoneNumber();
 
-        if(phoneNumber == null || phoneNumber.length() == 0)
-            throw new BaseException(EMPTY_PHONENUMBER);
+        if(parameters.getPhoneNumber() == null || parameters.getPhoneNumber().length() == 0) {
+            return new BaseResponse<>(EMPTY_PHONENUMBER);
+        }
+        if(!isRegexPhoneNumber(parameters.getPhoneNumber())) {
+            return new BaseResponse<>(INVALID_PHONENUMBER);
+        }
 
-        if(name == null || name.length() == 0)
-            throw new BaseException(EMPTY_NAME);
+        if (parameters.getName() == null || parameters.getName().length() == 0) {
+            return new BaseResponse<>(EMPTY_NAME);
+        }
+        if (!isRegexName(parameters.getName())){
+            return new BaseResponse<>(INVALID_NAME);
+        }
 
         try {
             GetEmailRes getEmailRes = userProvider.searchEmail(name,phoneNumber);
@@ -216,15 +255,28 @@ public class UserController {
         String name = parameters.getName();
         String phoneNumber = parameters.getPhoneNumber();
 
-        if(email == null || email.length() == 0)
-            throw new BaseException(EMPTY_EMAIL);
+        //이메일 정규식
+        if (parameters.getEmail() == null || parameters.getEmail().length() == 0) {
+            return new BaseResponse<>(EMPTY_EMAIL);
+        }
+        if (!isRegexEmail(parameters.getEmail())){
+            return new BaseResponse<>(INVALID_EMAIL);
+        }
 
-        if(name == null || name.length() == 0)
-            throw new BaseException(EMPTY_NAME);
+        if (parameters.getName() == null || parameters.getName().length() == 0) {
+            return new BaseResponse<>(EMPTY_NAME);
+        }
+        if (!isRegexName(parameters.getName())){
+            return new BaseResponse<>(INVALID_NAME);
+        }
 
 
-        if(phoneNumber == null || phoneNumber.length() == 0)
-            throw new BaseException(EMPTY_PHONENUMBER);
+        if(parameters.getPhoneNumber() == null || parameters.getPhoneNumber().length() == 0) {
+            return new BaseResponse<>(EMPTY_PHONENUMBER);
+        }
+        if(!isRegexPhoneNumber(parameters.getPhoneNumber())) {
+            return new BaseResponse<>(INVALID_PHONENUMBER);
+        }
 
 
         try {
@@ -245,8 +297,13 @@ public class UserController {
             @RequestHeader(value = "X-ACCESS-TOKEN") String jwt,
             @RequestBody GetPasswordReq parameters) throws BaseException{
 
-            if(parameters.getPassword() == null || parameters.getPassword().length() == 0)
-                throw new BaseException(EMPTY_PASSWORD);
+        if (parameters.getPassword() == null || parameters.getPassword().length() == 0) {
+            return new BaseResponse<>(EMPTY_PASSWORD);
+        }
+        if (!isRegexPassword(parameters.getPassword())){
+            return new BaseResponse<>(INVALID_PASSWORD);
+        }
+
         try {
             Long userId = jwtService.getUserInfo().getUserId();
 
@@ -276,12 +333,19 @@ public class UserController {
             String password = parameters.getPassword();
             String authenticationPassword = parameters.getAuthenticationPassword();
 
-            if (password == null || password.length() == 0) {
+            if (parameters.getPassword() == null || parameters.getPassword().length() == 0) {
                 return new BaseResponse<>(EMPTY_PASSWORD);
             }
+            if (!isRegexPassword(parameters.getPassword())){
+                return new BaseResponse<>(INVALID_PASSWORD);
+            }
 
-            if (authenticationPassword == null || authenticationPassword.length() == 0) {
+            if (parameters.getAuthenticationPassword() == null || parameters.getAuthenticationPassword().length() == 0) {
                 return new BaseResponse<>(EMPTY_CONFIRM_PASSWORD);
+            }
+
+            if (!isRegexPassword(parameters.getAuthenticationPassword())){
+                return new BaseResponse<>(INVALID_CONFIRM_PASSWORD);
             }
 
             if (!password.equals(authenticationPassword)) {
