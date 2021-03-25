@@ -319,7 +319,7 @@ public class UserService {
      * @return
      */
     @Transactional
-    public PatchRoleRes ChangeRoleToMentee(Long userId, PatchRoleReq patchRoleReq) throws BaseException{
+    public Long ChangeRoleToMentee(Long userId, PatchRoleReq patchRoleReq) throws BaseException{
 
         // 유저 조회
         UserInfo userInfo = userInfoRepository.findByStateAndId(State.ACTIVE, userId)
@@ -361,9 +361,7 @@ public class UserService {
 
         userProvider.logout();
 
-        return PatchRoleRes.builder()
-                .nickName(userInfo.getNickName())
-                .build();
+        return userInfo.getId();
     }
 
     @Transactional
