@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -181,11 +182,9 @@ public class UserProvider {
         emailContent.append("</html>");
 
         //인증코드 3분제한으로 저장
-        Date time = Date.from(Instant.now().plusSeconds(180L));
-        redisTemplate.opsForValue().set(email,authenticationCode,
-                time.getTime() - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
-        redisTemplate.opsForValue().set(authenticationCode,email,
-                time.getTime() - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
+        //Date time = Date.from(Instant.now().plusSeconds(180L));
+        redisTemplate.opsForValue().set(email,authenticationCode, Duration.ofSeconds(600L));
+        redisTemplate.opsForValue().set(authenticationCode,email, Duration.ofSeconds(600L));
 
         // when
         sesEmailEmailSender.send(subject, emailContent.toString(), to);
@@ -206,16 +205,25 @@ public class UserProvider {
             throw new BaseException(FAILED_TO_AUTHENTICATION_CODE);
 
         //이메일로 최신화된 인증 코드 조회
-        String authenticationTime = redisTemplate.opsForValue().get(email);
+        String authentication = redisTemplate.opsForValue().get(email);
 
-        //인증코드가 없다면 시간이 만료된 것것
-       if(authenticationTime == null)
-            throw new BaseException(AUTHENTICATION_TIME_EXPIRED);
-
-        if(authenticationTime.equals(authenticationCode))
-            return AuthenticationCheck.YES;
-        else
+        Long expireTime = redisTemplate.getExpire(email);
+        //인증코드가 없다면 에러
+       if(authentication == null || expireTime == null)
             throw new BaseException(FAILED_TO_AUTHENTICATION_CODE);
+
+        if(authentication.equals(authenticationCode)) {
+            if(expireTime > 420L) {
+                return AuthenticationCheck.YES;
+            }else if(0L <= expireTime){
+                return AuthenticationCheck.NO;
+            }else{
+                throw new BaseException(FAILED_TO_AUTHENTICATION_CODE);
+            }
+        }
+        else {
+            throw new BaseException(FAILED_TO_AUTHENTICATION_CODE);
+        }
 
         //LocalDateTime currentTime = LocalDateTime.now();
         //LocalDateTime parsedTime = LocalDateTime.parse(authenticationTime, getDateTime.GetFormatter());
