@@ -54,6 +54,7 @@ public class SympathyService {
                 .state(State.ACTIVE)
                 .build();
         Sympathy savedSympathy = sympathyRepository.save(sympathy);
+        userInfo.addSympathy(savedSympathy);
         return savedSympathy.getSympathyId();
     }
 

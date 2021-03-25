@@ -54,6 +54,7 @@ public class AppreciateService {
                 .state(State.ACTIVE)
                 .build();
         Appreciate savedAppreciate = appreciateRepository.save(newAppreciate);
+        userInfo.addAppreciate(savedAppreciate);
         return savedAppreciate.getAppreciateId();
     }
 
