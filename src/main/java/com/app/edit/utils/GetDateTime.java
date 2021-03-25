@@ -2,6 +2,7 @@ package com.app.edit.utils;
 
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -24,6 +25,12 @@ public class GetDateTime {
         }else{
             return LocalDateTime.now().minusMinutes(number).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         }
+    }
+
+    public String getToday(){
+        LocalDate date = LocalDate.now();
+        DateTimeFormatter todayFormatter = DateTimeFormatter.ofPattern("yyyyMMdd ");
+        return date.format(todayFormatter);
     }
 
 }

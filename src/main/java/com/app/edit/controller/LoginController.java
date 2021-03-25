@@ -64,7 +64,7 @@ public class LoginController {
      * [Post] /api/login
      */
     @PostMapping(value = "/logout")
-    @ApiOperation(value = "로그아웃(미완성)", notes = "로그아웃(미완성)")
+    @ApiOperation(value = "로그아웃", notes = "로그아웃")
     public BaseResponse<Void> logout(){
 
         try {

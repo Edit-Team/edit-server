@@ -14,13 +14,16 @@ import com.app.edit.utils.AES128;
 import com.app.edit.utils.GetDateTime;
 import com.app.edit.utils.JwtService;
 import lombok.extern.slf4j.Slf4j;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -235,11 +238,11 @@ public class UserProvider {
      */
     public void logout() throws BaseException {
         String accessToken = jwtService.getJwt();
-        Date expirationDate = jwtService.getExpireDate(accessToken);
+        //Date expirationDate = jwtService.getExpireDate(accessToken);
+        String today = getDateTime.getToday();
         redisTemplate.opsForValue().set(
-                accessToken, "true",
-                expirationDate.getTime() - System.currentTimeMillis(),
-                TimeUnit.MILLISECONDS
+                "blacklist:"+today, accessToken
+                //expirationDate.getTime() - System.currentTimeMillis(), TimeUnit.MILLISECONDS
         );
     }
 

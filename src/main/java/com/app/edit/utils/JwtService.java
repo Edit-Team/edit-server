@@ -98,9 +98,12 @@ public class JwtService {
         System.out.println("로그아웃 확인: " +redisTemplate.opsForValue().get(accessToken));
 
         // 1.5 logout 확인
-        if(redisTemplate.opsForValue().get(accessToken) != null){
-            throw new BaseException(ALREADY_LOGOUT);
+        for(int i = 0; i < 14; i++){
+            if(redisTemplate.opsForValue().get(accessToken) != null){
+                throw new BaseException(ALREADY_LOGOUT);
+            }
         }
+
 
 
         // 2. JWT parsing
