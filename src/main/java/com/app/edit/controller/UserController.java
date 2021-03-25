@@ -619,7 +619,7 @@ public class UserController {
      */
     @PatchMapping(value = "/change-roles/to-mentee")
     @ApiOperation(value = "멘토 -> 멘티 역할 변경", notes = "멘토 -> 멘티 역할 변경 API")
-    public BaseResponse<PatchRoleRes> changeRoleToMentee(
+    public BaseResponse<Long> changeRoleToMentee(
             //@RequestHeader("X-ACCESS-TOKEN") String jwt,
             @RequestBody PatchRoleReq patchRoleReq) throws BaseException{
 
@@ -632,8 +632,7 @@ public class UserController {
                 return new BaseResponse<>(EMPTY_USERID);
             }
 
-            PatchRoleRes patchRoleRes = userService.ChangeRoleToMentee(userId, patchRoleReq);
-            return new BaseResponse<>(SUCCESS, patchRoleRes);
+            return new BaseResponse<>(SUCCESS, userService.ChangeRoleToMentee(userId, patchRoleReq));
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
