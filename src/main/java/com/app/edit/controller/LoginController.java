@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import static com.app.edit.config.BaseResponseStatus.*;
+import static com.app.edit.utils.ValidationRegex.isRegexEmail;
 import static com.app.edit.utils.ValidationRegex.isRegexPassword;
 
 @Slf4j
@@ -48,7 +49,7 @@ public class LoginController {
         if(parameters.getEmail() == null || parameters.getEmail().length() == 0)
             throw new BaseException(EMPTY_EMAIL);
 
-        if (!isRegexPassword(parameters.getPassword())){
+        if (!isRegexEmail(parameters.getEmail())){
             throw new BaseException(INVALID_EMAIL);
         }
 
