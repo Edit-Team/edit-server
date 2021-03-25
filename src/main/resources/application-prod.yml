@@ -6,6 +6,9 @@ spring:
     include: credentials
   application:
     name: edit
+  redis:
+    port: 6379
+    host: edit-server-redis-001.gwrq5s.0001.apn2.cache.amazonaws.com
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
@@ -32,5 +35,3 @@ spring:
     username: admin
     password: editadmin
     driver-class-name: com.mysql.cj.jdbc.Driver
-    data: classpath:testData.sql
-#    initialization-mode: always
