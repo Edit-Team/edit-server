@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import static com.app.edit.config.BaseResponseStatus.*;
+import static com.app.edit.utils.ValidationRegex.isRegexPassword;
 
 @Slf4j
 @RequestMapping("/api")
@@ -44,11 +45,20 @@ public class LoginController {
     public BaseResponse<PostUserRes> login(
             @RequestBody PostLoginReq parameters) throws BaseException{
 
-        if(parameters.getEmail() == null)
+        if(parameters.getEmail() == null || parameters.getEmail().length() == 0)
             throw new BaseException(EMPTY_EMAIL);
 
-        if(parameters.getPassword() == null)
+        if (!isRegexPassword(parameters.getPassword())){
+            throw new BaseException(INVALID_EMAIL);
+        }
+
+        if(parameters.getPassword() == null || parameters.getPassword().length() == 0)
             throw new BaseException(EMPTY_PASSWORD);
+
+
+        if (!isRegexPassword(parameters.getPassword())){
+            throw new BaseException(INVALID_PASSWORD);
+        }
 
         try {
             PostUserRes postUserRes = userProvider.login(parameters);

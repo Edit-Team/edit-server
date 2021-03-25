@@ -238,11 +238,14 @@ public class UserProvider {
      */
     public void logout() throws BaseException {
         String accessToken = jwtService.getJwt();
-        //Date expirationDate = jwtService.getExpireDate(accessToken);
+
         String today = getDateTime.getToday();
+        redisTemplate.opsForSet().add("blacklist:"+today, accessToken);
+
+        Date expirationDate = jwtService.getExpireDate(accessToken);
         redisTemplate.opsForValue().set(
-                "blacklist:"+today, accessToken
-                //expirationDate.getTime() - System.currentTimeMillis(), TimeUnit.MILLISECONDS
+                accessToken,"edit",
+                expirationDate.getTime() - System.currentTimeMillis(), TimeUnit.MILLISECONDS
         );
     }
 

@@ -8,12 +8,14 @@ import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.Set;
 
 import static com.app.edit.config.BaseResponseStatus.*;
 
@@ -21,11 +23,13 @@ import static com.app.edit.config.BaseResponseStatus.*;
 @Slf4j
 public class JwtService {
 
-    private final RedisTemplate redisTemplate;
+    private final RedisTemplate<String,String> redisTemplate;
+    private final GetDateTime getDateTime;
 
     @Autowired
-    public JwtService(RedisTemplate redisTemplate) {
+    public JwtService(RedisTemplate<String,String> redisTemplate, GetDateTime getDateTime) {
         this.redisTemplate = redisTemplate;
+        this.getDateTime = getDateTime;
     }
 
     private final long ACCESS_TOKEN_VALID_TIME = 14 * 24 * 3600 * 1000L;   // 2주
@@ -94,17 +98,10 @@ public class JwtService {
             throw new BaseException(EMPTY_JWT);
         }
 
-        System.out.println(accessToken);
-        System.out.println("로그아웃 확인: " +redisTemplate.opsForValue().get(accessToken));
-
         // 1.5 logout 확인
-        for(int i = 0; i < 14; i++){
-            if(redisTemplate.opsForValue().get(accessToken) != null){
-                throw new BaseException(ALREADY_LOGOUT);
-            }
-        }
-
-
+        if(redisTemplate.opsForValue().get(accessToken) != null){
+           throw new BaseException(ALREADY_LOGOUT);
+       }
 
         // 2. JWT parsing
         Jws<Claims> claims;
