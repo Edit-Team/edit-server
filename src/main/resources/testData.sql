@@ -26,41 +26,41 @@ insert into job
 values (13, current_timestamp, current_timestamp, '기타');
 
 insert into user_info
-values (1, current_timestamp, current_timestamp, 0, concat('email', '1@naver.com'), 'YES', 'YES', 'YES',
+values (1, current_timestamp, current_timestamp, 0, 'email1@naver.com', 'YES', 'YES', 'YES',
         concat('name', 1),
-        concat('nickName', 1),'Jjhg67XYWl1rwJ8QpW0VDg==',concat('01011111111'),
+        concat('nickName', 1),'Jjhg67XYWl1rwJ8QpW0VDg==','01011111111',
         'ACTIVE', 'MENTOR', 'NONE', 1);
         
 insert into user_info
-values (2, current_timestamp, current_timestamp, 0, concat('email', '2@naver.com'), 'YES', 'YES', 'YES',
+values (2, current_timestamp, current_timestamp, 0, 'email2@naver.com', 'YES', 'YES', 'YES',
         concat('name', 2),
-        concat('nickName', 2),'Jjhg67XYWl1rwJ8QpW0VDg==', concat('01022222222'),
+        concat('nickName', 2),'Jjhg67XYWl1rwJ8QpW0VDg==', '01022222222',
         'ACTIVE', 'MENTOR', 'NONE', 1);
         
 insert into user_info
 
-values (3, current_timestamp, current_timestamp, 0, concat('email', '3@naver.com'), 'YES','YES','YES',
+values (3, current_timestamp, current_timestamp, 0, 'email3@naver.com', 'YES','YES','YES',
         concat('name', 3),
-        concat('nickName', 1),'Jjhg67XYWl1rwJ8QpW0VDg==', concat('01033333333'),
+        concat('nickName', 1),'Jjhg67XYWl1rwJ8QpW0VDg==', '01033333333',
         'ACTIVE', 'MENTOR', 'NONE', 1);
         
 insert into user_info
-values (4, current_timestamp, current_timestamp, 0, concat('email', '4@naver.com'), 'YES','YES','YES',
+values (4, current_timestamp, current_timestamp, 0, 'email4@naver.com', 'YES','YES','YES',
         concat('name', 4),
-        concat('nickName', 4),'Jjhg67XYWl1rwJ8QpW0VDg==', concat('01044444444'),
+        concat('nickName', 4),'Jjhg67XYWl1rwJ8QpW0VDg==', '01044444444',
         'ACTIVE', 'MENTOR', 'NONE', 1);
         
 insert into user_info
 
-values (5, current_timestamp, current_timestamp, 0, concat('email', '5@naver.com'), 'YES','YES','YES',
+values (5, current_timestamp, current_timestamp, 0, 'email5@naver.com', 'YES','YES','YES',
         concat('name', 5),
-        concat('nickName', 5),'Jjhg67XYWl1rwJ8QpW0VDg==', concat('01055555555'),
+        concat('nickName', 5),'Jjhg67XYWl1rwJ8QpW0VDg==', '01055555555',
         'ACTIVE', 'MENTOR', 'NONE', 1);
         
 insert into user_info
-values (6, current_timestamp, current_timestamp, 0, concat('email', '6@naver.com'), 'YES','YES','YES',
+values (6, current_timestamp, current_timestamp, 0, 'email6@naver.com', 'YES','YES','YES',
         concat('name', 6),
-        concat('nickName', 6),'Jjhg67XYWl1rwJ8QpW0VDg==', concat('01066666666'),
+        concat('nickName', 6),'Jjhg67XYWl1rwJ8QpW0VDg==', '01066666666',
         'ACTIVE', 'MENTEE', 'NONE', 1);
 
 insert into profile_emotion

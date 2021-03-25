@@ -4,6 +4,9 @@ server:
 spring:
   profiles:
     include: credentials
+  redis:
+    host: myredis.jtphqr.0001.apn2.cache.amazonaws.com
+    port: 6379
   application:
     name: edit
   jpa:

@@ -32,6 +32,7 @@ import com.app.edit.utils.AES128;
 import com.app.edit.utils.JwtService;
 import com.app.edit.utils.S3Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -373,6 +374,8 @@ public class UserService {
 
         // 멘티로 변경
         userInfo.setUserRole(UserRole.MENTEE);
+
+        userProvider.logout();
 
         return PatchRoleRes.builder()
                 .nickName(userInfo.getNickName())

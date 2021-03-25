@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -180,7 +181,11 @@ public class UserProvider {
         emailContent.append("</html>");
 
         //인증코드 3분제한으로 저장
-        authenticationCodeRepository.put(authenticationCode,getDateTime.getCustomDataTime("plus",3L));
+        Date time = Date.from(Instant.now().plusSeconds(180L));
+        redisTemplate.opsForValue().set(email,authenticationCode,
+                time.getTime() - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
+        redisTemplate.opsForValue().set(authenticationCode,email,
+                time.getTime() - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
 
         // when
         sesEmailEmailSender.send(subject, emailContent.toString(), to);
@@ -193,20 +198,32 @@ public class UserProvider {
      */
     public AuthenticationCheck authenticationCode(String authenticationCode) throws BaseException {
 
-        String authenticationTime = authenticationCodeRepository.get(authenticationCode);
+        //인증코드를 통해서 이메일 조회
+        String email = redisTemplate.opsForValue().get(authenticationCode);
 
-        if(authenticationTime == null)
+        //이메일이 비어있으면 잘못된 인증 코드
+        if(email == null)
             throw new BaseException(FAILED_TO_AUTHENTICATION_CODE);
 
+        //이메일로 최신화된 인증 코드 조회
+        String authenticationTime = redisTemplate.opsForValue().get(email);
 
-        LocalDateTime currentTime = LocalDateTime.now();
-        LocalDateTime parsedTime = LocalDateTime.parse(authenticationTime, getDateTime.GetFormatter());
+        //인증코드가 없다면 시간이 만료된 것것
+       if(authenticationTime == null)
+            throw new BaseException(AUTHENTICATION_TIME_EXPIRED);
 
-        //현재 시간이 인증 시간 이전이라면 true
-        if(currentTime.isBefore(parsedTime))
+        if(authenticationTime.equals(authenticationCode))
             return AuthenticationCheck.YES;
         else
-            throw new BaseException(AUTHENTICATION_TIME_EXPIRED);
+            throw new BaseException(FAILED_TO_AUTHENTICATION_CODE);
+
+        //LocalDateTime currentTime = LocalDateTime.now();
+        //LocalDateTime parsedTime = LocalDateTime.parse(authenticationTime, getDateTime.GetFormatter());
+
+        //현재 시간이 인증 시간 이전이라면 true
+        //if(currentTime.isBefore(parsedTime))
+        //else
+         //   throw new BaseException(AUTHENTICATION_TIME_EXPIRED);
     }
 
     /**
@@ -237,10 +254,18 @@ public class UserProvider {
      * @return
      */
     public void logout() throws BaseException {
+
         String accessToken = jwtService.getJwt();
 
-        String today = getDateTime.getToday();
-        redisTemplate.opsForSet().add("blacklist:"+today, accessToken);
+        if(redisTemplate.opsForValue().get(accessToken) != null){
+            throw new BaseException(ALREADY_LOGOUT);
+        }
+
+        //StringBuilder sb = new StringBuilder();
+        //String today = getDateTime.getToday();
+        //sb.append("blacklist:").append(today);
+        //String setDays = sb.toString();
+        //redisTemplate.opsForSet().add(setDays, accessToken);
 
         Date expirationDate = jwtService.getExpireDate(accessToken);
         redisTemplate.opsForValue().set(
