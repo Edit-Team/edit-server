@@ -2,17 +2,20 @@ package com.app.edit.utils;
 
 import com.app.edit.config.BaseException;
 import com.app.edit.config.secret.Secret;
-import com.app.edit.enums.State;
 import com.app.edit.enums.UserRole;
 import com.app.edit.response.user.GetUserInfo;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.Set;
 
 import static com.app.edit.config.BaseResponseStatus.*;
 
@@ -20,6 +23,14 @@ import static com.app.edit.config.BaseResponseStatus.*;
 @Slf4j
 public class JwtService {
 
+    private final RedisTemplate<String,String> redisTemplate;
+    private final GetDateTime getDateTime;
+
+    @Autowired
+    public JwtService(RedisTemplate<String,String> redisTemplate, GetDateTime getDateTime) {
+        this.redisTemplate = redisTemplate;
+        this.getDateTime = getDateTime;
+    }
 
     private final long ACCESS_TOKEN_VALID_TIME = 14 * 24 * 3600 * 1000L;   // 2주
 
@@ -50,6 +61,31 @@ public class JwtService {
     }
 
     /**
+     * Jwt 만료시간 추출
+     * @return String
+     */
+    public Date getExpireDate(String accessToken) throws BaseException {
+
+
+        try {
+
+            Jws<Claims> claims = Jwts.parser()
+                    .setSigningKey(Secret.JWT_SECRET_KEY)
+                    .parseClaimsJws(accessToken);
+
+            return claims.getBody().getExpiration();
+
+        } catch (ExpiredJwtException exception) {
+            log.info("JWT가 만료되었습니다.");
+            throw new BaseException(EXPIRED_JWT);
+        }catch (Exception e){
+            log.info("유효하지 않은 JWT 입니다.");
+            throw new BaseException(INVALID_JWT);
+        }
+
+    }
+
+    /**
      * JWT에서 userId 및 Role 추출
      * @return int
      * @throws BaseException
@@ -62,12 +98,10 @@ public class JwtService {
             throw new BaseException(EMPTY_JWT);
         }
 
-//        // 1.5 logout 확인
-//        if(tokenRepository.get(accessToken) != null){
-//            log.info("로그아웃 확인: " +String.valueOf(tokenRepository.get(accessToken)));
-//            throw new BaseException(ALREADY_LOGOUT);
-//        }
-
+        // 1.5 logout 확인
+        if(redisTemplate.opsForValue().get(accessToken) != null){
+           throw new BaseException(ALREADY_LOGOUT);
+       }
 
         // 2. JWT parsing
         Jws<Claims> claims;

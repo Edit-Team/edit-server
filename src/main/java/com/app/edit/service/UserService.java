@@ -36,6 +36,7 @@ import com.app.edit.utils.S3Service;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -329,7 +330,11 @@ public class UserService {
             throw new BaseException(ALREADY_ROLE_MENTEE);
 
         String changeContent = patchRoleReq.getChangeContent();
+
         String etcChangeContent = patchRoleReq.getEtcChangeContent();
+
+        if(etcChangeContent == null)
+            etcChangeContent = "NONE";
 
         //카테고리 조회
         ChangeRoleCategory changeRoleCategory = changeRoleCategoryRepository.findByName(changeContent)
@@ -353,6 +358,8 @@ public class UserService {
 
         // 멘티로 변경
         userInfo.setUserRole(UserRole.MENTEE);
+
+        userProvider.logout();
 
         return PatchRoleRes.builder()
                 .nickName(userInfo.getNickName())

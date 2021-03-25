@@ -16,6 +16,7 @@ import com.app.edit.response.user.GetUserInfo;
 import com.app.edit.service.CommentService;
 import com.app.edit.utils.JwtService;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -28,6 +29,7 @@ import static com.app.edit.config.Constant.DEFAULT_PAGE_SIZE;
 
 @RequestMapping("/api")
 @RestController
+@Slf4j
 public class CommentController {
 
     private final CommentProvider commentProvider;
@@ -56,7 +58,7 @@ public class CommentController {
 
             GetUserInfo userInfo = jwtService.getUserInfo();
 
-            if(userInfo.getRole().equals(UserRole.MENTOR.name()))
+            if(userInfo.getRole().equals(UserRole.MENTEE.name()))
                 throw new BaseException(UNAUTHORIZED_AUTHORITY);
 
             Long userId = userInfo.getUserId();
@@ -80,10 +82,14 @@ public class CommentController {
     @GetMapping("/comments")
     public BaseResponse<List<GetMyCommentsRes>> getMyComments(@RequestParam Integer page) throws BaseException {
 
-        Long userId = jwtService.getUserInfo().getUserId();
+        GetUserInfo userInfo = jwtService.getUserInfo();
+        Long userId = userInfo.getUserId();
 
         if(userId == null || userId <= 0)
             throw new BaseException(EMPTY_USERID);
+
+        if(userInfo.getRole().equals(UserRole.MENTEE.name()))
+            throw new BaseException(UNAUTHORIZED_AUTHORITY);
 
         PageRequest pageRequest = com.app.edit.config.PageRequest.of(page, DEFAULT_PAGE_SIZE);
         return new BaseResponse<>(SUCCESS,
@@ -99,10 +105,14 @@ public class CommentController {
     public BaseResponse<GetCoverLettersByCommentRes> getCommentWithCoverLetter(
             @PathVariable("cover-letter-id") Long coverLetterId) throws BaseException {
 
-        Long userId = jwtService.getUserInfo().getUserId();
+        GetUserInfo userInfo = jwtService.getUserInfo();
+        Long userId = userInfo.getUserId();
 
         if(userId == null || userId <= 0)
             throw new BaseException(EMPTY_USERID);
+
+        if(userInfo.getRole().equals(UserRole.MENTEE.name()))
+            throw new BaseException(UNAUTHORIZED_AUTHORITY);
 
         return new BaseResponse<>(SUCCESS, commentProvider.retrieveCommentWithCoverLetter(userId, coverLetterId));
     }
@@ -164,5 +174,29 @@ public class CommentController {
             throw new BaseException(EMPTY_USERID);
 
         return new BaseResponse<>(SUCCESS, commentProvider.getMyCommentWithCoverLetter(commentId,userId));
+    }
+
+    /**
+     * 코멘트 삭제하기
+     * @param commentId
+     * @return
+     * @throws BaseException
+     */
+    @ApiOperation(value = "코멘트 삭제하기")
+    @DeleteMapping("/comments/{comment-id}")
+    public BaseResponse<Void> deleteComment(
+            @PathVariable("comment-id") Long commentId) throws Exception {
+
+        GetUserInfo userInfo = jwtService.getUserInfo();
+        Long userId = userInfo.getUserId();
+
+        if(userId == null || userId <= 0)
+            throw new BaseException(EMPTY_USERID);
+
+        if(userInfo.getRole().equals(UserRole.MENTEE.name()))
+            throw new BaseException(UNAUTHORIZED_AUTHORITY);
+
+        commentService.deleteComment(userId, commentId);
+        return new BaseResponse<>(SUCCESS);
     }
 }

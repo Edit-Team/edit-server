@@ -26,11 +26,11 @@ public enum BaseResponseStatus {
     EMPTY_EMAIL(false, 2020, "이메일을 입력해주세요."),
     INVALID_EMAIL(false, 2021, "이메일 형식을 확인해주세요."),
     EMPTY_PASSWORD(false, 2030, "비밀번호를 입력해주세요."),
-    EMPTY_CONFIRM_PASSWORD(false, 2031, "비밀번호 확인을 입력해주세요."),
+    EMPTY_CONFIRM_PASSWORD(false, 2031, "확인 비밀번호를 입력해주세요."),
     WRONG_PASSWORD(false, 2032, "비밀번호를 다시 입력해주세요."),
     DO_NOT_MATCH_PASSWORD(false, 2033, "비밀번호와 비밀번호확인 값이 일치하지 않습니다."),
     EMPTY_NICKNAME(false, 2040, "닉네임을 입력해주세요."),
-    INVALID_PHONENUMBER(false, 2041, "전화번호 형식이 다릅니다."),
+    INVALID_PHONENUMBER(false, 2041, "전화번호 형식을 확인해주세요."),
     EXPIRED_JWT(false, 2042, "토큰이 만료되었습니다."),
     EMPTY_RECEIVER(false, 2043, "이메일 수신자가 없습니다."),
     AUTHENTICATION_TIME_EXPIRED(false, 2044, "인증 시간이 만료되었습니다."),
@@ -39,10 +39,15 @@ public enum BaseResponseStatus {
     UNAUTHORIZED_AUTHORITY(false, 2047, "권한이 없습니다."),
     EMPTY_JOBNAME(false, 2048, "직군이 비었습니다."),
     EMPTY_ETCJOBNAME(false, 2049, "기타 직군이 비었습니다."),
-    EMPTY_NAME(false, 2050, "이름이 비었습니다."),
     EMPTY_PHONENUMBER(false, 2500, "핸드폰 번호가 비었습니다."),
     EMPTY_COLORNAME(false, 2501, "색상 이름이 비었습니다."),
     EMPTY_EMOTIONNAME(false, 2502, "감정표현 이름이 비었습니다."),
+    ALREADY_LOGOUT(false, 2503, "로그아웃 처리된 JWT 입니다."),
+    EMPTY_NAME(false, 2504, "이름이 비었습니다."),
+    INVALID_NICKNAME(false, 2505, "닉네임 형식을 확인해주세요."),
+    INVALID_NAME(false, 2504, "이름 형식을 확인해주세요."),
+    INVALID_PASSWORD(false, 2504, "비밀번호 형식을 확인해주세요."),
+    INVALID_CONFIRM_PASSWORD(false, 2504, "확인 비밀번호 형식을 확인해주세요."),
 
 
 
@@ -78,6 +83,9 @@ public enum BaseResponseStatus {
     FAILED_TO_POST_COMMENT(false, 3030, "코멘트 등록에 실패 했습니다."),
     ALREADY_ROLE_MENTEE(false, 3031, "이미 멘티 입니다."),
     FAILED_TO_GET_SYMPATHIES_COVERLETTER(false, 3032, "공감한 자소서 조회에 실패 했습니다."),
+    NOT_FOUND_TEMPORARY_COMMENT(false, 3033, "임시 코멘트가 비었습니다."),
+    FAILED_TO_POST_TEMPORARY_COMMENT(false, 3034, "코멘트 임시저장에 실패 했습니다."),
+    FAILED_TO_DELETE_COMMENT(false, 3035, "채택된 코멘트는 삭제할 수 없습니다."),
 
     // colt
     TOKEN_INFORMATION_IS_NOT_EQUALS_IN_SERVER(false, 3050, "토큰의 정보가 서버의 정보와 다릅니다. 로그인을 통해 갱신해주세요."),

@@ -13,18 +13,26 @@ import com.app.edit.service.EmailSenderService;
 import com.app.edit.utils.AES128;
 import com.app.edit.utils.GetDateTime;
 import com.app.edit.utils.JwtService;
+import lombok.extern.slf4j.Slf4j;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static com.app.edit.config.BaseResponseStatus.*;
 
 @Service
+@Slf4j
 @Transactional(readOnly = true)
 public class UserProvider {
 
@@ -34,18 +42,20 @@ public class UserProvider {
     private final HashMap<String,String> authenticationCodeRepository;
     private final CertificationRequestRepository certificationRequestRepository;
     private final JwtService jwtService;
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Autowired
     public UserProvider(UserInfoRepository userRepository,
                         EmailSenderService sesEmailEmailSender,
                         GetDateTime getDateTime, HashMap<String, String> authenticationCodeRepository,
-                        CertificationRequestRepository certificationRequestRepository, JwtService jwtService) {
+                        CertificationRequestRepository certificationRequestRepository, JwtService jwtService, RedisTemplate<String, String> redisTemplate) {
         this.userInfoRepository = userRepository;
         this.sesEmailEmailSender = sesEmailEmailSender;
         this.getDateTime = getDateTime;
         this.authenticationCodeRepository = authenticationCodeRepository;
         this.certificationRequestRepository = certificationRequestRepository;
         this.jwtService = jwtService;
+        this.redisTemplate = redisTemplate;
     }
 
     /**
@@ -171,7 +181,11 @@ public class UserProvider {
         emailContent.append("</html>");
 
         //인증코드 3분제한으로 저장
-        authenticationCodeRepository.put(authenticationCode,getDateTime.getCustomDataTime("plus",3L));
+        Date time = Date.from(Instant.now().plusSeconds(180L));
+        redisTemplate.opsForValue().set(email,authenticationCode,
+                time.getTime() - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
+        redisTemplate.opsForValue().set(authenticationCode,email,
+                time.getTime() - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
 
         // when
         sesEmailEmailSender.send(subject, emailContent.toString(), to);
@@ -184,20 +198,32 @@ public class UserProvider {
      */
     public AuthenticationCheck authenticationCode(String authenticationCode) throws BaseException {
 
-        String authenticationTime = authenticationCodeRepository.get(authenticationCode);
+        //인증코드를 통해서 이메일 조회
+        String email = redisTemplate.opsForValue().get(authenticationCode);
 
-        if(authenticationTime == null)
+        //이메일이 비어있으면 잘못된 인증 코드
+        if(email == null)
             throw new BaseException(FAILED_TO_AUTHENTICATION_CODE);
 
+        //이메일로 최신화된 인증 코드 조회
+        String authenticationTime = redisTemplate.opsForValue().get(email);
 
-        LocalDateTime currentTime = LocalDateTime.now();
-        LocalDateTime parsedTime = LocalDateTime.parse(authenticationTime, getDateTime.GetFormatter());
+        //인증코드가 없다면 시간이 만료된 것것
+       if(authenticationTime == null)
+            throw new BaseException(AUTHENTICATION_TIME_EXPIRED);
 
-        //현재 시간이 인증 시간 이전이라면 true
-        if(currentTime.isBefore(parsedTime))
+        if(authenticationTime.equals(authenticationCode))
             return AuthenticationCheck.YES;
         else
-            throw new BaseException(AUTHENTICATION_TIME_EXPIRED);
+            throw new BaseException(FAILED_TO_AUTHENTICATION_CODE);
+
+        //LocalDateTime currentTime = LocalDateTime.now();
+        //LocalDateTime parsedTime = LocalDateTime.parse(authenticationTime, getDateTime.GetFormatter());
+
+        //현재 시간이 인증 시간 이전이라면 true
+        //if(currentTime.isBefore(parsedTime))
+        //else
+         //   throw new BaseException(AUTHENTICATION_TIME_EXPIRED);
     }
 
     /**
@@ -227,8 +253,25 @@ public class UserProvider {
      * 로그아웃
      * @return
      */
-    public PostUserRes logout() {
-        return null;
+    public void logout() throws BaseException {
+
+        String accessToken = jwtService.getJwt();
+
+        if(redisTemplate.opsForValue().get(accessToken) != null){
+            throw new BaseException(ALREADY_LOGOUT);
+        }
+
+        //StringBuilder sb = new StringBuilder();
+        //String today = getDateTime.getToday();
+        //sb.append("blacklist:").append(today);
+        //String setDays = sb.toString();
+        //redisTemplate.opsForSet().add(setDays, accessToken);
+
+        Date expirationDate = jwtService.getExpireDate(accessToken);
+        redisTemplate.opsForValue().set(
+                accessToken,"edit",
+                expirationDate.getTime() - System.currentTimeMillis(), TimeUnit.MILLISECONDS
+        );
     }
 
     /**

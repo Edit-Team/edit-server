@@ -67,7 +67,7 @@ public interface UserInfoRepository extends JpaRepository<UserInfo,Long> {
      */
     @Query(value = "select new com.app.edit.response.user.GetProfileRes(u.nickName,p.profileEmotion.name,p.profileColor.name,u.userRole) " +
             "from UserInfo u join fetch UserProfile p " +
-            "on u.id = :userInfoId and u.state = :state group by u.id")
+            "on u.id = p.userInfo.id where u.id = :userInfoId and u.state = :state group by u.id")
     Optional<GetProfileRes> findProfileByUser(@Param("userInfoId") Long userInfoId,@Param("state") State state);
 
     /**
@@ -79,7 +79,7 @@ public interface UserInfoRepository extends JpaRepository<UserInfo,Long> {
     @Query(value = "select " +
             "new com.app.edit.response.user.GetUserInfosRes" +
             "(u.nickName,p.profileEmotion.name,p.profileColor.name,u.userRole, u.job.name) " +
-            "from UserInfo u join fetch UserProfile p " +
-            "on u.id = :userInfoId and u.state = :state group by u.id")
+            "from UserInfo u join fetch UserProfile p on u.id = p.userInfo.id " +
+            "where u.id = :userInfoId and u.state = :state group by u.id")
     Optional<GetUserInfosRes> findProfileBySympathizeUser(@Param("userInfoId") Long userInfoId, @Param("state") State state);
 }
