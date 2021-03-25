@@ -32,6 +32,9 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
+    //autoProperty
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
     // DB
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     runtimeOnly 'mysql:mysql-connector-java'
@@ -49,6 +52,11 @@ dependencies {
     // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-ses
     implementation group: 'com.amazonaws', name: 'aws-java-sdk-ses', version: '1.11.967'
     compile 'software.amazon.awssdk:ses:2.10.25'
+
+    // spring-data-redis(prod)
+    compile('org.springframework.boot:spring-boot-starter-data-redis')
+    //embedded-redis(local)
+    compile group: 'it.ozimov', name: 'embedded-redis', version: '0.7.2'
 
     // H2 Database
     runtimeOnly 'com.h2database:h2'
