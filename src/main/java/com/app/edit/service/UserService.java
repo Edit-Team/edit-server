@@ -166,10 +166,10 @@ public class UserService {
         emailContent.append("<body>");
         emailContent.append(
                 " <div" 																																																	+
-                        "	style=\"font-family: 'Apple SD Gothic Neo', 'sans-serif' !important; width: 400px; height: 600px; border-top: 4px solid #02b875; margin: 100px auto; padding: 30px 0; box-sizing: border-box;\">"		+
+                        "	style=\"font-family: 'Apple SD Gothic Neo', 'sans-serif' !important; width: 800px; height: 600px; border-top: 4px solid #5a32dc; margin: 100px auto; padding: 30px 0; box-sizing: border-box;\">"		+
                         "	<h1 style=\"margin: 0; padding: 0 5px; font-size: 28px; font-weight: 400;\">"																															+
                         "		<span style=\"font-size: 15px; margin: 0 0 10px 3px;\">EDIT.</span><br />"																													+
-                        "		<span style=\"color: #02b875\">임시 비밀번호 발급</span> 안내입니다."																																				+
+                        "		<span style=\"color: #5a32dc\">임시 비밀번호 발급</span> 안내입니다."																																				+
                         "	</h1>\n"																																																+
                         "	<p style=\"font-size: 16px; line-height: 26px; margin-top: 50px; padding: 0 5px;\">"																													+
                         "		안녕하세요.<br />"																																													+
