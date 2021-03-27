@@ -22,4 +22,5 @@ public class Constant {
     public static String DEFAULT_COMPLETED_COVER_LETTER_CONTENT = null;
     public static String ETC_CHANGE_ROLE_CATEGORY_NAME = "기타";
     public static Integer ETC_CHANGE_ROLE_CONTENT_MINIMUM_LENGTH = 10;
+    public static Integer TODAY_COVER_LETTER_LIMIT_COUNT = 10;
 }
