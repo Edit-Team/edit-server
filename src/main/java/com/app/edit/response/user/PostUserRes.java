@@ -11,4 +11,5 @@ import lombok.Getter;
 public class PostUserRes {
     private final String jwt;
     private final UserRole userRole;
+    private Boolean isCertificatedMentor;
 }
