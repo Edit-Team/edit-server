@@ -18,6 +18,7 @@ import com.app.edit.domain.user.UserInfo;
 import com.app.edit.domain.user.UserInfoRepository;
 import com.app.edit.domain.userprofile.UserProfile;
 import com.app.edit.domain.userprofile.UserProfileRepository;
+import com.app.edit.enums.AuthenticationCheck;
 import com.app.edit.enums.IsProcessing;
 import com.app.edit.enums.State;
 import com.app.edit.enums.UserRole;
@@ -136,6 +137,7 @@ public class UserService {
         return PostUserRes.builder()
                 .jwt(jwt)
                 .userRole(newUser.getUserRole())
+                .isCertificatedMentor(newUser.getIsCertificatedMentor().equals(AuthenticationCheck.YES))
                 .build();
     }
 
