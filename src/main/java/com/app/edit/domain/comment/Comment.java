@@ -79,7 +79,7 @@ public class Comment extends BaseEntity {
     /*
      * 코멘트 내용
      **/
-    @Column(name = "content", nullable = false, length = 90)
+    @Column(name = "content", nullable = false, length = 300)
     private String content;
 
     /*
