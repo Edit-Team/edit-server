@@ -4,6 +4,7 @@ import com.app.edit.config.BaseException;
 import com.app.edit.domain.changerolereqeust.ChangeRoleRequest;
 import com.app.edit.domain.user.UserInfo;
 import com.app.edit.domain.user.UserInfoRepository;
+import com.app.edit.enums.AuthenticationCheck;
 import com.app.edit.enums.State;
 import com.app.edit.response.user.GetJoinedUserInfoRes;
 import com.app.edit.response.user.GetUserInfo;
@@ -54,8 +55,9 @@ public class UserInfoProvider {
         if (!userInfo.getUserRole().name().equals(userRole)) {
             throw new BaseException(TOKEN_INFORMATION_IS_NOT_EQUALS_IN_SERVER);
         }
+        boolean isCertificatedMentor = userInfo.getIsCertificatedMentor().equals(AuthenticationCheck.YES);
         Optional<ChangeRoleRequest> changeRoleRequest = changeRoleRequestProvider.getChangeRoleRequestByUserInfo(userInfo);
         changeRoleRequest.ifPresent(request -> request.process());
-        return new GetJoinedUserInfoRes(userInfo.getUserRole());
+        return new GetJoinedUserInfoRes(userInfo.getUserRole(), isCertificatedMentor);
     }
 }
