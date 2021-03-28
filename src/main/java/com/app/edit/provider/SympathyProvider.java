@@ -23,7 +23,7 @@ public class SympathyProvider {
     }
 
     public Long getSympathiesCount(CoverLetter coverLetter) {
-        return sympathyRepository.countSympathiesByCoverLetterAndState(coverLetter, State.ACTIVE);
+        return sympathyRepository.countSympathiesByCoverLetter(coverLetter);
     }
 
     public boolean getIsSympathy(Long coverLetterId, Long userInfoId) {

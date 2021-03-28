@@ -1,0 +1,53 @@
+language: java
+
+jdk:
+  - openjdk11
+
+branches:
+  only:
+    - main
+
+# Travis CI 서버의 Home
+cache:
+  directories:
+    - '$HOME/.m2/repository'
+    - '$HOME/.gradle'
+
+# Permission Denied 오류 해결을 위해 추가
+before_install:
+  - chmod +x gradlew
+
+script: "./gradlew clean build"
+
+before_deploy:
+  - zip -r edit *
+  - mkdir -p deploy
+  - mv edit.zip deploy/edit.zip
+
+deploy:
+  - provider: s3
+    access_key_id: $AWS_ACCESS_KEY # Travis repo settings에 설정된 값
+    secret_access_key: $AWS_SECRET_KEY # Travis repo settings에 설정된 값
+
+    bucket: edit-server-bucket # S3 버킷
+    region: ap-northeast-2
+    skip_cleanup: true
+    acl: private # zip 파일 접근을 private로
+    local_dir: deploy # before_deploy에서 생성한 디렉토리
+    wait-until-deployed: true
+
+  - provider: codedeploy
+    access_key_id: $AWS_ACCESS_KEY # Travis repo settings에 설정된 값
+    secret_access_key: $AWS_SECRET_KEY # Travis repo settings에 설정된 값
+    bucket: edit-server-bucket # S3 버킷
+    key: edit.zip # 빌드 파일을 압축해서 전달
+    bundle_type: zip # 압축 확장자
+    application: edit-server # 웹 콘솔에서 등록한 CodeDeploy 애플리케이션
+    deployment_group: edit-deploy # 웹 콘솔에서 등록한 CodeDeploy 배포 그룹
+    region: ap-northeast-2
+    wait-until-deployed: true
+
+# 실행 완료 시 메일로 알람
+notifications:
+  email:
+    - recipients: zhfxmtkachdt@daum.net

@@ -90,6 +90,7 @@ public enum BaseResponseStatus {
     // colt
     TOKEN_INFORMATION_IS_NOT_EQUALS_IN_SERVER(false, 3050, "토큰의 정보가 서버의 정보와 다릅니다. 로그인을 통해 갱신해주세요."),
     NOT_FOUND_COVER_LETTER(false, 3100, "존재하지 않는 자소서입니다."),
+    CAN_NOT_CREATE_COVER_LETTER_MORE_THAN_TODAY_LIMIT_COUNT(false, 3110, "하루에 자소서를 10개 이상 작성할 수 없습니다."),
     NOT_FOUND_COVER_LETTER_DECLARATION(false, 3150, "존재하지 않는 자소서 신고입니다."),
     ALREADY_PROCESSED_COVER_LETTER_DECLARATION(false, 3170, "이미 처리된 자소서 신고입니다."),
     NOT_FOUND_USER_INFO(false, 3200, "존재하지 않는 유저입니다."),
