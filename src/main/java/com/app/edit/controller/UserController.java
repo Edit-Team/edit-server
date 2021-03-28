@@ -244,9 +244,9 @@ public class UserController {
 
     /**
      * 비밀번호 찾기
-     * [Patch] /api/users/temporary-password
+     * [POST] /api/users/temporary-password
      */
-    @PatchMapping(value = "/users/temporary-password")
+    @PostMapping(value = "/users/temporary-password")
     @ApiOperation(value = "비밀번호 찾기", notes = " 찾기")
     public BaseResponse<Void> searchPassword(
             @RequestBody PatchSearchPasswordReq parameters) throws BaseException{

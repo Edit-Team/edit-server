@@ -64,7 +64,7 @@ public enum BaseResponseStatus {
     DUPLICATED_USER(false, 3011, "이미 존재하는 회원입니다."),
     FAILED_TO_GET_USER(false, 3012, "회원 정보 조회에 실패하였습니다."),
     FAILED_TO_POST_USER(false, 3013, "회원가입에 실패하였습니다."),
-    FAILED_TO_LOGIN(false, 3014, "로그인에 실패하였습니다."),
+    FAILED_TO_LOGIN(false, 3014, "로그인 정보가 없습니다."),
     FAILED_TO_DELETE_USER(false, 3015, "회원 탈퇴에 실패하였습니다."),
     FAILED_TO_PATCH_USER(false, 3016, "개인정보 수정에 실패하였습니다."),
     FAILED_TO_SEND_EMAIL(false, 3017, "이메일 전송에 실패했습니다."),
