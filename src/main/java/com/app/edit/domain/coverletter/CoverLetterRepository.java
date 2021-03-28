@@ -41,7 +41,7 @@ public interface CoverLetterRepository extends JpaRepository<CoverLetter, Long> 
     /*
      * 많은 분들이 공감하고 있어요 조회 쿼리
      **/
-    @Query(value = "select cl from CoverLetter cl where cl.createdAt >= :beforeThreeDays and cl.state = :state")
+    @Query(value = "select cl from CoverLetter cl where cl.createdAt >= :beforeThreeDays and cl.state = :state order by size(cl.sympathies) desc ")
     Page<CoverLetter> findCoverLettersHasManySympathies(Pageable pageable, @Param("beforeThreeDays") LocalDateTime beforeThreeDays, @Param("state") State state);
 
     /*

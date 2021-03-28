@@ -59,13 +59,13 @@ public class CoverLetterController {
 
     /*
      * 오늘의 문장 조회 API
-     * 먼저 등록된 순서대로 정렬
+     * 최근에 등록된 순서대로 정렬
      **/
     @ApiOperation(value = "오늘의 문장 조회 API")
     @GetMapping("/today-cover-letters")
     public BaseResponse<List<GetCoverLettersRes>> getTodayCoverLetters(@RequestParam Integer page) throws BaseException {
         PageRequest pageRequest = com.app.edit.config.PageRequest
-                .of(page, DEFAULT_PAGE_SIZE, Sort.by("createdAt"));
+                .of(page, DEFAULT_PAGE_SIZE, Sort.by("createdAt").descending());
         return new BaseResponse<>(BaseResponseStatus.SUCCESS, coverLetterProvider.retrieveTodayCoverLetters(pageRequest));
     }
 

@@ -134,6 +134,7 @@ public class TemporaryCoverLetterService {
     }
 
     public Long createWritingCoverLetterFromTemporary(PostWritingCoverLetterFromTemporaryReq request) throws BaseException {
+        coverLetterService.validateTodayCoverLetterCount();
         Long userId = jwtService.getUserInfo().getUserId();
         UserInfo userInfo = userInfoProvider.getUserInfoById(userId);
         validateUserIsMentee(userInfo);
