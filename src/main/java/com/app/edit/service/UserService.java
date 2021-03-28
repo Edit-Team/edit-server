@@ -137,7 +137,6 @@ public class UserService {
         return PostUserRes.builder()
                 .jwt(jwt)
                 .userRole(newUser.getUserRole())
-                .isCertificatedMentor(newUser.getIsCertificatedMentor().equals(AuthenticationCheck.YES))
                 .build();
     }
 
