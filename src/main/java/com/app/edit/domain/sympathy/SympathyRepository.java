@@ -15,7 +15,7 @@ import java.util.List;
 @Repository
 public interface SympathyRepository extends JpaRepository<Sympathy, SympathyId> {
 
-    Long countSympathiesByCoverLetterAndState(CoverLetter coverLetter, State state);
+    Long countSympathiesByCoverLetter(CoverLetter coverLetter);
 
     //List<GetSympathizeCoverLettersRes> MySympathiesByCoverLetter();
 
