@@ -53,7 +53,8 @@ public interface CoverLetterRepository extends JpaRepository<CoverLetter, Long> 
     @Query(value = "select cl " +
             "from CoverLetter cl " +
             "where cl.userInfo.id = :userInfoId and cl.state = :state and cl.type = :type " +
-            "and not exists(select cl2 from CoverLetter cl2 where cl.id = cl2.originalCoverLetterId and cl2.state = :state and cl2.type = 'COMPLETING')")
+            "and not exists(select cl2 from CoverLetter cl2 where cl.id = cl2.originalCoverLetterId and cl2.state = :state and cl2.type = 'COMPLETING') " +
+            "order by cl.createdAt desc ")
     Page<CoverLetter> findMyCoverLettersNotCompleted(Pageable pageable, @Param("userInfoId") Long userInfoId, @Param("state") State state, @Param("type") CoverLetterType type);
 
     /*
