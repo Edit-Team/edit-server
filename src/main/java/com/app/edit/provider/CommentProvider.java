@@ -1,6 +1,7 @@
 package com.app.edit.provider;
 
 import com.app.edit.config.BaseException;
+import com.app.edit.domain.appreciate.Appreciate;
 import com.app.edit.domain.comment.Comment;
 import com.app.edit.domain.comment.CommentRepository;
 import com.app.edit.domain.coverletter.CoverLetter;
@@ -32,14 +33,16 @@ public class CommentProvider {
     private final CommentRepository commentRepository;
     private final CoverLetterProvider coverLetterProvider;
     private final UserProvider userProvider;
+    private final AppreciateProvider appreciateProvider;
     private final JwtService jwtService;
 
     @Autowired
     public CommentProvider(CommentRepository commentRepository, CoverLetterProvider coverLetterProvider,
-                           UserProvider userProvider, JwtService jwtService) {
+                           UserProvider userProvider, AppreciateProvider appreciateProvider, JwtService jwtService) {
         this.commentRepository = commentRepository;
         this.coverLetterProvider = coverLetterProvider;
         this.userProvider = userProvider;
+        this.appreciateProvider = appreciateProvider;
         this.jwtService = jwtService;
     }
 
@@ -50,6 +53,7 @@ public class CommentProvider {
                 .map(comment -> {
                     CommentInfo commentInfo = comment.toCommentInfo();
                     setIsMineToCommentInfo(userInfoId, comment, commentInfo);
+                    setIsAppreciatedToCommentInfo(userInfoId, comment, commentInfo);
                     setUserProfileToCommentInfo(comment, commentInfo);
                     return commentInfo;
                 })
@@ -61,6 +65,11 @@ public class CommentProvider {
         coverLetterInfo.setIsSympathy(null);
         coverLetterInfo.setSympathiesCount(null);
         return new GetCommentsRes(coverLetterInfo, commentInfos);
+    }
+
+    private void setIsAppreciatedToCommentInfo(Long userInfoId, Comment comment, CommentInfo commentInfo) {
+        Optional<Appreciate> appreciate = appreciateProvider.getAppreciateByComment(userInfoId, comment);
+        appreciate.ifPresent(selectedAppreciate -> commentInfo.setIsAppreciated(true));
     }
 
     private void setIsMineToCommentInfo(Long userInfoId, Comment comment, CommentInfo commentInfo) {
