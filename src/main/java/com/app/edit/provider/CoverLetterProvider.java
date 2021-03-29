@@ -155,14 +155,14 @@ public class CoverLetterProvider {
     }
 
     /**
-     * 내가 등록한 자소서 목록 조회
+     * 내가 등록했지만 아직 완성되지 않은 자소서 목록 조회
      * @param pageable
      * @return
      */
     public List<GetCoverLettersRes> retrieveMyWritingCoverLetters(Pageable pageable) throws BaseException {
         Long userInfoId = jwtService.getUserInfo().getUserId();
         Page<CoverLetter> myCoverLetters = coverLetterRepository
-                .findMyCoverLetters(pageable, userInfoId, State.ACTIVE, CoverLetterType.WRITING);
+                .findMyCoverLettersNotCompleted(pageable, userInfoId, State.ACTIVE, CoverLetterType.WRITING);
         return getMyCoverLettersResponses(myCoverLetters);
     }
 
