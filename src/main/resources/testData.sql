@@ -61,7 +61,7 @@ insert into user_info
 values (6, current_timestamp, current_timestamp, 0, 'email6@naver.com', 'YES','YES','YES',
         concat('name', 6),
         concat('nickName', 6),'oZSdbew338DGScMteSYIHA==', '01066666666',
-        'ACTIVE', 'MENTEE', 'NONE', 1);
+        'ACTIVE', 'MENTOR', 'NONE', 1);
 
 insert into profile_emotion
 values (1, current_timestamp, current_timestamp(), 'relief', 'ACTIVE');

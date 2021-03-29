@@ -164,10 +164,10 @@ public class UserProvider {
         emailContent.append("<body>");
         emailContent.append(
                 " <div" 																																																	+
-                        "	style=\"font-family: 'Apple SD Gothic Neo', 'sans-serif' !important; width: 400px; height: 600px; border-top: 4px solid #02b875; margin: 100px auto; padding: 30px 0; box-sizing: border-box;\">"		+
+                        "	style=\"font-family: 'Apple SD Gothic Neo', 'sans-serif' !important; width: 400px; height: 600px; border-top: 4px solid #5a32dc; margin: 100px auto; padding: 30px 0; box-sizing: border-box;\">"		+
                         "	<h1 style=\"margin: 0; padding: 0 5px; font-size: 28px; font-weight: 400;\">"																															+
                         "		<span style=\"font-size: 15px; margin: 0 0 10px 3px;\">EDIT.</span><br />"																													+
-                        "		<span style=\"color: #02b875\">메일인증</span> 안내입니다."																																				+
+                        "		<span style=\"color: #5a32dc\">메일인증</span> 안내입니다."																																				+
                         "	</h1>\n"																																																+
                         "	<p style=\"font-size: 16px; line-height: 26px; margin-top: 50px; padding: 0 5px;\">"																													+
                         "		안녕하세요.<br />"																																													+
@@ -183,8 +183,8 @@ public class UserProvider {
 
         //인증코드 3분제한으로 저장
         //Date time = Date.from(Instant.now().plusSeconds(180L));
-        redisTemplate.opsForValue().set(email,authenticationCode, Duration.ofSeconds(600L));
-        redisTemplate.opsForValue().set(authenticationCode,email, Duration.ofSeconds(600L));
+        redisTemplate.opsForValue().set(email,authenticationCode, Duration.ofSeconds(1200L));
+        redisTemplate.opsForValue().set(authenticationCode,email, Duration.ofSeconds(1200L));
 
         // when
         sesEmailEmailSender.send(subject, emailContent.toString(), to);
@@ -213,7 +213,7 @@ public class UserProvider {
             throw new BaseException(FAILED_TO_AUTHENTICATION_CODE);
 
         if(authentication.equals(authenticationCode)) {
-            if(expireTime > 420L) {
+            if(expireTime > 900L) {
                 return AuthenticationCheck.YES;
             }else if(0L <= expireTime){
                 return AuthenticationCheck.NO;
