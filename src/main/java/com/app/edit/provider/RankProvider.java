@@ -8,25 +8,22 @@ import com.app.edit.enums.CoverLetterType;
 import com.app.edit.enums.IsAdopted;
 import com.app.edit.enums.State;
 import com.app.edit.enums.UserRole;
+import com.app.edit.response.user.GetRankMentorRes;
 import com.app.edit.response.user.GetRankRes;
 import com.app.edit.response.user.GetUserRankRes;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Stack;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static com.app.edit.config.BaseResponseStatus.NOT_FOUND_USER;
+
 
 @Transactional(readOnly = true)
 @Service
@@ -34,10 +31,12 @@ import static org.junit.Assert.assertThat;
 public class RankProvider {
 
     private final UserInfoRepository userInfoRepository;
+    private final CommentProvider commentProvider;
 
     @Autowired
-    public RankProvider(UserInfoRepository userInfoRepository) {
+    public RankProvider(UserInfoRepository userInfoRepository, CommentProvider commentProvider) {
         this.userInfoRepository = userInfoRepository;
+        this.commentProvider = commentProvider;
     }
 
     /**
@@ -75,12 +74,34 @@ public class RankProvider {
                 .getUserRankResList(userInfo.stream()
                         .map(userInfo1 -> GetUserRankRes.builder()
                                 .rankId(count.getAndIncrement())
+                                .userId(userInfo1.getId())
                                 .colorName(userInfo1.getUserProfile().getProfileColor().getName())
                                 .emotionName(userInfo1.getUserProfile().getProfileEmotion().getName())
-                                .name(userInfo1.getName())
+                                .nickName(userInfo1.getNickName())
                                 .job(userInfo1.getJob().getName())
                                 .build())
                         .collect(Collectors.toList()))
+                .build();
+    }
+
+    /**
+     * 멘토 랭킹 상세 조회
+     * @param userId
+     * @param rankId
+     */
+    public GetRankMentorRes getRankMentor(Long userId, Long rankId) throws BaseException{
+
+        UserInfo userInfo = userInfoRepository.findByStateAndId(State.ACTIVE,userId)
+                .orElseThrow(() -> new BaseException(NOT_FOUND_USER));
+
+        return GetRankMentorRes.builder()
+                .rankId(rankId)
+                .nickName(userInfo.getNickName())
+                .colorName(userInfo.getUserProfile().getProfileColor().getName())
+                .emotionName(userInfo.getUserProfile().getProfileEmotion().getName())
+                .userRole(userInfo.getUserRole())
+                .CommentCount(commentProvider.retrieveMyCommentCount(userId))
+                .CommentAdoptCount(commentProvider.retrieveMyAdoptCommentCount(userId))
                 .build();
     }
 }
