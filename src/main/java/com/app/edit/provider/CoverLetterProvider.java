@@ -261,11 +261,11 @@ public class CoverLetterProvider {
 
     public GetCoverLetterToCompleteRes retrieveCoverLetterToComplete(Long coverLetterId) throws BaseException {
         CoverLetter originalCoverLetter = getCoverLetterById(coverLetterId);
-        Long originalCoverLetterCategoryId = originalCoverLetter.getCoverLetterCategory().getId();
+        String originalCoverLetterCategoryName = originalCoverLetter.getCoverLetterCategory().getName();
         String originalCoverLetterContent = originalCoverLetter.getContent();
         Comment adoptedComment = originalCoverLetter.getAdoptedComment();
         String adoptedCommentContent = adoptedComment.getContent();
-        return new GetCoverLetterToCompleteRes(coverLetterId, originalCoverLetterCategoryId,
+        return new GetCoverLetterToCompleteRes(coverLetterId, originalCoverLetterCategoryName,
                 originalCoverLetterContent, adoptedCommentContent);
     }
 
