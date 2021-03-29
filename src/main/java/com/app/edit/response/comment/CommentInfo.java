@@ -21,4 +21,5 @@ public class CommentInfo {
     private String commentContent;
     private IsAdopted isAdopted;
     private Boolean isMine;
+    private Boolean isAppreciated;
 }
