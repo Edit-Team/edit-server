@@ -22,8 +22,7 @@ public class AppreciateProvider {
         this.appreciateRepository = appreciateRepository;
     }
 
-    public Optional<Appreciate> getAppreciateByComment(Comment comment) {
-        UserInfo userInfo = comment.getUserInfo();
-        return appreciateRepository.findByUserInfoAndState(userInfo, State.ACTIVE);
+    public Optional<Appreciate> getAppreciateByComment(Long userInfoId, Comment comment) {
+        return appreciateRepository.findByUserInfoAndCommentAndState(userInfoId, comment, State.ACTIVE);
     }
 }
