@@ -77,7 +77,7 @@ public class CoverLetterProvider {
         LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
         LocalDateTime startOfTomorrow = startOfToday.plusDays(ONE);
         Page<CoverLetter> coverLettersOnToday = coverLetterRepository
-                .findCoverLettersOnToday(pageable, startOfToday, startOfTomorrow, State.ACTIVE);
+                .findCoverLettersOnToday(pageable, startOfToday, startOfTomorrow, State.ACTIVE, CoverLetterType.WRITING);
         return getCoverLettersResponses(coverLettersOnToday);
     }
 
@@ -85,7 +85,7 @@ public class CoverLetterProvider {
      * 코멘트를 기다리고 있어요 조회
      **/
     public List<GetCoverLettersRes> retrieveWaitingForCommentCoverLetters(Pageable pageable) throws BaseException {
-        Page<CoverLetter> coverLettersHasNotComment = coverLetterRepository.findCoverLettersHasNotComment(pageable, State.ACTIVE);
+        Page<CoverLetter> coverLettersHasNotComment = coverLetterRepository.findCoverLettersHasNotComment(pageable, State.ACTIVE, CoverLetterType.WRITING);
         return getCoverLettersResponses(coverLettersHasNotComment);
     }
 
@@ -93,7 +93,7 @@ public class CoverLetterProvider {
      * 채택이 완료되었어요 조회
      **/
     public List<GetCoverLettersRes> retrieveAdoptedCoverLetters(Pageable pageable) throws BaseException {
-        Page<CoverLetter> coverLettersHasAdoptedComment = coverLetterRepository.findCoverLettersHasAdoptedComment(pageable, IsAdopted.YES, State.ACTIVE);
+        Page<CoverLetter> coverLettersHasAdoptedComment = coverLetterRepository.findCoverLettersHasAdoptedComment(pageable, IsAdopted.YES, State.ACTIVE, CoverLetterType.WRITING);
         return getCoverLettersResponses(coverLettersHasAdoptedComment);
     }
 
@@ -102,7 +102,7 @@ public class CoverLetterProvider {
      **/
     public List<GetCoverLettersRes> retrieveManySympathiesCoverLetters(Pageable pageable) throws BaseException {
         LocalDateTime beforeThreeDays = LocalDateTime.now().minusDays(CAN_STAY_DAY);
-        Page<CoverLetter> coverLettersHasManySympathies = coverLetterRepository.findCoverLettersHasManySympathies(pageable, beforeThreeDays, State.ACTIVE);
+        Page<CoverLetter> coverLettersHasManySympathies = coverLetterRepository.findCoverLettersHasManySympathies(pageable, beforeThreeDays, State.ACTIVE, CoverLetterType.WRITING);
         return getCoverLettersResponses(coverLettersHasManySympathies).stream()
                 .sorted(comparing(GetCoverLettersRes::getSympathiesCount).reversed())
                 .collect(toList());
