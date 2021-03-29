@@ -44,6 +44,19 @@ public interface CoverLetterRepository extends JpaRepository<CoverLetter, Long> 
     @Query(value = "select cl from CoverLetter cl where cl.createdAt >= :beforeThreeDays and cl.state = :state and cl.type = :type order by size(cl.sympathies) desc ")
     Page<CoverLetter> findCoverLettersHasManySympathies(Pageable pageable, @Param("beforeThreeDays") LocalDateTime beforeThreeDays, @Param("state") State state, @Param("type") CoverLetterType type);
 
+    /**
+     * 내가 등록했지만 아직 완성되지 않은 자소서 목록 조회
+     * @param pageable
+     * @param type
+     * @return
+     */
+    @Query(value = "select cl " +
+            "from CoverLetter cl " +
+            "where cl.userInfo.id = :userInfoId and cl.state = :state and cl.type = :type " +
+            "and not exists(select cl2 from CoverLetter cl2 where cl.id = cl2.originalCoverLetterId and cl2.state = :state and cl2.type = 'COMPLETING') " +
+            "order by cl.createdAt desc ")
+    Page<CoverLetter> findMyCoverLettersNotCompleted(Pageable pageable, @Param("userInfoId") Long userInfoId, @Param("state") State state, @Param("type") CoverLetterType type);
+
     /*
      * 내가 등록한/완성한 자소서 목록 조회 쿼리
      **/
@@ -59,6 +72,7 @@ public interface CoverLetterRepository extends JpaRepository<CoverLetter, Long> 
 
     /**
      * 유저가 오늘 작성한 자소서 개수 조회 쿼리
+     *
      * @param userInfoId
      * @param startOfToday
      * @param startOfTomorrow
