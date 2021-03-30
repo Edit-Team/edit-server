@@ -77,7 +77,7 @@ public class CoverLetterProvider {
         LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
         LocalDateTime startOfTomorrow = startOfToday.plusDays(ONE);
         Page<CoverLetter> coverLettersOnToday = coverLetterRepository
-                .findCoverLettersOnToday(pageable, startOfToday, startOfTomorrow, State.ACTIVE);
+                .findCoverLettersOnToday(pageable, startOfToday, startOfTomorrow, State.ACTIVE, CoverLetterType.WRITING);
         return getCoverLettersResponses(coverLettersOnToday);
     }
 
@@ -85,7 +85,7 @@ public class CoverLetterProvider {
      * 코멘트를 기다리고 있어요 조회
      **/
     public List<GetCoverLettersRes> retrieveWaitingForCommentCoverLetters(Pageable pageable) throws BaseException {
-        Page<CoverLetter> coverLettersHasNotComment = coverLetterRepository.findCoverLettersHasNotComment(pageable, State.ACTIVE);
+        Page<CoverLetter> coverLettersHasNotComment = coverLetterRepository.findCoverLettersHasNotComment(pageable, State.ACTIVE, CoverLetterType.WRITING);
         return getCoverLettersResponses(coverLettersHasNotComment);
     }
 
@@ -93,7 +93,7 @@ public class CoverLetterProvider {
      * 채택이 완료되었어요 조회
      **/
     public List<GetCoverLettersRes> retrieveAdoptedCoverLetters(Pageable pageable) throws BaseException {
-        Page<CoverLetter> coverLettersHasAdoptedComment = coverLetterRepository.findCoverLettersHasAdoptedComment(pageable, IsAdopted.YES, State.ACTIVE);
+        Page<CoverLetter> coverLettersHasAdoptedComment = coverLetterRepository.findCoverLettersHasAdoptedComment(pageable, IsAdopted.YES, State.ACTIVE, CoverLetterType.WRITING);
         return getCoverLettersResponses(coverLettersHasAdoptedComment);
     }
 
@@ -102,7 +102,7 @@ public class CoverLetterProvider {
      **/
     public List<GetCoverLettersRes> retrieveManySympathiesCoverLetters(Pageable pageable) throws BaseException {
         LocalDateTime beforeThreeDays = LocalDateTime.now().minusDays(CAN_STAY_DAY);
-        Page<CoverLetter> coverLettersHasManySympathies = coverLetterRepository.findCoverLettersHasManySympathies(pageable, beforeThreeDays, State.ACTIVE);
+        Page<CoverLetter> coverLettersHasManySympathies = coverLetterRepository.findCoverLettersHasManySympathies(pageable, beforeThreeDays, State.ACTIVE, CoverLetterType.WRITING);
         return getCoverLettersResponses(coverLettersHasManySympathies).stream()
                 .sorted(comparing(GetCoverLettersRes::getSympathiesCount).reversed())
                 .collect(toList());
@@ -155,14 +155,14 @@ public class CoverLetterProvider {
     }
 
     /**
-     * 내가 등록한 자소서 목록 조회
+     * 내가 등록했지만 아직 완성되지 않은 자소서 목록 조회
      * @param pageable
      * @return
      */
     public List<GetCoverLettersRes> retrieveMyWritingCoverLetters(Pageable pageable) throws BaseException {
         Long userInfoId = jwtService.getUserInfo().getUserId();
         Page<CoverLetter> myCoverLetters = coverLetterRepository
-                .findMyCoverLetters(pageable, userInfoId, State.ACTIVE, CoverLetterType.WRITING);
+                .findMyCoverLettersNotCompleted(pageable, userInfoId, State.ACTIVE, CoverLetterType.WRITING);
         return getMyCoverLettersResponses(myCoverLetters);
     }
 
@@ -261,11 +261,11 @@ public class CoverLetterProvider {
 
     public GetCoverLetterToCompleteRes retrieveCoverLetterToComplete(Long coverLetterId) throws BaseException {
         CoverLetter originalCoverLetter = getCoverLetterById(coverLetterId);
-        Long originalCoverLetterCategoryId = originalCoverLetter.getCoverLetterCategory().getId();
+        String originalCoverLetterCategoryName = originalCoverLetter.getCoverLetterCategory().getName();
         String originalCoverLetterContent = originalCoverLetter.getContent();
         Comment adoptedComment = originalCoverLetter.getAdoptedComment();
         String adoptedCommentContent = adoptedComment.getContent();
-        return new GetCoverLetterToCompleteRes(coverLetterId, originalCoverLetterCategoryId,
+        return new GetCoverLetterToCompleteRes(coverLetterId, originalCoverLetterCategoryName,
                 originalCoverLetterContent, adoptedCommentContent);
     }
 

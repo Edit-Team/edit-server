@@ -10,7 +10,7 @@ import lombok.Setter;
 public class GetCoverLetterToCompleteRes {
 
     private Long originalCoverLetterId;
-    private Long originalCoverLetterCategoryId;
+    private String originalCoverLetterCategoryName;
     private String originalCoverLetterContent;
     private String adoptedCommentContent;
 }

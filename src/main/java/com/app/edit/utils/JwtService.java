@@ -92,7 +92,7 @@ public class JwtService {
      */
     public GetUserInfo getUserInfo() throws BaseException {
         // 1. JWT 추출
-        log.info("JWT 검증 시작");
+        log.debug("JWT 검증 시작");
         String accessToken = getJwt();
         if (accessToken == null || accessToken.length() == 0) {
             throw new BaseException(EMPTY_JWT);
@@ -111,10 +111,10 @@ public class JwtService {
                     .parseClaimsJws(accessToken);
 
         } catch (ExpiredJwtException exception) {
-            log.info("JWT가 만료되었습니다.");
+            log.debug("JWT가 만료되었습니다.");
             throw new BaseException(EXPIRED_JWT);
         }catch (Exception e){
-            log.info("유효하지 않은 JWT 입니다.");
+            log.debug("유효하지 않은 JWT 입니다.");
             throw new BaseException(INVALID_JWT);
         }
 
