@@ -175,7 +175,7 @@ public class UserService {
                         "	<p style=\"font-size: 16px; line-height: 26px; margin-top: 50px; padding: 0 5px;\">"																													+
                         "		안녕하세요.<br />"																																													+
                         "		EDIT. 임시 비밀번호 발급 관련된 메일 전송입니다.<br />"																																						+
-                        "		인증코드는 "+ temporaryPassword + "입니다<br />"																													+
+                        "		임시 비밀번호는 "+ temporaryPassword + "입니다<br />"																													+
                         "		감사합니다."																																															+
                         "	</p>"																																																	+
                         "	<div style=\"border-top: 1px solid #DDD; padding: 5px;\"></div>"																																		+
