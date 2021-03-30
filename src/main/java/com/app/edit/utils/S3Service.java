@@ -51,7 +51,7 @@ public class S3Service {
                 .build();
     }
 
-    public String upload(byte[] file, Long userId) throws IOException {
+    public String upload(MultipartFile file, Long userId) throws IOException {
         String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         String fileName = "mentor-certifications/" + today + "/" + userId;
 
@@ -61,7 +61,7 @@ public class S3Service {
         metaData.setContentType("image/png");
         //ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
 
-        s3Client.putObject(new PutObjectRequest(bucket, fileName, new ByteArrayInputStream(file), metaData)
+        s3Client.putObject(new PutObjectRequest(bucket, fileName, file.getInputStream(), metaData)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
         return s3Client.getUrl(bucket, fileName).toString();
     }

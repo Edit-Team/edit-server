@@ -269,7 +269,7 @@ public class UserService {
      * @throws IOException
      * @throws BaseException
      */
-    public void AuthenticationMentor(Long userId, byte[] authenticationFile) throws IOException, BaseException {
+    public void AuthenticationMentor(Long userId, MultipartFile authenticationFile) throws IOException, BaseException {
 
         UserInfo userInfo = userInfoRepository.findByStateAndId(State.ACTIVE,userId)
                 .orElseThrow(() -> new BaseException(NOT_FOUND_USER));
