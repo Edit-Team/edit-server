@@ -10,6 +10,7 @@ import com.app.edit.response.user.GetJoinedUserInfoRes;
 import com.app.edit.response.user.GetUserInfo;
 import com.app.edit.service.ChangeRoleRequestService;
 import com.app.edit.utils.JwtService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,7 @@ import java.util.Optional;
 
 import static com.app.edit.config.BaseResponseStatus.*;
 
+@Slf4j
 @Transactional
 @Service
 public class UserInfoProvider {
@@ -58,6 +60,7 @@ public class UserInfoProvider {
         boolean isCertificatedMentor = userInfo.getIsCertificatedMentor().equals(AuthenticationCheck.YES);
         Optional<ChangeRoleRequest> changeRoleRequest = changeRoleRequestProvider.getChangeRoleRequestByUserInfo(userInfo);
         changeRoleRequest.ifPresent(request -> request.process());
+        log.info("{} 님이 자동 로그인 하셨습니다.", userInfo.getNickName());
         return new GetJoinedUserInfoRes(userInfo.getUserRole(), isCertificatedMentor);
     }
 }
