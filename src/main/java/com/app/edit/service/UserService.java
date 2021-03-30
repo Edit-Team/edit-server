@@ -26,6 +26,7 @@ import com.app.edit.provider.UserInfoProvider;
 import com.app.edit.provider.UserProvider;
 import com.app.edit.request.user.DeleteUserReq;
 import com.app.edit.request.user.PatchRoleReq;
+import com.app.edit.request.user.PostMentorAuthenticationReq;
 import com.app.edit.request.user.PostUserReq;
 import com.app.edit.response.user.GetNickNameRes;
 import com.app.edit.response.user.PostUserRes;
@@ -39,6 +40,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Optional;
 
 import static com.app.edit.config.BaseResponseStatus.*;
@@ -265,15 +267,16 @@ public class UserService {
     /**
      * 멘토 인증 신청
      * @param userId
-     * @param authenticationFile
+     * @param request
      * @throws IOException
      * @throws BaseException
      */
-    public void AuthenticationMentor(Long userId, MultipartFile authenticationFile) throws IOException, BaseException {
-
+    public void AuthenticationMentor(Long userId, PostMentorAuthenticationReq request) throws IOException, BaseException {
+        String authenticationFile = request.getAuthenticationImage();
+        byte[] decodedFile = Base64.getMimeDecoder().decode(authenticationFile.substring(authenticationFile.indexOf(",") + 1));
         UserInfo userInfo = userInfoRepository.findByStateAndId(State.ACTIVE,userId)
                 .orElseThrow(() -> new BaseException(NOT_FOUND_USER));
-        String imgPath = s3Service.upload(authenticationFile, userId);
+        String imgPath = s3Service.upload(decodedFile, userId);
 
         CertificationRequest certificationRequest = CertificationRequest.builder()
                 .userInfo(userInfo)

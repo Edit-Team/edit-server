@@ -52,24 +52,24 @@ public class S3Service {
                 .build();
     }
 
-    public String upload(MultipartFile file, Long userId) throws IOException {
+    public String upload(byte[] file, Long userId) throws IOException {
         String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         String fileName = "mentor-certifications/" + today + "/" + userId;
 
-        byte[] bytes = IOUtils.toByteArray(file.getInputStream());
+//        byte[] bytes = IOUtils.toByteArray(file.getInputStream());
         ObjectMetadata metaData = new ObjectMetadata();
-        metaData.setContentLength(bytes.length);
+        metaData.setContentLength(file.length);
         metaData.setCacheControl("604800"); // 60*60*24*7 일주일
-        String filetype = Objects.requireNonNull(file.getOriginalFilename()).substring(file.getOriginalFilename().length()-3);
-        if(filetype.equals("png")){
-            metaData.setContentType("image/png");
-        }
-        if(filetype.equals("jpg")){
-            metaData.setContentType("image/jpeg");
-        }
+//        String filetype = Objects.requireNonNull(file.getOriginalFilename()).substring(file.getOriginalFilename().length()-3);
+//        if(filetype.equals("png")){
+//            metaData.setContentType("image/png");
+//        }
+//        if(filetype.equals("jpg")){
+//            metaData.setContentType("image/jpeg");
+//        }
         //ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
 
-        s3Client.putObject(new PutObjectRequest(bucket, fileName, file.getInputStream(), metaData)
+        s3Client.putObject(new PutObjectRequest(bucket, fileName, new ByteArrayInputStream(file), metaData)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
         return s3Client.getUrl(bucket, fileName).toString();
     }
