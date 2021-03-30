@@ -11,8 +11,7 @@ import lombok.Getter;
 public class GetUserRankRes {
 
     private final Long rankId;
-    private final Long userId;
-    private final String nickName;
+    private final String name;
     private final String emotionName;
     private final String colorName;
     private final String job;

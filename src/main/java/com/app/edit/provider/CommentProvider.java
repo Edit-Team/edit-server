@@ -193,18 +193,5 @@ public class CommentProvider {
                 .build();
     }
 
-    /**
-     * 내 코멘트 작성된 수
-     */
-    public Long retrieveMyCommentCount(Long userInfoId){
-        return commentRepository.findByUserAndState(userInfoId,State.ACTIVE);
-    }
 
-    /**
-     * 내 채택된 코멘트 수
-     * @return
-     */
-    public Long retrieveMyAdoptCommentCount(Long userInfoId) {
-        return commentRepository.findUserAndStateAndAdopt(userInfoId,State.ACTIVE,IsAdopted.YES);
-    }
 }
