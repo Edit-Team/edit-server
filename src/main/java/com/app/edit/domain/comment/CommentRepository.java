@@ -53,4 +53,23 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     Page<Comment> findByUser(Pageable pageable,@Param("userInfoId") Long userInfoId, @Param("state") State state);
 
     Optional<Comment> findByIdAndState(Long commentId,State state);
+
+    /**
+     * 내가 작성한 코멘트 수 구하기
+     * @param userInfoId
+     * @param state
+     * @return
+     */
+    @Query(value = "select count(c) from Comment c where c.userInfo.id = :userInfoId and c.state = :state")
+    Long findByUserAndState(@Param("userInfoId") Long userInfoId,@Param("state") State state);
+
+    /**
+     * 내가 채택한 코멘트 수 구하기
+     * @param userInfoId
+     * @param state
+     * @param isAdopted
+     * @return
+     */
+    @Query(value = "select count(c) from Comment c where c.userInfo.id = :userInfoId and c.state = :state and c.isAdopted = :isAdopted")
+    Long findUserAndStateAndAdopt(@Param("userInfoId") Long userInfoId, @Param("state") State state,@Param("isAdopted") IsAdopted isAdopted);
 }
