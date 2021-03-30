@@ -51,9 +51,9 @@ public class S3Service {
                 .build();
     }
 
-    public String upload(byte[] file, Long certificationRequestId) throws IOException {
+    public String upload(byte[] file, Long userId) throws IOException {
         String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        String fileName = "mentor-certifications/" + today + "/" + certificationRequestId;
+        String fileName = "mentor-certifications/" + today + "/" + userId;
 
 //        byte[] bytes = IOUtils.toByteArray(file.getInputStream());
         ObjectMetadata metaData = new ObjectMetadata();
