@@ -456,7 +456,7 @@ public class UserController {
     @ApiOperation(value = "멘토 인증", notes = "멘토 인증")
     public BaseResponse<Void> userAuthentication(
             @RequestHeader("X-ACCESS-TOKEN") String jwt,
-            @RequestParam(value = "authenticationImage") byte[] authenticationImage) throws IOException {
+            @RequestPart(value = "authenticationImage") MultipartFile multipartFile) throws IOException {
         try {
 
             GetUserInfo getUserInfo = jwtService.getUserInfo();
@@ -473,7 +473,7 @@ public class UserController {
             if( userRole.equals(UserRole.MENTEE))
                 return new BaseResponse<>(UNAUTHORIZED_AUTHORITY);
 
-            userService.AuthenticationMentor(userId,authenticationImage);
+            userService.AuthenticationMentor(userId,multipartFile);
 
             return new BaseResponse<>(SUCCESS);
         } catch (BaseException exception) {
