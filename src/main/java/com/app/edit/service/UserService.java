@@ -273,13 +273,7 @@ public class UserService {
 
         UserInfo userInfo = userInfoRepository.findByStateAndId(State.ACTIVE,userId)
                 .orElseThrow(() -> new BaseException(NOT_FOUND_USER));
-        Optional<CertificationRequest> certificationRequestId = certificationRequestRepository.findTopByOrderByCreatedAtDesc();
-        String imgPath = "";
-        if (certificationRequestId.isPresent()) {
-            imgPath = s3Service.upload(authenticationFile, certificationRequestId.get().getId());
-        } else {
-            imgPath = s3Service.upload(authenticationFile, 1L);
-        }
+        String imgPath = s3Service.upload(authenticationFile, userId);
 
         CertificationRequest certificationRequest = CertificationRequest.builder()
                 .userInfo(userInfo)
