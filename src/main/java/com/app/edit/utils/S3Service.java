@@ -60,6 +60,7 @@ public class S3Service {
         ObjectMetadata metaData = new ObjectMetadata();
         metaData.setContentLength(file.length);
         metaData.setCacheControl("604800"); // 60*60*24*7 일주일
+        metaData.setContentType("image/jpeg");
 //        String filetype = Objects.requireNonNull(file.getOriginalFilename()).substring(file.getOriginalFilename().length()-3);
 //        if(filetype.equals("png")){
 //            metaData.setContentType("image/png");
