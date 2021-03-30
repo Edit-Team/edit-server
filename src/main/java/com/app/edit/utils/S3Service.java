@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 @Service
 public class S3Service {
@@ -55,10 +56,17 @@ public class S3Service {
         String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         String fileName = "mentor-certifications/" + today + "/" + userId;
 
-//        byte[] bytes = IOUtils.toByteArray(file.getInputStream());
+        byte[] bytes = IOUtils.toByteArray(file.getInputStream());
         ObjectMetadata metaData = new ObjectMetadata();
+        metaData.setContentLength(bytes.length);
         metaData.setCacheControl("604800"); // 60*60*24*7 일주일
-        metaData.setContentType("image/png");
+        String filetype = Objects.requireNonNull(file.getOriginalFilename()).substring(file.getOriginalFilename().length()-3);
+        if(filetype.equals("png")){
+            metaData.setContentType("image/png");
+        }
+        if(filetype.equals("jpg")){
+            metaData.setContentType("image/jpeg");
+        }
         //ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
 
         s3Client.putObject(new PutObjectRequest(bucket, fileName, file.getInputStream(), metaData)
