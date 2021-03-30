@@ -18,7 +18,6 @@ import com.app.edit.domain.user.UserInfo;
 import com.app.edit.domain.user.UserInfoRepository;
 import com.app.edit.domain.userprofile.UserProfile;
 import com.app.edit.domain.userprofile.UserProfileRepository;
-import com.app.edit.enums.AuthenticationCheck;
 import com.app.edit.enums.IsProcessing;
 import com.app.edit.enums.State;
 import com.app.edit.enums.UserRole;
@@ -29,15 +28,11 @@ import com.app.edit.request.user.DeleteUserReq;
 import com.app.edit.request.user.PatchRoleReq;
 import com.app.edit.request.user.PostUserReq;
 import com.app.edit.response.user.GetNickNameRes;
-import com.app.edit.response.user.PatchRoleRes;
 import com.app.edit.response.user.PostUserRes;
 import com.app.edit.utils.AES128;
 import com.app.edit.utils.JwtService;
 import com.app.edit.utils.S3Service;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -274,12 +269,17 @@ public class UserService {
      * @throws IOException
      * @throws BaseException
      */
-    public void AuthenticationMentor(Long userId, MultipartFile authenticationFile) throws IOException, BaseException {
+    public void AuthenticationMentor(Long userId, byte[] authenticationFile) throws IOException, BaseException {
 
         UserInfo userInfo = userInfoRepository.findByStateAndId(State.ACTIVE,userId)
                 .orElseThrow(() -> new BaseException(NOT_FOUND_USER));
-
-        String imgPath = s3Service.upload(authenticationFile);
+        Optional<CertificationRequest> certificationRequestId = certificationRequestRepository.findTopByOrderByCreatedAtDesc();
+        String imgPath = "";
+        if (certificationRequestId.isPresent()) {
+            imgPath = s3Service.upload(authenticationFile, certificationRequestId.get().getId());
+        } else {
+            imgPath = s3Service.upload(authenticationFile, 1L);
+        }
 
         CertificationRequest certificationRequest = CertificationRequest.builder()
                 .userInfo(userInfo)
@@ -287,7 +287,7 @@ public class UserService {
                 .build();
 
         try{
-            certificationRequestRepository.save(certificationRequest);
+            certificationRequestRepository.save(certificationRequest).getImageUrl();
         }catch (Exception exception){
             throw new BaseException(FAILED_TO_POST_CERTIFICATION_REQUEST);
         }
