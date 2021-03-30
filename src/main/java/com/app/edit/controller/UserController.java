@@ -456,7 +456,7 @@ public class UserController {
     @ApiOperation(value = "멘토 인증", notes = "멘토 인증")
     public BaseResponse<Void> userAuthentication(
             @RequestHeader("X-ACCESS-TOKEN") String jwt,
-            @RequestParam(value = "authenticationImage") byte[] authenticationImage) throws IOException {
+            @RequestPart(value = "authenticationImage") MultipartFile authenticationImage) throws IOException {
         try {
 
             GetUserInfo getUserInfo = jwtService.getUserInfo();
