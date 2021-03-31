@@ -14,7 +14,6 @@ import com.app.edit.utils.AES128;
 import com.app.edit.utils.GetDateTime;
 import com.app.edit.utils.JwtService;
 import lombok.extern.slf4j.Slf4j;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -22,10 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.time.Duration;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -352,7 +347,7 @@ public class UserProvider {
 
         //IsProcessing = no -> 처리중이면 Waiting 반환
         Optional<CertificationRequest> certificationRequest1 =
-                certificationRequestRepository.findByIsProcessingAndUserInfo(IsProcessing.NO,userInfo);
+                certificationRequestRepository.findTop1ByIsProcessingAndUserInfoOrderByCreatedAtDesc(IsProcessing.NO,userInfo);
 
         if(certificationRequest1.isPresent())
             return GetAuthenticationRes.builder()
@@ -361,7 +356,7 @@ public class UserProvider {
 
         //IsProcessing = yes -> 인증 성공 = YES, 인증 실패 = NO
         Optional<CertificationRequest> certificationRequest =
-                certificationRequestRepository.findByIsProcessingAndUserInfo(IsProcessing.YES,userInfo);
+                certificationRequestRepository.findTop1ByIsProcessingAndUserInfoOrderByCreatedAtDesc(IsProcessing.YES,userInfo);
 
         if(certificationRequest.isPresent()) {
             if(userInfo.getIsCertificatedMentor().equals(AuthenticationCheck.YES)) {
