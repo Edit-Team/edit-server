@@ -18,6 +18,7 @@ import com.app.edit.domain.user.UserInfo;
 import com.app.edit.domain.user.UserInfoRepository;
 import com.app.edit.domain.userprofile.UserProfile;
 import com.app.edit.domain.userprofile.UserProfileRepository;
+import com.app.edit.enums.AuthenticationCheck;
 import com.app.edit.enums.IsProcessing;
 import com.app.edit.enums.State;
 import com.app.edit.enums.UserRole;
@@ -353,6 +354,7 @@ public class UserService {
 
         // 멘티로 변경
         userInfo.setUserRole(UserRole.MENTEE);
+        userInfo.setIsCertificatedMentor(AuthenticationCheck.NO);
 
         userProvider.logout();
 
