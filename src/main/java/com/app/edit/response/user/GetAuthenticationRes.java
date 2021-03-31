@@ -8,5 +8,5 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class GetAuthenticationRes {
-    private String presentState;
+    private final String presentState;
 }
