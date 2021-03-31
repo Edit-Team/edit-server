@@ -35,7 +35,7 @@ public interface CoverLetterRepository extends JpaRepository<CoverLetter, Long> 
     /*
      * 채택이 완료되었어요 조회 쿼리
      **/
-    @Query(value = "select cl from CoverLetter cl where exists(select c from Comment c where c.isAdopted = :isAdopted and c.coverLetter = cl and c.state = :state) and cl.type = :type")
+    @Query(value = "select cl from CoverLetter cl where cl.state = :state and exists(select c from Comment c where c.isAdopted = :isAdopted and c.coverLetter = cl and c.state = :state) and cl.type = :type")
     Page<CoverLetter> findCoverLettersHasAdoptedComment(Pageable pageable, @Param("isAdopted") IsAdopted isAdopted, @Param("state") State state, @Param("type") CoverLetterType type);
 
     /*
