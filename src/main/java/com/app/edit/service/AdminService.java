@@ -1,7 +1,6 @@
 package com.app.edit.service;
 
 import com.app.edit.config.BaseException;
-import com.app.edit.config.BaseResponseStatus;
 import com.app.edit.domain.certificationRequest.CertificationRequest;
 import com.app.edit.domain.certificationRequest.CertificationRequestRepository;
 import com.app.edit.domain.user.UserInfo;
@@ -41,7 +40,7 @@ public class AdminService {
         //인증 승낙
         if(authenticationType == 1){
             CertificationRequest certificationRequest =
-                    certificationRequestRepository.findByIsProcessingAndUserInfo(IsProcessing.NO,userInfo)
+                    certificationRequestRepository.findTop1ByIsProcessingAndUserInfoOrderByCreatedAtDesc(IsProcessing.NO,userInfo)
                             .orElseThrow(() -> new BaseException(FAILED_TO_GET_CERTIFICATION_REQUEST));
 
             certificationRequest.setIsProcessing(IsProcessing.YES);
@@ -52,7 +51,7 @@ public class AdminService {
         if(authenticationType == 2){
             //인증 요청 조회
             CertificationRequest certificationRequest =
-                    certificationRequestRepository.findByIsProcessingAndUserInfo(IsProcessing.NO,userInfo)
+                    certificationRequestRepository.findTop1ByIsProcessingAndUserInfoOrderByCreatedAtDesc(IsProcessing.NO,userInfo)
                             .orElseThrow(() -> new BaseException(FAILED_TO_GET_CERTIFICATION_REQUEST));
 
             //인증 처리 후 멘티 -> 멘토로 역할 변경
@@ -79,7 +78,7 @@ public class AdminService {
 
             //인증 요청 조회
             CertificationRequest certificationRequest =
-                    certificationRequestRepository.findByIsProcessingAndUserInfo(IsProcessing.NO,userInfo)
+                    certificationRequestRepository.findTop1ByIsProcessingAndUserInfoOrderByCreatedAtDesc(IsProcessing.NO,userInfo)
                     .orElseThrow(() -> new BaseException(FAILED_TO_GET_CERTIFICATION_REQUEST));
 
             //인증 처리 후 멘티 -> 멘토로 역할 변경
@@ -91,7 +90,7 @@ public class AdminService {
         if(changeType == 2){
             //인증 요청 조회
             CertificationRequest certificationRequest =
-                    certificationRequestRepository.findByIsProcessingAndUserInfo(IsProcessing.NO,userInfo)
+                    certificationRequestRepository.findTop1ByIsProcessingAndUserInfoOrderByCreatedAtDesc(IsProcessing.NO,userInfo)
                             .orElseThrow(() -> new BaseException(FAILED_TO_GET_CERTIFICATION_REQUEST));
 
             //인증 처리 후 멘티 -> 멘토로 역할 변경

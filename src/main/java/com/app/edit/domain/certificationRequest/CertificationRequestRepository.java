@@ -10,6 +10,7 @@ import java.util.Optional;
 
 public interface CertificationRequestRepository extends JpaRepository<CertificationRequest,Long> {
 
-    Optional<CertificationRequest> findByIsProcessingAndUserInfo(IsProcessing no, UserInfo userInfo);
+
+    Optional<CertificationRequest> findTop1ByIsProcessingAndUserInfoOrderByCreatedAtDesc(IsProcessing no, UserInfo userInfo);
 
 }
