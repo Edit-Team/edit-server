@@ -5,6 +5,7 @@ import com.app.edit.domain.job.Job;
 import com.app.edit.domain.profilecolor.ProfileColor;
 import com.app.edit.domain.profileemotion.ProfileEmotion;
 import com.app.edit.domain.user.UserInfo;
+import com.app.edit.enums.AuthenticationCheck;
 import com.app.edit.enums.State;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -37,6 +38,14 @@ public class UserProfile extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "state", columnDefinition = "varchar(10) default 'ACTIVE'")
     private State state;
+
+    /**
+     * default 값 정의
+     */
+    @PrePersist
+    public void prePersist() {
+        this.state = this.state == null ? State.ACTIVE : this.state;
+    }
 
     @ManyToOne
     @JoinColumn(name = "profileColorId",nullable = false)
