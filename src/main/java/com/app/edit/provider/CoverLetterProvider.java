@@ -209,43 +209,16 @@ public class CoverLetterProvider {
      * @param
      * @return
      */
-    public List<GetSympathizeCoverLettersRes> retrieveMySympathizeCoverLetters(Long userInfoId, Integer pageNum) throws BaseException {
-
-        Pageable pageRequest = PageRequest.of(pageNum, 10);
-
-        Page<Sympathy> sympathies = sympathyRepository.findCoverLetterByUser(pageRequest, userInfoId, State.ACTIVE);
-
-        AtomicLong id = new AtomicLong(1L);
-
-
-        List<GetSympathizeCoverLettersRes> getSympathizeCoverLettersResList =
-                sympathies.stream()
-                        .map(sympathy ->
-                        {
-                            try {
-                                return GetSympathizeCoverLettersRes.builder()
-                                        .id(id.getAndIncrement())
-                                        .getSympathizeCoverLetterRes(retrieveSympathizeCoverLetter(sympathy.getCoverLetter().getId()))
-                                        .getSympathizeUserRes(userProvider.retrieveSympathizeUser(sympathy.getUserInfo().getId()))
-
-                                .build();
-                            } catch (BaseException baseException) {
-                                return null;
-                            }
-                        })
-        .collect(toList());
-
-        if (getSympathizeCoverLettersResList.size() == 0)
-            throw new BaseException(NOT_FOUND_COVER_LETTER);
-
-        return getSympathizeCoverLettersResList;
+    public List<GetCoverLettersRes> retrieveMySympathizeCoverLetters(Pageable pageable) throws BaseException {
+        Long userInfoId = jwtService.getUserInfo().getUserId();
+        Page<CoverLetter> mySympathizeCoverLetters = getSympathizeCoverLetters(pageable, userInfoId);
+        return getCoverLettersResponses(mySympathizeCoverLetters);
     }
 
-    private GetSympathizeCoverLetterRes retrieveSympathizeCoverLetter(Long coverLetterId) {
-
-        return coverLetterRepository.findBySympathizeCoverLetter(coverLetterId, State.ACTIVE);
+    private Page<CoverLetter> getSympathizeCoverLetters(Pageable pageable, Long userInfoId) {
+        return coverLetterRepository
+                .findMySympathizeCoverLetters(pageable, userInfoId, State.ACTIVE, CoverLetterType.WRITING);
     }
-
 
     /**
      * 유저가 오늘 작성한 자소서 개수 조회
