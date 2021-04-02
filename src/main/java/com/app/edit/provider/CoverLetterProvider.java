@@ -82,9 +82,15 @@ public class CoverLetterProvider {
         return getCoverLettersWithLimitScroll(coverLettersOnToday);
     }
 
-    private GetCoverLettersForLimitScrollRes getCoverLettersWithLimitScroll(Page<CoverLetter> coverLettersOnToday) throws BaseException {
-        List<GetCoverLettersRes> coverLetters = getCoverLettersResponses(coverLettersOnToday);
-        return new GetCoverLettersForLimitScrollRes(coverLetters, coverLettersOnToday.getTotalElements(), coverLettersOnToday.hasNext());
+    /**
+     * 스크롤 적용 응답으로 변환
+     * @param coverLetterPage
+     * @return
+     * @throws BaseException
+     */
+    private GetCoverLettersForLimitScrollRes getCoverLettersWithLimitScroll(Page<CoverLetter> coverLetterPage) throws BaseException {
+        List<GetCoverLettersRes> coverLetters = getCoverLettersResponses(coverLetterPage);
+        return new GetCoverLettersForLimitScrollRes(coverLetters, coverLetterPage.getTotalElements(), coverLetterPage.hasNext());
     }
 
     /*
@@ -219,10 +225,11 @@ public class CoverLetterProvider {
      * @param
      * @return
      */
-    public List<GetCoverLettersRes> retrieveMySympathizeCoverLetters(Pageable pageable) throws BaseException {
+    public GetCoverLettersForLimitScrollRes retrieveMySympathizeCoverLetters(Pageable pageable) throws BaseException {
         Long userInfoId = jwtService.getUserInfo().getUserId();
         Page<CoverLetter> mySympathizeCoverLetters = getSympathizeCoverLetters(pageable, userInfoId);
-        return getCoverLettersResponses(mySympathizeCoverLetters);
+        List<GetCoverLettersRes> coverLetters = getCoverLettersResponses(mySympathizeCoverLetters);
+        return new GetCoverLettersForLimitScrollRes(coverLetters, mySympathizeCoverLetters.getTotalElements(), mySympathizeCoverLetters.hasNext());
     }
 
     private Page<CoverLetter> getSympathizeCoverLetters(Pageable pageable, Long userInfoId) {
