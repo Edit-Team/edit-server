@@ -63,7 +63,7 @@ public class RankProvider {
         }else if(requestRole.equals("MENTEE")){
 
             userInfo = userInfoRepository
-                    .findByCoverLetterAndState(pageRequest, UserRole.MENTEE, State.ACTIVE, CoverLetterType.COMPLETING );
+                    .findByCoverLetterAndState(pageRequest, UserRole.MENTEE, State.ACTIVE);
         }else {
             throw new BaseException(BaseResponseStatus.FAILED_TO_GET_ROLE);
         }
@@ -106,7 +106,7 @@ public class RankProvider {
                 .emotionName(userInfo.getUserProfile().getProfileEmotion().getName())
                 .userRole(userInfo.getUserRole())
                 .commentCount(commentProvider.retrieveMyCommentCount(userInfoId))
-                .commentAdoptCount(commentProvider.retrieveMyAdoptCommentCount(userInfoId))
+                .commentAdoptCount(userInfo.getIsAdoptedCommentCount())
                 .build();
     }
 
@@ -127,7 +127,7 @@ public class RankProvider {
                 .emotionName(userInfo.getUserProfile().getProfileEmotion().getName())
                 .userRole(userInfo.getUserRole())
                 .coverLetterCount(coverLetterProvider.getCoverLetterByUser(userInfo))
-                .coverLetterCompleteCount(coverLetterProvider.getCompleteCoverLetterByUser(userInfo))
+                .coverLetterCompleteCount(userInfo.getCompleteCoverLetterCount())
                 .build();
     }
 }

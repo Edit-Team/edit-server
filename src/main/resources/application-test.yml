@@ -36,4 +36,4 @@ spring:
     password: 112233ll
     driver-class-name: com.mysql.cj.jdbc.Driver
     data: classpath:testData.sql
-    initialization-mode: never
+    initialization-mode: always
