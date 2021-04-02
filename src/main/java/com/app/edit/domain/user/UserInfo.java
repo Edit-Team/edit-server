@@ -132,7 +132,11 @@ public class UserInfo extends BaseEntity {
     @Column(name = "isAdoptedCommentCount")
     private Long isAdoptedCommentCount;
 
-
+    /**
+     * 완성된 자소서 카운트 조회
+     */
+    @Column(name = "completeCoverLetterCount")
+    private Long completeCoverLetterCount;
 
     /**
      * default 값 정의
@@ -149,6 +153,8 @@ public class UserInfo extends BaseEntity {
                 this.state == null ? State.ACTIVE : this.state;
         this.isAdoptedCommentCount =
                 this.isAdoptedCommentCount == null ? 0 : this.isAdoptedCommentCount;
+        this.completeCoverLetterCount =
+                this.completeCoverLetterCount == null ? 0 : this.completeCoverLetterCount;
     }
 
 
