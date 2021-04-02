@@ -1,4 +1,4 @@
-package com.app.edit.response.user;
+package com.app.edit.response.rank;
 
 import com.app.edit.enums.UserRole;
 import lombok.AllArgsConstructor;
@@ -11,8 +11,9 @@ import lombok.Getter;
 public class GetUserRankRes {
 
     private final Long rankId;
-    private final String name;
+    private final Long userId;
+    private final String nickName;
     private final String emotionName;
     private final String colorName;
-    private final String job;
+    private final String jobName;
 }

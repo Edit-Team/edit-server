@@ -1,5 +1,6 @@
 package com.app.edit.domain.coverletter;
 
+import com.app.edit.domain.user.UserInfo;
 import com.app.edit.enums.CoverLetterType;
 import com.app.edit.enums.IsAdopted;
 import com.app.edit.enums.State;
@@ -83,4 +84,19 @@ public interface CoverLetterRepository extends JpaRepository<CoverLetter, Long> 
     Long getTodayWritingCoverLetterCount(@Param("userInfoId") Long userInfoId, @Param("startOfToday") LocalDateTime startOfToday,
                                          @Param("startOfTomorrow") LocalDateTime startOfTomorrow, @Param("state") State state);
 
+    /**
+     * 유저가 작성한 자소서 개수 조회
+     * @param userInfo
+     * @return
+     */
+    Long countByUserInfoAndState(UserInfo userInfo, State active);
+
+    /**
+     * 유저가 작성한 완성된 자소서 개수 조회
+     * @param userInfo
+     * @param active
+     * @param
+     * @return
+     */
+    Long countByUserInfoAndStateAndType(UserInfo userInfo, State active,CoverLetterType coverLetterType);
 }

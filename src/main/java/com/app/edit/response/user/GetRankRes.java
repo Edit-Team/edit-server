@@ -1,5 +1,6 @@
 package com.app.edit.response.user;
 
+import com.app.edit.response.rank.GetUserRankRes;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

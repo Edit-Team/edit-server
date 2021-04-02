@@ -127,6 +127,14 @@ public class UserInfo extends BaseEntity {
     private State state;
 
     /**
+     * 채택된 코멘트 카운트 조회
+     */
+    @Column(name = "isAdoptedCommentCount")
+    private Long isAdoptedCommentCount;
+
+
+
+    /**
      * default 값 정의
      */
     @PrePersist
@@ -139,6 +147,8 @@ public class UserInfo extends BaseEntity {
                 this.etcWithdrawalContent == null ? "NONE" : this.etcWithdrawalContent;
         this.state =
                 this.state == null ? State.ACTIVE : this.state;
+        this.isAdoptedCommentCount =
+                this.isAdoptedCommentCount == null ? 0 : this.isAdoptedCommentCount;
     }
 
 
