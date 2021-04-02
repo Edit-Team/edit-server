@@ -16,16 +16,4 @@ import java.util.List;
 public interface SympathyRepository extends JpaRepository<Sympathy, SympathyId> {
 
     Long countSympathiesByCoverLetter(CoverLetter coverLetter);
-
-    //List<GetSympathizeCoverLettersRes> MySympathiesByCoverLetter();
-
-//    @Query(value = "select s from Sympathy s " +
-//            "join fetch s.userInfo u join fetch CoverLetter c " +
-//            "on s.userInfo.id = u.id and s.coverLetter.id = c.id group by u.id, c.id")
-//    List<Sympathy> findBYUserAndCoverLetter();
-
-    @Query(value = "select s from Sympathy s " +
-            "where s.userInfo.id = :userInfoId and s.userInfo.state = :state " +
-            "order by s.createdAt DESC"    )
-    Page<Sympathy> findCoverLetterByUser(Pageable pageRequest, @Param("userInfoId") Long userInfoId, @Param("state") State state);
 }

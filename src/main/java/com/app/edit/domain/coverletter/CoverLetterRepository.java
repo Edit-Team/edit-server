@@ -47,6 +47,7 @@ public interface CoverLetterRepository extends JpaRepository<CoverLetter, Long> 
 
     /**
      * 내가 등록했지만 아직 완성되지 않은 자소서 목록 조회
+     *
      * @param pageable
      * @param type
      * @return
@@ -70,6 +71,15 @@ public interface CoverLetterRepository extends JpaRepository<CoverLetter, Long> 
      */
     @Query(value = "select new com.app.edit.response.sympathize.GetSympathizeCoverLetterRes(c.id, c.content, c.coverLetterCategory.name, true) from CoverLetter c where c.id = :coverLetterId and c.state = :state")
     GetSympathizeCoverLetterRes findBySympathizeCoverLetter(@Param("coverLetterId") Long coverLetterId, @Param("state") State state);
+
+    /**
+     * 내가 공감한 자소서 조회
+     * @param userInfoId
+     * @param state
+     * @return
+     */
+    @Query(value = "select cl from CoverLetter cl inner join Sympathy s on cl.id = s.coverLetter.id where s.userInfo.id = :userInfoId and s.state = :state and cl.state = :state and cl.type = :type order by s.updatedAt desc")
+    Page<CoverLetter> findMySympathizeCoverLetters(Pageable pageable, @Param("userInfoId") Long userInfoId, @Param("state") State state, @Param("type") CoverLetterType type);
 
     /**
      * 유저가 오늘 작성한 자소서 개수 조회 쿼리

@@ -13,6 +13,7 @@ import com.app.edit.enums.CoverLetterType;
 import com.app.edit.enums.IsAdopted;
 import com.app.edit.enums.State;
 import com.app.edit.response.coverletter.GetCoverLetterToCompleteRes;
+import com.app.edit.response.coverletter.GetCoverLettersForLimitScrollRes;
 import com.app.edit.response.coverletter.GetCoverLettersRes;
 import com.app.edit.response.coverletter.GetMainCoverLettersRes;
 import com.app.edit.response.sympathize.GetSympathizeCoverLetterRes;
@@ -65,48 +66,54 @@ public class CoverLetterProvider {
     public GetMainCoverLettersRes retrieveMainCoverLetters() throws BaseException {
         Pageable pageableForToday = PageRequest.of(ONE, MAIN_TODAY_COVER_LETTERS_COUNT);
         Pageable pageableForAnother = PageRequest.of(ONE, MAIN_ANOTHER_COVER_LETTERS_COUNT);
-        return new GetMainCoverLettersRes(retrieveTodayCoverLetters(pageableForToday),
-                retrieveWaitingForCommentCoverLetters(pageableForAnother),
-                retrieveAdoptedCoverLetters(pageableForAnother),
-                retrieveManySympathiesCoverLetters(pageableForAnother));
+        return new GetMainCoverLettersRes(retrieveTodayCoverLetters(pageableForToday).getCoverLetters(),
+                retrieveWaitingForCommentCoverLetters(pageableForAnother).getCoverLetters(),
+                retrieveAdoptedCoverLetters(pageableForAnother).getCoverLetters(),
+                retrieveManySympathiesCoverLetters(pageableForAnother).getCoverLetters());
     }
 
     /*
      * 오늘의 문장 조회
      **/
-    public List<GetCoverLettersRes> retrieveTodayCoverLetters(Pageable pageable) throws BaseException {
+    public GetCoverLettersForLimitScrollRes retrieveTodayCoverLetters(Pageable pageable) throws BaseException {
         LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
         LocalDateTime startOfTomorrow = startOfToday.plusDays(ONE);
         Page<CoverLetter> coverLettersOnToday = coverLetterRepository
                 .findCoverLettersOnToday(pageable, startOfToday, startOfTomorrow, State.ACTIVE, CoverLetterType.WRITING);
-        return getCoverLettersResponses(coverLettersOnToday);
+        return getCoverLettersWithLimitScroll(coverLettersOnToday);
+    }
+
+    private GetCoverLettersForLimitScrollRes getCoverLettersWithLimitScroll(Page<CoverLetter> coverLettersOnToday) throws BaseException {
+        List<GetCoverLettersRes> coverLetters = getCoverLettersResponses(coverLettersOnToday);
+        return new GetCoverLettersForLimitScrollRes(coverLetters, coverLettersOnToday.getTotalElements(), coverLettersOnToday.hasNext());
     }
 
     /*
      * 코멘트를 기다리고 있어요 조회
      **/
-    public List<GetCoverLettersRes> retrieveWaitingForCommentCoverLetters(Pageable pageable) throws BaseException {
+    public GetCoverLettersForLimitScrollRes retrieveWaitingForCommentCoverLetters(Pageable pageable) throws BaseException {
         Page<CoverLetter> coverLettersHasNotComment = coverLetterRepository.findCoverLettersHasNotComment(pageable, State.ACTIVE, CoverLetterType.WRITING);
-        return getCoverLettersResponses(coverLettersHasNotComment);
+        return getCoverLettersWithLimitScroll(coverLettersHasNotComment);
     }
 
     /*
      * 채택이 완료되었어요 조회
      **/
-    public List<GetCoverLettersRes> retrieveAdoptedCoverLetters(Pageable pageable) throws BaseException {
+    public GetCoverLettersForLimitScrollRes retrieveAdoptedCoverLetters(Pageable pageable) throws BaseException {
         Page<CoverLetter> coverLettersHasAdoptedComment = coverLetterRepository.findCoverLettersHasAdoptedComment(pageable, IsAdopted.YES, State.ACTIVE, CoverLetterType.WRITING);
-        return getCoverLettersResponses(coverLettersHasAdoptedComment);
+        return getCoverLettersWithLimitScroll(coverLettersHasAdoptedComment);
     }
 
     /*
      * 많은 분들이 공감하고 있어요 조회
      **/
-    public List<GetCoverLettersRes> retrieveManySympathiesCoverLetters(Pageable pageable) throws BaseException {
+    public GetCoverLettersForLimitScrollRes retrieveManySympathiesCoverLetters(Pageable pageable) throws BaseException {
         LocalDateTime beforeThreeDays = LocalDateTime.now().minusDays(CAN_STAY_DAY);
         Page<CoverLetter> coverLettersHasManySympathies = coverLetterRepository.findCoverLettersHasManySympathies(pageable, beforeThreeDays, State.ACTIVE, CoverLetterType.WRITING);
-        return getCoverLettersResponses(coverLettersHasManySympathies).stream()
+        List<GetCoverLettersRes> coverLetters = getCoverLettersResponses(coverLettersHasManySympathies).stream()
                 .sorted(comparing(GetCoverLettersRes::getSympathiesCount).reversed())
                 .collect(toList());
+        return new GetCoverLettersForLimitScrollRes(coverLetters, coverLettersHasManySympathies.getTotalElements(), coverLettersHasManySympathies.hasNext());
     }
 
     private List<GetCoverLettersRes> getCoverLettersResponses(Page<CoverLetter> coverLetterPage) throws BaseException {
@@ -157,6 +164,7 @@ public class CoverLetterProvider {
 
     /**
      * 내가 등록했지만 아직 완성되지 않은 자소서 목록 조회
+     *
      * @param pageable
      * @return
      */
@@ -169,6 +177,7 @@ public class CoverLetterProvider {
 
     /**
      * 내가 완성한 자소서 목록 조회
+     *
      * @param pageable
      * @return
      */
@@ -206,50 +215,25 @@ public class CoverLetterProvider {
 
     /**
      * 내가 공감한 자소서 목록 조회
+     *
      * @param
      * @param
      * @return
      */
-    public List<GetSympathizeCoverLettersRes> retrieveMySympathizeCoverLetters(Long userInfoId, Integer pageNum) throws BaseException {
-
-        Pageable pageRequest = PageRequest.of(pageNum, 10);
-
-        Page<Sympathy> sympathies = sympathyRepository.findCoverLetterByUser(pageRequest, userInfoId, State.ACTIVE);
-
-        AtomicLong id = new AtomicLong(1L);
-
-
-        List<GetSympathizeCoverLettersRes> getSympathizeCoverLettersResList =
-                sympathies.stream()
-                        .map(sympathy ->
-                        {
-                            try {
-                                return GetSympathizeCoverLettersRes.builder()
-                                        .id(id.getAndIncrement())
-                                        .getSympathizeCoverLetterRes(retrieveSympathizeCoverLetter(sympathy.getCoverLetter().getId()))
-                                        .getSympathizeUserRes(userProvider.retrieveSympathizeUser(sympathy.getUserInfo().getId()))
-
-                                .build();
-                            } catch (BaseException baseException) {
-                                return null;
-                            }
-                        })
-        .collect(toList());
-
-        if (getSympathizeCoverLettersResList.size() == 0)
-            throw new BaseException(NOT_FOUND_COVER_LETTER);
-
-        return getSympathizeCoverLettersResList;
+    public List<GetCoverLettersRes> retrieveMySympathizeCoverLetters(Pageable pageable) throws BaseException {
+        Long userInfoId = jwtService.getUserInfo().getUserId();
+        Page<CoverLetter> mySympathizeCoverLetters = getSympathizeCoverLetters(pageable, userInfoId);
+        return getCoverLettersResponses(mySympathizeCoverLetters);
     }
 
-    private GetSympathizeCoverLetterRes retrieveSympathizeCoverLetter(Long coverLetterId) {
-
-        return coverLetterRepository.findBySympathizeCoverLetter(coverLetterId, State.ACTIVE);
+    private Page<CoverLetter> getSympathizeCoverLetters(Pageable pageable, Long userInfoId) {
+        return coverLetterRepository
+                .findMySympathizeCoverLetters(pageable, userInfoId, State.ACTIVE, CoverLetterType.WRITING);
     }
-
 
     /**
      * 유저가 오늘 작성한 자소서 개수 조회
+     *
      * @return
      */
     public Long retrieveTodayWritingCoverLetterCount() throws BaseException {

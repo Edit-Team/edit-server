@@ -8,6 +8,7 @@ import com.app.edit.provider.SympathyProvider;
 import com.app.edit.request.coverletter.PostCompletingCoverLetterReq;
 import com.app.edit.request.coverletter.PostWritingCoverLetterReq;
 import com.app.edit.response.coverletter.GetCoverLetterToCompleteRes;
+import com.app.edit.response.coverletter.GetCoverLettersForLimitScrollRes;
 import com.app.edit.response.coverletter.GetCoverLettersRes;
 import com.app.edit.response.coverletter.GetMainCoverLettersRes;
 import com.app.edit.response.sympathize.GetSympathizeCoverLettersRes;
@@ -25,6 +26,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 import static com.app.edit.config.BaseResponseStatus.EMPTY_USERID;
+import static com.app.edit.config.BaseResponseStatus.SUCCESS;
 import static com.app.edit.config.Constant.DEFAULT_PAGE_SIZE;
 
 
@@ -63,7 +65,7 @@ public class CoverLetterController {
      **/
     @ApiOperation(value = "오늘의 문장 조회 API")
     @GetMapping("/today-cover-letters")
-    public BaseResponse<List<GetCoverLettersRes>> getTodayCoverLetters(@RequestParam Integer page) throws BaseException {
+    public BaseResponse<GetCoverLettersForLimitScrollRes> getTodayCoverLetters(@RequestParam Integer page) throws BaseException {
         PageRequest pageRequest = com.app.edit.config.PageRequest
                 .of(page, DEFAULT_PAGE_SIZE, Sort.by("createdAt").descending());
         return new BaseResponse<>(BaseResponseStatus.SUCCESS, coverLetterProvider.retrieveTodayCoverLetters(pageRequest));
@@ -75,7 +77,7 @@ public class CoverLetterController {
      **/
     @ApiOperation(value = "코멘트를 기다리고 있어요 조회 API")
     @GetMapping("/waiting-for-comment-cover-letters")
-    public BaseResponse<List<GetCoverLettersRes>> getWaitingForCommentCoverLetters(@RequestParam Integer page) throws BaseException {
+    public BaseResponse<GetCoverLettersForLimitScrollRes> getWaitingForCommentCoverLetters(@RequestParam Integer page) throws BaseException {
         PageRequest pageRequest = com.app.edit.config.PageRequest
                 .of(page, DEFAULT_PAGE_SIZE, Sort.by("createdAt"));
         return new BaseResponse<>(BaseResponseStatus.SUCCESS,
@@ -88,7 +90,7 @@ public class CoverLetterController {
      **/
     @ApiOperation(value = "채택이 완료되었어요 조회 API")
     @GetMapping("/adopted-cover-letters")
-    public BaseResponse<List<GetCoverLettersRes>> getAdoptedCoverLetters(@RequestParam Integer page) throws BaseException {
+    public BaseResponse<GetCoverLettersForLimitScrollRes> getAdoptedCoverLetters(@RequestParam Integer page) throws BaseException {
         PageRequest pageRequest = com.app.edit.config.PageRequest
                 .of(page, DEFAULT_PAGE_SIZE);
         return new BaseResponse<>(BaseResponseStatus.SUCCESS,
@@ -102,7 +104,7 @@ public class CoverLetterController {
      **/
     @ApiOperation(value = "많은 분들이 공감하고 있어요 조회 API")
     @GetMapping("/many-sympathies-cover-letters")
-    public BaseResponse<List<GetCoverLettersRes>> getManySympathiesCoverLetters(@RequestParam Integer page) throws BaseException {
+    public BaseResponse<GetCoverLettersForLimitScrollRes> getManySympathiesCoverLetters(@RequestParam Integer page) throws BaseException {
         PageRequest pageRequest = com.app.edit.config.PageRequest.of(page, DEFAULT_PAGE_SIZE);
         return new BaseResponse<>(BaseResponseStatus.SUCCESS,
                 coverLetterProvider.retrieveManySympathiesCoverLetters(pageRequest));
@@ -168,23 +170,10 @@ public class CoverLetterController {
      * @return
      */
     @ApiOperation(value = "내가 공감한 자소서 조회 API")
-    @GetMapping("/sympathize-coverletters")
-    public BaseResponse<List<GetSympathizeCoverLettersRes>> getSympathizeCoverLetters(
-            //@RequestHeader(value = "X-ACCESS-TOKEN") String jwt,
-            @RequestParam(value = "pageNum") Integer pageNum) {
-
-        try {
-
-            Long userId = jwtService.getUserInfo().getUserId();
-
-            if (userId == null || userId <= 0) {
-                return new BaseResponse<>(EMPTY_USERID);
-            }
-
-            return new BaseResponse<>(BaseResponseStatus.SUCCESS, coverLetterProvider.retrieveMySympathizeCoverLetters(userId, pageNum));
-        } catch (BaseException exception) {
-            return new BaseResponse<>(exception.getStatus());
-        }
+    @GetMapping("/sympathize-cover-letters")
+    public BaseResponse<List<GetCoverLettersRes>> getSympathizeCoverLetters(@RequestParam Integer page) throws BaseException {
+        PageRequest pageRequest = com.app.edit.config.PageRequest.of(page, DEFAULT_PAGE_SIZE);
+        return new BaseResponse<>(SUCCESS, coverLetterProvider.retrieveMySympathizeCoverLetters(pageRequest));
     }
 
      /**
