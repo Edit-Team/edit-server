@@ -41,14 +41,11 @@ public interface UserInfoRepository extends JpaRepository<UserInfo,Long> {
      */
     @Query(value = "select u from UserInfo u left join fetch Comment c on u.id = c.userInfo.id" +
             "     where u.userRole = :role and u.state = :state " +
-            "     group by u.id, c.isAdopted " +
-            //"having c.isAdopted = :isAdopted" +
-            "     order by (select count(c.id) from Comment c where c.userInfo.userRole = 'MENTOR' and c.userInfo.state = 'ACTIVE' and c.isAdopted = 'YES')" +
-            "      , count(c.id) DESC ")
+            "     group by u.id" +
+            "     order by u.isAdoptedCommentCount + count(c.id) DESC")
     List<UserInfo> findByAdoptAndState(Pageable pageable,
                                        @Param("role") UserRole role ,
                                        @Param("state") State state);
-                                       //@Param("isAdopted") IsAdopted isAdopted);
 
     /**
      * 멘티 랭킹 조회
