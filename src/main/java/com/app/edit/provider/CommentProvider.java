@@ -156,7 +156,7 @@ public class CommentProvider {
                         .userInfo(userProvider.retrieveSympathizeUser(coverLetter.getUserInfo().getId()))
                         .coverLetterId(coverLetter.getId())
                         .coverLetterContent(coverLetter.getContent())
-                        .coverLetterCategoryName(coverLetter.getContent())
+                        .coverLetterCategoryName(coverLetter.getCoverLetterCategory().getName())
                         .build())
                 .build();
     }
