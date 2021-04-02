@@ -79,6 +79,7 @@ public class CoverLetterService {
         CoverLetter completingCoverLetter = CoverLetter.buildCompletingCoverLetter(originalCoverLetterCategory, originalCoverLetterId, content);
         userInfo.addCoverLetter(completingCoverLetter);
         CoverLetter savedTemporaryCoverLetter = saveCoverLetter(completingCoverLetter);
+        userInfo.setCompleteCoverLetterCount(userInfo.getCompleteCoverLetterCount() + 1);
         return savedTemporaryCoverLetter.getId();
     }
 

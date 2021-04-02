@@ -8,6 +8,7 @@ import com.app.edit.domain.coverletter.CoverLetter;
 import com.app.edit.domain.coverletter.CoverLetterRepository;
 import com.app.edit.domain.sympathy.Sympathy;
 import com.app.edit.domain.sympathy.SympathyRepository;
+import com.app.edit.domain.user.UserInfo;
 import com.app.edit.enums.CoverLetterType;
 import com.app.edit.enums.IsAdopted;
 import com.app.edit.enums.State;
@@ -253,4 +254,16 @@ public class CoverLetterProvider {
                 originalCoverLetterContent, adoptedCommentContent);
     }
 
+    /**
+     * 내가 쓴 자소서 개수 구하기
+     * @param userInfo
+     * @return
+     */
+    public Long getCoverLetterByUser(UserInfo userInfo) {
+        return coverLetterRepository.countByUserInfoAndState(userInfo,State.ACTIVE);
+    }
+
+//    public Long getCompleteCoverLetterByUser(UserInfo userInfo) {
+//        return coverLetterRepository.countByUserInfoAndStateAndType(userInfo,State.ACTIVE,CoverLetterType.COMPLETING);
+//    }
 }

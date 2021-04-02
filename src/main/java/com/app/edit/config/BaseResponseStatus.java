@@ -45,9 +45,10 @@ public enum BaseResponseStatus {
     ALREADY_LOGOUT(false, 2503, "로그아웃 처리된 JWT 입니다."),
     EMPTY_NAME(false, 2504, "이름이 비었습니다."),
     INVALID_NICKNAME(false, 2505, "닉네임 형식을 확인해주세요."),
-    INVALID_NAME(false, 2504, "이름 형식을 확인해주세요."),
-    INVALID_PASSWORD(false, 2504, "비밀번호 형식을 확인해주세요."),
-    INVALID_CONFIRM_PASSWORD(false, 2504, "확인 비밀번호 형식을 확인해주세요."),
+    INVALID_NAME(false, 2506, "이름 형식을 확인해주세요."),
+    INVALID_PASSWORD(false, 2507, "비밀번호 형식을 확인해주세요."),
+    INVALID_CONFIRM_PASSWORD(false, 2508, "확인 비밀번호 형식을 확인해주세요."),
+    EMPTY_USER_RANK(false, 2509, "랭킹을 조회할 유저가 없습니다."),
 
 
 
@@ -86,6 +87,7 @@ public enum BaseResponseStatus {
     NOT_FOUND_TEMPORARY_COMMENT(false, 3033, "임시 코멘트가 비었습니다."),
     FAILED_TO_POST_TEMPORARY_COMMENT(false, 3034, "코멘트 임시저장에 실패 했습니다."),
     FAILED_TO_DELETE_COMMENT(false, 3035, "채택된 코멘트는 삭제할 수 없습니다."),
+
 
     // colt
     TOKEN_INFORMATION_IS_NOT_EQUALS_IN_SERVER(false, 3050, "토큰의 정보가 서버의 정보와 다릅니다. 로그인을 통해 갱신해주세요."),

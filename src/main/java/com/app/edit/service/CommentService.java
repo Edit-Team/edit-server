@@ -11,6 +11,7 @@ import com.app.edit.enums.State;
 import com.app.edit.provider.CommentProvider;
 import com.app.edit.provider.CoverLetterProvider;
 import com.app.edit.provider.TemporaryCommentProvider;
+import com.app.edit.provider.UserInfoProvider;
 import com.app.edit.request.comment.PostCommentReq;
 import com.app.edit.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,28 +31,43 @@ public class CommentService {
     private final UserInfoRepository userInfoRepository;
     private final CoverLetterProvider coverLetterProvider;
     private final TemporaryCommentProvider temporaryCommentProvider;
+    private final UserInfoProvider userInfoProvider;
     private final JwtService jwtService;
 
     @Autowired
     public CommentService(CommentRepository commentRepository,
                           CommentProvider commentProvider,
                           UserInfoRepository userInfoRepository,
-                          CoverLetterProvider coverLetterProvider, TemporaryCommentProvider temporaryCommentProvider, JwtService jwtService) {
+                          CoverLetterProvider coverLetterProvider, TemporaryCommentProvider temporaryCommentProvider, UserInfoProvider userInfoProvider, JwtService jwtService) {
         this.commentRepository = commentRepository;
         this.commentProvider = commentProvider;
         this.userInfoRepository = userInfoRepository;
         this.coverLetterProvider = coverLetterProvider;
         this.temporaryCommentProvider = temporaryCommentProvider;
+        this.userInfoProvider = userInfoProvider;
         this.jwtService = jwtService;
     }
 
+    /**
+     * 코멘트 채택하기
+     * @param commentId
+     * @return
+     * @throws BaseException
+     */
     public Long updateCommentAdoptedById(Long commentId) throws BaseException {
+        //유저 ID 추출
         Long userInfoId = jwtService.getUserInfo().getUserId();
+
+        //코멘트 조회 및 채택
         Comment selectedComment = commentProvider.getCommentById(commentId);
         validateUser(userInfoId, selectedComment);
         validateAdoptedComment(selectedComment);
         selectedComment.setIsAdopted(IsAdopted.YES);
-        commentRepository.save(selectedComment);
+
+        //코멘트 수 증가
+        UserInfo userInfo = userInfoProvider.getUserInfoById(userInfoId);
+        userInfo.setIsAdoptedCommentCount(userInfo.getIsAdoptedCommentCount() + 1);
+
         return selectedComment.getId();
     }
 

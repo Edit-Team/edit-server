@@ -40,23 +40,22 @@ public interface UserInfoRepository extends JpaRepository<UserInfo,Long> {
      * 멘토 랭킹 조회
      */
     @Query(value = "select u from UserInfo u join fetch Comment c on u.id = c.userInfo.id" +
-            "     where u.userRole = :role and u.state = :state group by u.id, c.isAdopted having c.isAdopted = :isAdopted" +
-            "     order by count(c.isAdopted) + count(c.id) DESC ")
+            "     where u.userRole = :role and u.state = :state " +
+            "     group by u.id" +
+            "     order by u.isAdoptedCommentCount + count(c.id) DESC")
     List<UserInfo> findByAdoptAndState(Pageable pageable,
                                        @Param("role") UserRole role ,
-                                       @Param("state") State state,
-                                       @Param("isAdopted") IsAdopted isAdopted);
+                                       @Param("state") State state);
 
     /**
      * 멘티 랭킹 조회
      */
     @Query(value = "select u from UserInfo u join fetch CoverLetter c on u.id = c.userInfo.id"+
-            " where u.userRole = :role and u.state = :state group by u.id, c.type having c.type = :type"+
-            " order by count(c.id) + count(c.type) DESC")
+            " where u.userRole = :role and u.state = :state group by u.id " +
+            " order by u.completeCoverLetterCount + count(c.id) DESC")
     List<UserInfo> findByCoverLetterAndState(Pageable pageRequest,
                                              @Param("role") UserRole role,
-                                             @Param("state") State state,
-                                             @Param("type") CoverLetterType type);
+                                             @Param("state") State state);
 
 
     /**
