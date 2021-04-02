@@ -25,6 +25,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 import static com.app.edit.config.BaseResponseStatus.EMPTY_USERID;
+import static com.app.edit.config.BaseResponseStatus.SUCCESS;
 import static com.app.edit.config.Constant.DEFAULT_PAGE_SIZE;
 
 
@@ -168,23 +169,10 @@ public class CoverLetterController {
      * @return
      */
     @ApiOperation(value = "내가 공감한 자소서 조회 API")
-    @GetMapping("/sympathize-coverletters")
-    public BaseResponse<List<GetSympathizeCoverLettersRes>> getSympathizeCoverLetters(
-            //@RequestHeader(value = "X-ACCESS-TOKEN") String jwt,
-            @RequestParam(value = "pageNum") Integer pageNum) {
-
-        try {
-
-            Long userId = jwtService.getUserInfo().getUserId();
-
-            if (userId == null || userId <= 0) {
-                return new BaseResponse<>(EMPTY_USERID);
-            }
-
-            return new BaseResponse<>(BaseResponseStatus.SUCCESS, coverLetterProvider.retrieveMySympathizeCoverLetters(userId, pageNum));
-        } catch (BaseException exception) {
-            return new BaseResponse<>(exception.getStatus());
-        }
+    @GetMapping("/sympathize-cover-letters")
+    public BaseResponse<List<GetCoverLettersRes>> getSympathizeCoverLetters(@RequestParam Integer page) throws BaseException {
+        PageRequest pageRequest = com.app.edit.config.PageRequest.of(page, DEFAULT_PAGE_SIZE);
+        return new BaseResponse<>(SUCCESS, coverLetterProvider.retrieveMySympathizeCoverLetters(pageRequest));
     }
 
      /**
