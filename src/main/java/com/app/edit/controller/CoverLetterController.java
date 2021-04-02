@@ -171,7 +171,7 @@ public class CoverLetterController {
      */
     @ApiOperation(value = "내가 공감한 자소서 조회 API")
     @GetMapping("/sympathize-cover-letters")
-    public BaseResponse<List<GetCoverLettersRes>> getSympathizeCoverLetters(@RequestParam Integer page) throws BaseException {
+    public BaseResponse<GetCoverLettersForLimitScrollRes> getSympathizeCoverLetters(@RequestParam Integer page) throws BaseException {
         PageRequest pageRequest = com.app.edit.config.PageRequest.of(page, DEFAULT_PAGE_SIZE);
         return new BaseResponse<>(SUCCESS, coverLetterProvider.retrieveMySympathizeCoverLetters(pageRequest));
     }
