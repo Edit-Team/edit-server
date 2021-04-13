@@ -45,7 +45,6 @@ public class TemporaryCommentService {
 
         UserInfo userInfo = userInfoRepository.findByStateAndId(State.ACTIVE,userInfoId)
                 .orElseThrow(() -> new BaseException(NOT_FOUND_USER));
-
         CoverLetter coverLetter = coverLetterProvider.getCoverLetterById(parameters.getCoverLetterId());
 
         TemporaryComment temporaryComment = TemporaryComment.builder()

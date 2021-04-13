@@ -273,6 +273,7 @@ public class UserService {
      * @throws BaseException
      */
     public void AuthenticationMentor(Long userId, PostMentorAuthenticationReq request) throws IOException, BaseException {
+
         String authenticationFile = request.getAuthenticationImage();
         byte[] decodedFile = Base64.getMimeDecoder().decode(authenticationFile.substring(authenticationFile.indexOf(",") + 1));
         UserInfo userInfo = userInfoRepository.findByStateAndId(State.ACTIVE,userId)
