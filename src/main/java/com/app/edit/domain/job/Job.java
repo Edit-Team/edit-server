@@ -35,4 +35,5 @@ public class Job extends BaseEntity {
 
     @OneToMany(mappedBy = "job",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<UserInfo> userInfoList;
+
 }

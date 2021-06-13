@@ -40,9 +40,11 @@ public class UserInfoProvider {
 
     public UserInfo getUserInfoById(Long userInfoId) throws BaseException {
         Optional<UserInfo> userInfo = userInfoRepository.findById(userInfoId);
+
         if (userInfo.isEmpty()) {
             throw new BaseException(NOT_FOUND_USER_INFO);
         }
+
         if (userInfo.get().getState().equals(State.INACTIVE)) {
             throw new BaseException(ALREADY_DELETED_USER);
         }
