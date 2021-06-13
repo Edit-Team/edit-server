@@ -127,7 +127,7 @@ public class RankProvider {
                 .emotionName(userInfo.getUserProfile().getProfileEmotion().getName())
                 .userRole(userInfo.getUserRole())
                 .coverLetterCount(coverLetterProvider.getCoverLetterByUser(userInfo))
-                .coverLetterCompleteCount(userInfo.getCompleteCoverLetterCount())
+                .coverLetterCompleteCount(coverLetterProvider.getCompleteCoverLetterByUser(userInfo))
                 .build();
     }
 }

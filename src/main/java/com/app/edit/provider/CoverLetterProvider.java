@@ -270,7 +270,7 @@ public class CoverLetterProvider {
         return coverLetterRepository.countByUserInfoAndState(userInfo,State.ACTIVE);
     }
 
-//    public Long getCompleteCoverLetterByUser(UserInfo userInfo) {
-//        return coverLetterRepository.countByUserInfoAndStateAndType(userInfo,State.ACTIVE,CoverLetterType.COMPLETING);
-//    }
+    public Long getCompleteCoverLetterByUser(UserInfo userInfo) {
+        return coverLetterRepository.countByUserInfoAndStateAndType(userInfo,State.ACTIVE,CoverLetterType.COMPLETING);
+    }
 }
