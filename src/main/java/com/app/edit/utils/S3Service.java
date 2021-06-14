@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.annotation.MultipartConfig;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -52,6 +53,7 @@ public class S3Service {
                 .build();
     }
 
+    
     public String upload(byte[] file, Long userId) throws IOException {
         String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         String fileName = "mentor-certifications/" + today + "/" + userId;

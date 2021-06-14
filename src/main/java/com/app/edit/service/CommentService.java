@@ -55,6 +55,7 @@ public class CommentService {
      * @throws BaseException
      */
     public Long updateCommentAdoptedById(Long commentId) throws BaseException {
+
         //유저 ID 추출
         Long userInfoId = jwtService.getUserInfo().getUserId();
 

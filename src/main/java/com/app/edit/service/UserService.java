@@ -278,6 +278,7 @@ public class UserService {
         byte[] decodedFile = Base64.getMimeDecoder().decode(authenticationFile.substring(authenticationFile.indexOf(",") + 1));
         UserInfo userInfo = userInfoRepository.findByStateAndId(State.ACTIVE,userId)
                 .orElseThrow(() -> new BaseException(NOT_FOUND_USER));
+
         String imgPath = s3Service.upload(decodedFile, userId);
 
         CertificationRequest certificationRequest = CertificationRequest.builder()

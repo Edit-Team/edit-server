@@ -106,7 +106,7 @@ public class RankProvider {
                 .emotionName(userInfo.getUserProfile().getProfileEmotion().getName())
                 .userRole(userInfo.getUserRole())
                 .commentCount(commentProvider.retrieveMyCommentCount(userInfoId))
-                .commentAdoptCount(userInfo.getIsAdoptedCommentCount())
+                .commentAdoptCount(commentProvider.retrieveMyAdoptCommentCount(userInfoId))
                 .build();
     }
 
@@ -127,7 +127,7 @@ public class RankProvider {
                 .emotionName(userInfo.getUserProfile().getProfileEmotion().getName())
                 .userRole(userInfo.getUserRole())
                 .coverLetterCount(coverLetterProvider.getCoverLetterByUser(userInfo))
-                .coverLetterCompleteCount(userInfo.getCompleteCoverLetterCount())
+                .coverLetterCompleteCount(coverLetterProvider.getCompleteCoverLetterByUser(userInfo))
                 .build();
     }
 }

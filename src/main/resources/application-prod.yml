@@ -35,4 +35,4 @@ spring:
     username: admin
     password: editadmin
     driver-class-name: com.mysql.cj.jdbc.Driver
-    data: classpath:testData.sql
+    #data: classpath:testData.sql

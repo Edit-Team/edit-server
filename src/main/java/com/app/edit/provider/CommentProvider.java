@@ -200,13 +200,13 @@ public class CommentProvider {
         return commentRepository.findByUserAndState(userInfoId,State.ACTIVE);
     }
 
-//    /**
-//     * 내 채택된 코멘트 수
-//     * @return
-//     */
-//    public Long retrieveMyAdoptCommentCount(Long userInfoId) {
-//        return commentRepository.findUserAndStateAndAdopt(userInfoId,State.ACTIVE,IsAdopted.YES);
-//    }
+    /**
+     * 내 채택된 코멘트 수
+     * @return
+     */
+    public Long retrieveMyAdoptCommentCount(Long userInfoId) {
+        return commentRepository.findUserAndStateAndAdopt(userInfoId,State.ACTIVE,IsAdopted.YES);
+    }
 
 
 }
